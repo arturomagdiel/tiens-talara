@@ -25,7 +25,7 @@
   </style>
 </head>
 <body>
-    <audio id="clickSound" src="sonidos/click1.mp3" preload="auto"></audio>
+    <audio id="clickSound" src="./sonidos/click1.mp3" preload="auto"></audio>
 
 
 <div class="container">

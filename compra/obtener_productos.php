@@ -1,6 +1,5 @@
 <?php
-
-include 'conexion.php'; // Incluir la conexión
+include '../shared/conexion.php'; // Incluir la conexión
 
 // Obtener el tipo de precio
 $tipoPrecio = $_GET["tipo"];
