@@ -16,7 +16,7 @@ if ($result->num_rows > 0) {
     $pv = $row["pv_" . $tipoPrecio];
 
     // Imprimir los datos del producto en la consola (depuraci��n)
-    echo "<script>console.log(" . json_encode($row) . ");</script>";
+    //echo "<script>console.log(" . json_encode($row) . ");</script>";
 
     echo "<div class='col'>";
     echo "<button class='product-button' data-id='" . $row["id"] . "' 

@@ -1,6 +1,6 @@
 <?php
 // Conexion a la base de datos
-$servername = "localhost";
+$servername = "web2.searchdotcom.club";
 $username = "tienslima_shopu";
 $password = "Mar11ine!shop";
 $dbname = "tienslima_shop";
