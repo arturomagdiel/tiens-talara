@@ -2,14 +2,14 @@ $(document).ready(function() {
     var tipoPrecio = "master"; // Establecer "master" como predeterminado
 
     function cargarProductos() {
-        console.log("Tipo de precio:", tipoPrecio);
+        //console.log("Tipo de precio:", tipoPrecio);
 
         $.ajax({
             url: 'obtener_productos.php',
             type: 'GET',
             data: { tipo: tipoPrecio },
             success: function(response) {
-                console.log("Respuesta AJAX:", response);
+                //console.log("Respuesta AJAX:", response);
                 $('#product-list').html(response);
 
                 $('.product-button').click(function() {
@@ -19,9 +19,9 @@ $(document).ready(function() {
                     var precio = $(this).data('precio_' + tipoPrecio);
                     var pv = $(this).data('pv_' + tipoPrecio);
 
-                    console.log("ID:", id);
-                    console.log("Precio:", precio);
-                    console.log("PV:", pv);
+                    // console.log("ID:", id);
+                    // console.log("Precio:", precio);
+                    // console.log("PV:", pv);
 
                     agregarAlCarrito(id, nombre, imagen, precio, pv, tipoPrecio,
                         $(this).data('precio_publico'), $(this).data('pv_publico'),
@@ -38,7 +38,7 @@ $(document).ready(function() {
         });
     }
 
-    cargarProductos();
+    
 
     $('input[name="tipo-precio"]').change(function() {
         tipoPrecio = $(this).val();
@@ -187,7 +187,7 @@ $(document).ready(function() {
             totalPagar += item.cantidad * parseFloat(item["precio_" + tipoPrecio]);
         });
 
-        var mensaje = "Pedido Tiens\n\nFecha del Pedido: " + fechaFormateada + "\nNombre y Código de Afiliado: " + nombreCodigo + "\nNotas del Pedido: " + notasPedido + "\n\nProductos:\n";
+        var mensaje = "Pedido Tiens\n\nFecha del Pedido: " + fechaFormateada + "\nNombre y Codigo: " + nombreCodigo + "\nNotas del Pedido: " + notasPedido + "\n\nProductos:\n";
 
         carrito.forEach(function(item) {
             mensaje += "- " + item.cantidad + " " + item.nombre + " (S/" + parseFloat(item["precio_" + tipoPrecio]).toFixed(2) + ")\n";
@@ -205,5 +205,5 @@ $(document).ready(function() {
     });
 
     actualizarCarrito();
-    $('#limpiar-carrito, #solicitar-whatsapp').hide();
+    cargarProductos();
 });

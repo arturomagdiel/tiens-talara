@@ -7,6 +7,8 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="../images/tiens.ico">
 </head>
 
 <body>
@@ -14,9 +16,11 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-md-9">
-                <h2>Calcula tu Compra</h2>
-                <div class="row mb-3">
+            <div class="col-md-3">
+                <h3>Calcula tu Compra</h3>
+            </div>
+            <div class="col-md-6">
+            <div class="row mb-3">
                     <div class="col-md-12">
                         <div class="btn-group" role="group" aria-label="Tipo de precio">
                             <input type="radio" class="btn-check" name="tipo-precio" id="publico" autocomplete="off"
@@ -43,28 +47,44 @@
                 </div>
             </div>
             <div class="col-md-3 text-end">
-                <h2>Carrito</h2>
-                <div id="carrito">
-                    <p>Productos: <span id="carrito-cantidad">0</span></p>
-                    <p>S/<span id="carrito-precio">0</span> - <span id="carrito-pv">0</span>PV</p>
-                </div>
+                <div class="d-md-block d-none">
+                    <h3>Carrito (<span id="carrito-cantidad">0</span>)</h3>
+                 </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-9">
-                <div id="product-list" class="row row-cols-1 row-cols-md-5 g-4">
+                <div id="product-list" class="row row-cols-1 row-cols-sm-3 row-cols-md-5 row-cols-lg-5 g-4">
                 </div>
             </div>
-            <div class="col-md-3 sidebar-fixed">
+            <div class="col-md-3 sidebar-fixed d-md-block d-none">
                 <ul id="carrito-lista"></ul>
+                <div id="carrito">
+                        <p>S/<span id="carrito-precio">0</span> - <span id="carrito-pv">0</span>PV</p>
+                    </div>
                 <button id="limpiar-carrito" class="btn btn-secondary btn-sm">
-    <i class="bi bi-trash"></i> Limpiar
-</button>
+                    <i class="bi bi-trash"></i> Limpiar
+                </button>
                 <button id="solicitar-whatsapp" class="btn btn-success btn-sm" data-bs-toggle="modal"
                     data-bs-target="#modal-whatsapp">
                     <i class="bi bi-whatsapp"></i> Enviar
                 </button>
+                
+            </div>
+        </div>
+        <div class="row d-md-none">
+            <div class="col-12">
+                <div class="text-center">
+                    <ul id="carrito-lista"></ul>
+                    <button id="limpiar-carrito" class="btn btn-secondary btn-sm">
+                        <i class="bi bi-trash"></i> Limpiar
+                    </button>
+                    <button id="solicitar-whatsapp" class="btn btn-success btn-sm" data-bs-toggle="modal"
+                        data-bs-target="#modal-whatsapp">
+                        <i class="bi bi-whatsapp"></i> Enviar
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -79,11 +99,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="nombre-codigo" class="form-label">Nombre y Código de Afiliado</label>
+                        <label for="nombre-codigo" class="form-label">Nombre y Codigo</label>
                         <input type="text" class="form-control" id="nombre-codigo">
                     </div>
                     <div class="mb-3">
-                        <label for="notas-pedido" class="form-label">Notas del Pedido</label>
+                        <label for="notas-pedido" class="form-label">Notas</label>
                         <textarea class="form-control" id="notas-pedido" rows="3"></textarea>
                     </div>
                 </div>

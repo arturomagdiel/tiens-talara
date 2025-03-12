@@ -26,6 +26,7 @@
     border: 1px solid #ddd;
     border-radius: 5px;
     margin-bottom: 10px;
+    text-align: right;
 }
 #carrito p {
     margin-bottom: 5px;
@@ -40,12 +41,13 @@
     padding: 0.5rem; /* Ajusta este valor según sea necesario */
 }
 
-#carrito-precio {
-    font-weight: bold;
+#carrito-precio {  
     color: darkgreen;
+    font-weight: bold;
 }
 
 #carrito-pv {
-    font-weight: bold;
     color:darkblue;
+    font-weight: bold;
 }
+
