@@ -16,100 +16,100 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-md-3">
-                <h3>Calcula tu Compra</h3>
+            <div class="col-12 d-md-none" id="col-der-movil">
+                <div class="row">
+                    <h3>Carrito (<span id="carrito-cantidad">0</span>)</h3>
+                    <div class="col sidebar-fixed">
+                        <ul id="carrito-lista-movil">
+                            <div class="carrito-items-container">
+                            </div>
+                        </ul>
+                        <div id="carrito">
+                            <p>S/<span id="carrito-precio">0</span> - <span id="carrito-pv">0</span>PV</p>
+                        </div>
+                        <button id="limpiar-carrito" class="btn btn-secondary btn-sm">
+                            <i class="bi bi-trash"></i> Limpiar
+                        </button>
+                        <button id="solicitar-whatsapp" class="btn btn-success btn-sm" data-bs-toggle="modal"
+                            data-bs-target="#modal-whatsapp">
+                            <i class="bi bi-whatsapp"></i> Enviar
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6">
-            <div class="row mb-3">
-                    <div class="col-md-12">
+            <div class="col-md-9" id="col-izq">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Calcula tu Compra</h3>
+                    </div>
+                    <div class="col-md-6">
                         <div class="btn-group" role="group" aria-label="Tipo de precio">
                             <input type="radio" class="btn-check" name="tipo-precio" id="publico" autocomplete="off"
                                 value="publico">
                             <label class="btn btn-outline-dark" for="publico">Publico</label>
-
                             <input type="radio" class="btn-check" name="tipo-precio" id="afiliado" autocomplete="off"
                                 value="afiliado">
                             <label class="btn btn-outline-secondary" for="afiliado">Afiliado</label>
-
                             <input type="radio" class="btn-check" name="tipo-precio" id="junior" autocomplete="off"
                                 value="junior">
                             <label class="btn btn-outline-primary" for="junior">5%</label>
-
                             <input type="radio" class="btn-check" name="tipo-precio" id="senior" autocomplete="off"
                                 value="senior">
                             <label class="btn btn-outline-warning" for="senior">8%</label>
-
                             <input type="radio" class="btn-check" name="tipo-precio" id="master" autocomplete="off"
                                 value="master" checked>
                             <label class="btn btn-outline-danger active" for="master">15%</label>
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col">
+                        <div id="product-list" class="row row-cols-2 row-cols-sm-3 row-cols-md-3 row-cols-lg-5 g-4">
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-3 text-end">
-                <div class="d-md-block d-none">
+            <div class="col-md-3 d-none d-md-block" id="col-der">
+                <div class="row">
                     <h3>Carrito (<span id="carrito-cantidad">0</span>)</h3>
-                 </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-9">
-                <div id="product-list" class="row row-cols-1 row-cols-sm-3 row-cols-md-5 row-cols-lg-5 g-4">
-                </div>
-            </div>
-            <div class="col-md-3 sidebar-fixed d-md-block d-none">
-                <ul id="carrito-lista"></ul>
-                <div id="carrito">
-                        <p>S/<span id="carrito-precio">0</span> - <span id="carrito-pv">0</span>PV</p>
+                    <div class="col sidebar-fixed">
+                        <ul id="carrito-lista"></ul>
+                        <div id="carrito">
+                            <p>S/<span id="carrito-precio">0</span> - <span id="carrito-pv">0</span>PV</p>
+                        </div>
+                        <button id="limpiar-carrito" class="btn btn-secondary btn-sm">
+                            <i class="bi bi-trash"></i> Limpiar
+                        </button>
+                        <button id="solicitar-whatsapp" class="btn btn-success btn-sm" data-bs-toggle="modal"
+                            data-bs-target="#modal-whatsapp">
+                            <i class="bi bi-whatsapp"></i> Enviar
+                        </button>
                     </div>
-                <button id="limpiar-carrito" class="btn btn-secondary btn-sm">
-                    <i class="bi bi-trash"></i> Limpiar
-                </button>
-                <button id="solicitar-whatsapp" class="btn btn-success btn-sm" data-bs-toggle="modal"
-                    data-bs-target="#modal-whatsapp">
-                    <i class="bi bi-whatsapp"></i> Enviar
-                </button>
-                
-            </div>
-        </div>
-        <div class="row d-md-none">
-            <div class="col-12">
-                <div class="text-center">
-                    <ul id="carrito-lista"></ul>
-                    <button id="limpiar-carrito" class="btn btn-secondary btn-sm">
-                        <i class="bi bi-trash"></i> Limpiar
-                    </button>
-                    <button id="solicitar-whatsapp" class="btn btn-success btn-sm" data-bs-toggle="modal"
-                        data-bs-target="#modal-whatsapp">
-                        <i class="bi bi-whatsapp"></i> Enviar
-                    </button>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="modal fade" id="modal-whatsapp" tabindex="-1" aria-labelledby="modal-whatsapp-label"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal-whatsapp-label">Enviar por WhatsApp</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="nombre-codigo" class="form-label">Nombre y Codigo</label>
-                        <input type="text" class="form-control" id="nombre-codigo">
+        <div class="modal fade" id="modal-whatsapp" tabindex="-1" aria-labelledby="modal-whatsapp-label"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal-whatsapp-label">Enviar por WhatsApp</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="mb-3">
-                        <label for="notas-pedido" class="form-label">Notas</label>
-                        <textarea class="form-control" id="notas-pedido" rows="3"></textarea>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="nombre-codigo" class="form-label">Nombre y Codigo</label>
+                            <input type="text" class="form-control" id="nombre-codigo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="notas-pedido" class="form-label">Notas</label>
+                            <textarea class="form-control" id="notas-pedido" rows="3"></textarea>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-success" id="enviar-whatsapp">Enviar a WhatsApp</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success" id="enviar-whatsapp">Enviar a WhatsApp</button>
+                    </div>
                 </div>
             </div>
         </div>

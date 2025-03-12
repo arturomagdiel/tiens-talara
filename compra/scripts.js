@@ -87,31 +87,36 @@ $(document).ready(function() {
     }
 
     function actualizarCarrito() {
-
         let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
         console.log("Carrito:", carrito);
-
+    
         var cantidad = 0;
         var precioTotal = 0;
         var pvTotal = 0;
-
+    
         carrito.forEach(function(item) {
             cantidad += item.cantidad;
-
+    
             var precio = parseFloat(item["precio_" + tipoPrecio]).toFixed(2);
             var pv = parseFloat(item["pv_" + tipoPrecio]).toFixed(2);
-
+    
             precioTotal = (parseFloat(precioTotal) + parseFloat(precio) * item.cantidad).toFixed(2);
             pvTotal = (parseFloat(pvTotal) + parseFloat(pv) * item.cantidad).toFixed(2);
         });
-
-        $('#carrito-cantidad').text(cantidad);
-        $('#carrito-precio').text(precioTotal);
-        $('#carrito-pv').text(pvTotal);
-
+    
+        $('#col-der #carrito-cantidad').text(cantidad);
+        $('#col-der #carrito-precio').text(precioTotal);
+        $('#col-der #carrito-pv').text(pvTotal);
+    
+        $('#col-der-movil #carrito-cantidad').text(cantidad);
+        $('#col-der-movil #carrito-precio').text(precioTotal);
+        $('#col-der-movil #carrito-pv').text(pvTotal);
+    
         var carritoLista = $('#carrito-lista');
+        var carritoListaMovil = $('#carrito-lista-movil .carrito-items-container');
         carritoLista.empty();
-
+        carritoListaMovil.empty();
+    
         carrito.forEach(function(item) {
             var listItem = $("<li></li>");
             listItem.html(`
@@ -127,16 +132,22 @@ $(document).ready(function() {
                     </div>
                 </div>
             `);
-            carritoLista.append(listItem);
+    
+            var itemDiv = $('<div class="carrito-item-movil"></div>'); // Contenedor para cada item
+            itemDiv.append(listItem.clone()); // Usamos clone para no mover el elemento original.
+            carritoListaMovil.append(itemDiv); // Agregamos el item al div contenedor
+    
+            carritoLista.append(listItem); // Añadimos el item a la lista de escritorio
+    
         });
-
+    
         $('.eliminar-producto').click(function() {
             var id = $(this).data('id');
             eliminarDelCarrito(id);
         });
-
+    
         if (carrito.length > 0) {
-            $('#limpiar-carrito, #solicitar-whatsapp').show();
+            $('#carrito, #limpiar-carrito, #solicitar-whatsapp').show();
         } else {
             $('#limpiar-carrito, #solicitar-whatsapp').hide();
         }
@@ -160,7 +171,12 @@ $(document).ready(function() {
         }
     }
 
-    $('#limpiar-carrito').click(function() {
+    $('#col-der #limpiar-carrito').click(function() {
+        localStorage.removeItem('carrito');
+        actualizarCarrito();
+    });
+
+    $('#col-der-movil #limpiar-carrito').click(function() {
         localStorage.removeItem('carrito');
         actualizarCarrito();
     });
