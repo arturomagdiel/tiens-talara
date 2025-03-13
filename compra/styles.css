@@ -26,7 +26,7 @@
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    margin: 0 0 10px; /* Simplificado */
+    margin: 0 0 10px;
     text-align: right;
 }
 
@@ -56,14 +56,14 @@
 }
 
 .carrito-item-movil {
-    width: 48%;
-    margin: 0 2% 5px 0; /* Simplificado */
+    width: 48%; /* Ajuste inicial para móviles */
+    margin: 0 2% 5px 0;
 }
 
 /* Media queries */
 @media (max-width: 400px) {
     .carrito-item-movil {
-        width: 100%;
+        width: 100%; /* Un solo item por fila en pantallas muy pequeñas */
         margin-right: 0;
     }
 }
@@ -71,6 +71,18 @@
 @media (max-width: 768px) {
     #carrito {
         margin-top: 20px;
+    }
+
+    #col-der {
+        display: none;
+    }
+
+    #col-der-movil {
+        display: block;
+    }
+
+    #product-list {
+        width: 100%;
     }
 }
 
