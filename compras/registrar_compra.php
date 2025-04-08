@@ -33,16 +33,43 @@ if ($resultProductos->num_rows > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Compra</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Registrar Compra</h1>
-        <form id="compra-form">
-            <!-- Selección de persona -->
+
+<div class="container mt-4">
+        <div class="row align-items-center">
+            <!-- Columna izquierda: Título -->
+            <div class="col-md-6">
+                <h1 class="text-center text-md-start">Registrar Compras</h1>
+            </div>
+
+            <!-- Columna derecha: Botones -->
+            <div class="col-md-6 d-flex justify-content-center justify-content-md-end">
+            <button class="btn btn-primary btn-sm me-2 d-flex align-items-center justify-content-center" 
+            onclick="window.location.href='registrar_compra.php'" 
+            title="Registrar Compra">
+        <i class="bi bi-cart-plus"></i>
+    </button>
+    <button class="btn btn-secondary btn-sm me-2 d-flex align-items-center justify-content-center" 
+            onclick="window.location.href='buscar_compra.php'" 
+            title="Buscar Producto">
+        <i class="bi bi-search"></i>
+    </button>
+    <button class="btn btn-dark btn-sm d-flex align-items-center justify-content-center" 
+            onclick="window.location.href='../index.php'" 
+            title="Menú Principal">
+        <i class="bi bi-house-door"></i>
+    </button>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-body">
+            <h5 class="card-title">Buscar Persona</h5>
+                            <!-- Selección de persona -->
             <div class="mb-3 d-flex align-items-center">
-                <label for="persona-busqueda" class="form-label me-2">Buscar Persona:</label>
                 <input type="text" class="form-control w-50 me-2" id="persona-busqueda" placeholder="Ingrese nombre o código de la persona" autocomplete="off">
                 <select class="form-select w-25 me-2" id="descuento-persona">
                     <option value="0">0%</option>
@@ -53,8 +80,67 @@ if ($resultProductos->num_rows > 0) {
                 <button type="button" id="actualizar-descuento" class="btn btn-primary">Actualizar Descuento</button>
             </div>
             <div class="list-group position-absolute w-100" id="persona-lista" style="z-index: 1000;">
-                <!-- Resultados de búsqueda aparecerán aquí -->
+    <!-- Resultados de búsqueda aparecerán aquí -->
+</div>
+
             </div>
+        </div>
+        
+        <div class="card mt-4">
+        <div class="card-body">
+
+        <form id="compra-form">
+
+
+
+            <!-- Lista de productos -->
+           
+            <div class="mb-3 position-relative">
+            <h5 class="card-title">Buscar Producto</h5>
+                <input type="text" class="form-control" id="producto-busqueda" placeholder="Ingrese nombre o código del producto" autocomplete="off">
+                <div class="list-group position-absolute w-100" id="producto-lista" style="z-index: 1000;">
+                    <!-- Resultados de búsqueda aparecerán aquí -->
+                </div>
+            </div>
+
+            <!-- Tabla de productos agregados -->
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Código</th>
+                        <th>Precio</th>
+                        <th>PV</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="productos-lista">
+                    <!-- Los productos agregados aparecerán aquí -->
+                </tbody>
+            </table>
+
+            <!-- Totales -->
+            <div class="text-end">
+                <p><strong>Total a Pagar:</strong> S/<span id="total-pagar">0.00</span></p>
+                <p><strong>Total PV:</strong> <span id="total-pv-display">0.00</span></p>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="text-end">
+                <button type="button" id="guardar-compra" class="btn btn-success" style="display: none;">Guardar Compra</button>
+                <button type="button" id="comenzar-nuevo" class="btn btn-warning" style="display: none;">Comenzar de nuevo</button>
+            </div>
+        </form>
+
+
+</div>
+</div>
+        
+
+    <div class="container mt-5">
+ 
 
             <!-- Modal de confirmación -->
             <div class="modal fade" id="modalConfirmacion" tabindex="-1" aria-labelledby="modalConfirmacionLabel" aria-hidden="true">
@@ -127,66 +213,42 @@ if ($resultProductos->num_rows > 0) {
                 </div>
             </div>
 
-            <!-- Lista de productos -->
-           
-            <div class="mb-3 position-relative">
-                <label for="producto-busqueda" class="form-label">Buscar Producto</label>
-                <input type="text" class="form-control" id="producto-busqueda" placeholder="Ingrese nombre o código del producto" autocomplete="off">
-                <div class="list-group position-absolute w-100" id="producto-lista" style="z-index: 1000;">
-                    <!-- Resultados de búsqueda aparecerán aquí -->
-                </div>
-            </div>
-
-            <!-- Tabla de productos agregados -->
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Producto</th>
-                        <th>Código</th>
-                        <th>Precio</th>
-                        <th>PV</th>
-                        <th>Cantidad</th>
-                        <th>Subtotal</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="productos-lista">
-                    <!-- Los productos agregados aparecerán aquí -->
-                </tbody>
-            </table>
-
-            <!-- Totales -->
-            <div class="text-end">
-                <p><strong>Total a Pagar:</strong> S/<span id="total-pagar">0.00</span></p>
-                <p><strong>Total PV:</strong> <span id="total-pv-display">0.00</span></p>
-            </div>
-
-            <!-- Botones de acción -->
-            <div class="text-end">
-                <button type="button" id="guardar-compra" class="btn btn-success" style="display: none;">Guardar Compra</button>
-                <button type="button" id="comenzar-nuevo" class="btn btn-warning" style="display: none;">Comenzar de nuevo</button>
-                <a href="index.php" class="btn btn-secondary">Volver</a>
-            </div>
-
-            <!-- Modal de confirmación -->
-            <!-- <div class="modal fade" id="modalConfirmarCompra" tabindex="-1" aria-labelledby="modalConfirmarCompraLabel" aria-hidden="true">
-                <div class="modal-dialog">
+            <!-- Modal de alerta de pago -->
+            <div class="modal fade" id="modalAlertaPago" tabindex="-1" aria-labelledby="modalAlertaPagoLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="modalConfirmarCompraLabel">Confirmar Compra</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <h5 class="modal-title" id="modalAlertaPagoLabel">Atención</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                         </div>
                         <div class="modal-body">
-                            ¿Desea acumular la compra o liquidarla?
+                            Por favor, ingrese detalles del pago.
                         </div>
                         <div class="modal-footer">
-                            <button type="button" id="acumular-compra" class="btn btn-primary" data-bs-dismiss="modal">Acumular</button>
-                            <button type="button" id="liquidar-compra" class="btn btn-danger" data-bs-dismiss="modal">Liquidar</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
                         </div>
                     </div>
                 </div>
-            </div> -->
-        </form>
+            </div>
+            
+            <!-- Modal de alerta para detalles del pago -->
+            <div class="modal fade" id="modalAlertaPago" tabindex="-1" aria-labelledby="modalAlertaPagoLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalAlertaPagoLabel">Detalles del Pago</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Por favor, ingrese los detalles del pago antes de continuar.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
     </div>
     <script>
         const personas = <?= json_encode($personas); ?>; // Pasar datos de personas al script

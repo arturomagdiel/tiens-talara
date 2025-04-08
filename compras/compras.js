@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const filtroLiquidadas = document.getElementById('filtroLiquidadas');
     const confirmarLiquidacionBtn = document.getElementById('confirmarLiquidacion');
     const confirmarPasarCompraBtn = document.getElementById('confirmarPasarCompra');
+    const tituloCompras = document.getElementById('tituloCompras'); // Referencia al título
+    let personaSeleccionada = null; // Variable para almacenar la persona seleccionada
 
     let personas = []; // Aquí se cargarán las personas desde el backend
 
@@ -15,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => response.json())
         .then(data => {
             personas = data.data; // Acceder a la clave "data" del JSON
+            console.log('Personas cargadas:', personas); // Verificar el contenido del arreglo
         })
         .catch(error => console.error('Error al cargar las personas:', error));
 
@@ -39,8 +42,13 @@ document.addEventListener('DOMContentLoaded', function () {
             item.dataset.id = persona.id;
 
             item.addEventListener('click', function () {
-                buscarPersona.value = persona.nombre;
+                personaSeleccionada = persona; // Asignar la persona seleccionada
                 personaId.value = persona.id;
+                buscarPersona.value = persona.nombre;
+                listaPersonas.innerHTML = ''; // Limpiar la lista
+
+                // Actualizar el título con el nombre y el código de la persona seleccionada
+                tituloCompras.textContent = `Compras de ${persona.nombre} (Código: ${persona.codigo})`;
 
                 // Cargar las compras automáticamente con el filtro por defecto (pendientes)
                 cargarCompras(persona.id, 'pendiente');
@@ -177,17 +185,24 @@ document.addEventListener('DOMContentLoaded', function () {
     // Función para confirmar la liquidación
     confirmarLiquidacionBtn.addEventListener('click', function () {
         const compraId = document.getElementById('compraIdLiquidar').value;
-        const notaLiquidacion = document.getElementById('notaLiquidacion').value;
+        const numeroLiquidacion = document.getElementById('numeroLiquidacion').value;
+        const notaLiquidacion = `LIQUIDADO > ${document.getElementById('notaLiquidacion').value}`;
 
         if (!compraId) {
-            alert('No se ha seleccionado una compra para liquidar.');
+            alert('Debe seleccionar una compra para liquidar.');
             return;
         }
 
-        if (!notaLiquidacion.trim()) {
-            alert('Por favor, ingrese una nota para la liquidación.');
+        if (!numeroLiquidacion.trim()) {
+            alert('El número de liquidación no puede estar vacío.');
             return;
         }
+
+        // Concatenar la fecha con la nota
+        const notaConFecha = concatenarFechaConNota(notaLiquidacion);
+
+        // Generar la fecha en formato MySQL
+        const fechaLiquidacion = generarFechaFormatoMySQL();
 
         // Enviar los datos al backend
         fetch('liquidar_compra.php', {
@@ -197,14 +212,21 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify({
                 compra_id: compraId,
-                nota: notaLiquidacion,
+                numero_liquidacion: numeroLiquidacion,
+                fecha_liquidacion: fechaLiquidacion, // Enviar la fecha en formato MySQL
+                nota: notaConFecha, // Enviar la nota con la fecha
             }),
         })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Compra liquidada con éxito.');
-                    location.reload(); // Recargar la página
+                    // Mostrar el modal de éxito
+                    mostrarModalExito('Compra liquidada con éxito.');
+
+                    // Recargar las compras de la persona seleccionada
+                    if (personaSeleccionada) {
+                        cargarCompras(personaSeleccionada.id, 'pendiente');
+                    }
                 } else {
                     alert('Error al liquidar la compra: ' + data.message);
                 }
@@ -265,13 +287,37 @@ document.addEventListener('DOMContentLoaded', function () {
     // Confirmar pasar compra
     confirmarPasarCompraBtn.addEventListener('click', function () {
         const compraId = document.getElementById('compraIdPasar').value;
-        const personaId = document.getElementById('personaIdPasar').value;
-        const notaPasarCompra = document.getElementById('notaPasarCompra').value;
+        const personaIdPasar = document.getElementById('personaIdPasar').value;
+        const notaPasarCompra = `TRANSFERIDO DE ${personaSeleccionada.nombre} > ${document.getElementById('notaPasarCompra').value}`;
 
-        if (!compraId || !personaId) {
+        if (!compraId || !personaIdPasar) {
             alert('Debe seleccionar una compra y una persona.');
             return;
         }
+
+        if (!personaSeleccionada) {
+            alert('Debe seleccionar una persona actual.');
+            return;
+        }
+
+        // Buscar la nueva persona seleccionada en el arreglo de personas
+        const personaNueva = personas.find(persona => parseInt(persona.id) === parseInt(personaIdPasar));
+        if (!personaNueva) {
+            alert('No se pudo encontrar la nueva persona seleccionada.');
+            return;
+        }
+
+        // Validar si los descuentos son diferentes
+        if (personaSeleccionada.descuento !== personaNueva.descuento) {
+            const modalErrorDescuento = new bootstrap.Modal(document.getElementById('modalErrorDescuento'));
+            const mensajeErrorDescuento = document.getElementById('mensajeErrorDescuento');
+            mensajeErrorDescuento.textContent = `No es posible pasar la compra porque "${personaNueva.nombre} (${personaNueva.descuento}%)" no tiene el mismo descuento que "${personaSeleccionada.nombre} (${personaSeleccionada.descuento}%)".`;
+            modalErrorDescuento.show();
+            return;
+        }
+
+        // Concatenar la fecha con la nota
+        const notaConFecha = concatenarFechaConNota(notaPasarCompra);
 
         // Enviar los datos al backend
         fetch('pasar_compra.php', {
@@ -281,15 +327,20 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify({
                 compra_id: compraId,
-                persona_id: personaId,
-                nota: notaPasarCompra,
+                persona_id: personaIdPasar,
+                nota: notaConFecha, // Enviar la nota con la fecha
             }),
         })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Compra pasada con éxito.');
-                    location.reload(); // Recargar la página
+                    // Mostrar el modal de éxito
+                    mostrarModalExito('Compra pasada con éxito.');
+
+                    // Recargar las compras de la persona seleccionada
+                    if (personaSeleccionada) {
+                        cargarCompras(personaSeleccionada.id, 'pendiente');
+                    }
                 } else {
                     alert('Error al pasar la compra: ' + data.message);
                 }
@@ -298,4 +349,47 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error('Error:', error);
             });
     });
+
+    function generarFechaFormato() {
+        const fechaActual = new Date();
+        let horas = fechaActual.getHours();
+        const minutos = fechaActual.getMinutes().toString().padStart(2, '0');
+        const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
+        const ampm = horas >= 12 ? 'PM' : 'AM';
+        horas = horas % 12 || 12; // Convertir a formato de 12 horas (0 se convierte en 12)
+
+        return `${fechaActual.getDate().toString().padStart(2, '0')}/${(fechaActual.getMonth() + 1)
+            .toString()
+            .padStart(2, '0')}/${fechaActual.getFullYear()} ${horas.toString().padStart(2, '0')}:${minutos}:${segundos} ${ampm}`;
+    }
+
+    function concatenarFechaConNota(nota) {
+        const fecha = generarFechaFormato();
+        return `${fecha}: ${nota}`;
+    }
+
+    function mostrarModalExito(mensaje) {
+        const modalExito = new bootstrap.Modal(document.getElementById('modalExito'));
+        const modalExitoBody = document.querySelector('#modalExito .modal-body p');
+        modalExitoBody.textContent = mensaje; // Cambiar el mensaje del modal
+        modalExito.show();
+
+        // Ocultar el modal automáticamente después de 1 segundo
+        setTimeout(() => {
+            modalExito.hide();
+            location.reload(); // Recargar la página
+        }, 1000); // 1000 ms = 1 segundo
+    }
+
+    function generarFechaFormatoMySQL() {
+        const fechaActual = new Date();
+        const año = fechaActual.getFullYear();
+        const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0'); // Mes en formato 2 dígitos
+        const dia = fechaActual.getDate().toString().padStart(2, '0'); // Día en formato 2 dígitos
+        const horas = fechaActual.getHours().toString().padStart(2, '0');
+        const minutos = fechaActual.getMinutes().toString().padStart(2, '0');
+        const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
+
+        return `${año}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
+    }
 });

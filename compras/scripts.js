@@ -11,10 +11,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const actualizarDescuento = document.getElementById('actualizar-descuento');
     const modalConfirmacion = new bootstrap.Modal(document.getElementById('modalConfirmacion'));
     const guardarCompra = document.getElementById('guardar-compra');
-    const guardarCompraBtn = document.getElementById('guardar-compra');
-    const modalPago = new bootstrap.Modal(document.getElementById('modalPago'));
+        const modalPago = new bootstrap.Modal(document.getElementById('modalPago'));
     const confirmarPagoBtn = document.getElementById('confirmar-pago');
     const modalConfirmacionCompra = new bootstrap.Modal(document.getElementById('modalConfirmacionCompra'));
+    const modalAlertaPago = new bootstrap.Modal(document.getElementById('modalAlertaPago'));
 
     let personaSeleccionada = null; // Variable para almacenar la persona seleccionada
     let descuentoSeleccionado = 0; // Inicializar el descuento seleccionado con 0
@@ -108,8 +108,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const filas = productosLista.querySelectorAll('tr');
         if (filas.length > 0) {
             guardarCompra.style.display = 'inline-block'; // Mostrar el botón
+            comenzarNuevo.style.display = 'inline-block'; // Mostrar el botón
         } else {
             guardarCompra.style.display = 'none'; // Ocultar el botón
+            comenzarNuevo.style.display = 'none'; // Mostrar el botón
         }
     }
 
@@ -272,20 +274,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Manejar el botón "Guardar Compra"
     guardarCompra.addEventListener('click', function () {
-        if (!personaSeleccionada) {
-            alert('Por favor, seleccione una persona antes de guardar la compra.');
-            return;
-        }
-
-        const filas = productosLista.querySelectorAll('tr');
-        if (filas.length === 0) {
-            alert('Por favor, agregue productos antes de guardar la compra.');
-            return;
-        }
-
-
+        // Mostrar el modal para ingresar los detalles del pago
+        const modalPago = new bootstrap.Modal(document.getElementById('modalPago'));
+        modalPago.show();
     });
 
+   
     // Función para procesar la compra
     function procesarCompra(estado, liquidacionNota) {
         const filas = document.querySelectorAll('#productos-lista tr');
@@ -301,16 +295,28 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        // Iterar sobre las filas de productos
         filas.forEach(fila => {
             const id = fila.getAttribute('data-id');
             const codigo = fila.querySelector('td:nth-child(2)').textContent.trim();
-            const nombre = fila.querySelector('td:nth-child(1)').textContent.trim();
             const precio = parseFloat(fila.querySelector('.precio').textContent.replace('S/', '').trim());
             const pv = parseFloat(fila.querySelector('.pv').textContent.replace('S/', '').trim());
             const cantidad = parseInt(fila.querySelector('.cantidad').value) || 0;
 
-            productos.push({ id, codigo, nombre, precio, pv, cantidad });
+            // Crear un registro por cada unidad del producto
+            for (let i = 0; i < cantidad; i++) {
+                productos.push({ id, codigo, precio, pv });
+            }
         });
+
+        if (productos.length === 0) {
+            alert('No hay productos válidos para guardar.');
+            return;
+        }
+
+        // Agregar la fecha actual a la nota
+        const fechaActual = new Date().toLocaleString(); // Formato: DD/MM/YYYY HH:MM:SS
+        const notaConFecha = `${fechaActual}: ${liquidacionNota}`;
 
         // Enviar los datos al backend
         fetch('procesar_compra.php', {
@@ -322,7 +328,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 persona: personaSeleccionada,
                 productos,
                 estado,
-                liquidacion_nota: liquidacionNota,
+                liquidacion_nota: notaConFecha, // Enviar la nota con la fecha
             }),
         })
             .then(response => response.json())
@@ -355,22 +361,19 @@ document.addEventListener('DOMContentLoaded', function () {
     // Llamar a verificarProductosEnLista al cargar la página
     verificarProductosEnLista();
 
-    // Mostrar el modal al hacer clic en "Guardar Compra"
-    guardarCompraBtn.addEventListener('click', function () {
-        modalPago.show();
-    });
-
+ 
     // Confirmar el pago y procesar la compra
     confirmarPagoBtn.addEventListener('click', function () {
         const pagoNotaInput = document.getElementById('pago-nota');
-        liquidacionNota = `pago: ${pagoNotaInput.value.trim()}`;
+        liquidacionNota = pagoNotaInput.value.trim(); // Obtener el valor ingresado en el campo de pago
 
-        if (!liquidacionNota || liquidacionNota === 'pago:') {
-            alert('Por favor, ingrese detalles del pago.');
+        if (!liquidacionNota) {
+            // Mostrar el modal de alerta si no se ingresaron detalles del pago
+            modalAlertaPago.show();
             return;
         }
 
-        modalPago.hide(); // Ocultar el modal
+        modalPago.hide(); // Ocultar el modal de pago
         procesarCompra('pendiente', liquidacionNota); // Llamar a la función para procesar la compra
     });
 });

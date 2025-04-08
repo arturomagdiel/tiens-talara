@@ -5,12 +5,17 @@ header('Content-Type: application/json');
 
 $data = json_decode(file_get_contents('php://input'), true);
 
-if (!$data || !isset($data['compra_id'])) {
+// Verificar los datos recibidos
+error_log(print_r($data, true));
+
+if (!$data || !isset($data['compra_id']) || !isset($data['numero_liquidacion']) || !isset($data['fecha_liquidacion'])) {
     echo json_encode(['success' => false, 'message' => 'Datos incompletos.']);
     exit;
 }
 
 $compraId = $data['compra_id'];
+$numeroLiquidacion = $data['numero_liquidacion'];
+$fechaLiquidacion = $data['fecha_liquidacion'];
 $nuevaNota = $data['nota'] ?? '';
 
 // Obtener el contenido actual de liquidacion_nota
@@ -32,10 +37,10 @@ $stmtSelect->close();
 // Concatenar la nueva nota con la existente
 $notaActualizada = trim($notaActual) . "\n" . trim($nuevaNota);
 
-// Actualizar el campo liquidacion_nota
-$queryUpdate = "UPDATE compras SET estado = 'liquidado', liquidacion_nota = ? WHERE id = ?";
+// Actualizar el campo liquidacion_nota, número de liquidación y fecha de liquidación
+$queryUpdate = "UPDATE compras SET estado = 'liquidado', liquidacion_nota = ?, liquidacion_numero = ?, liquidacion_fecha = ? WHERE id = ?";
 $stmtUpdate = $conn->prepare($queryUpdate);
-$stmtUpdate->bind_param('si', $notaActualizada, $compraId);
+$stmtUpdate->bind_param('sssi', $notaActualizada, $numeroLiquidacion, $fechaLiquidacion, $compraId);
 
 if ($stmtUpdate->execute()) {
     echo json_encode(['success' => true, 'message' => 'Compra liquidada con éxito.']);

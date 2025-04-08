@@ -1,122 +1,40 @@
 <?php
 include '../shared/conexion.php';
 
-header('Content-Type: application/json'); // Asegurarse de que la respuesta sea JSON
+header('Content-Type: application/json');
 
-// Leer los datos enviados desde el frontend
+// Obtener los datos enviados desde el frontend
 $data = json_decode(file_get_contents('php://input'), true);
 
-if (!$data) {
-    echo json_encode(['success' => false, 'message' => 'No se recibieron datos.']);
-    exit;
-}
-
-$persona = $data['persona'] ?? null;
-$productos = $data['productos'] ?? [];
-$estado = $data['estado'] ?? 'pendiente';
-$liquidacionNota = $data['liquidacion_nota'] ?? null;
-
-if (!$persona || empty($productos) || !$estado) {
+if (!isset($data['persona']['id']) || !isset($data['persona']['codigo']) || !isset($data['persona']['descuento']) || !isset($data['productos']) || !isset($data['liquidacion_nota'])) {
     echo json_encode(['success' => false, 'message' => 'Datos incompletos.']);
     exit;
 }
 
-if (!isset($persona['id']) || !isset($persona['codigo']) || !isset($persona['descuento'])) {
-    echo json_encode(['success' => false, 'message' => 'Datos de la persona incompletos.']);
-    exit;
-}
+$personaId = $data['persona']['id'];
+$personaCodigo = $data['persona']['codigo'];
+$personaDescuento = $data['persona']['descuento']; // Recibir el descuento de la persona
+$productos = $data['productos'];
+$liquidacionNota = $data['liquidacion_nota'];
 
-// Procesar los datos y almacenarlos en la base de datos
-foreach ($productos as $producto) {
-    if (!isset($producto['id']) || !isset($producto['codigo']) || !isset($producto['precio']) || !isset($producto['pv'])) {
-        echo json_encode(['success' => false, 'message' => 'Datos del producto incompletos.']);
-        exit;
+$conn->begin_transaction();
+
+try {
+    foreach ($productos as $producto) {
+        $stmt = $conn->prepare("
+            INSERT INTO compras (personas_id, personas_codigo, personas_descuento, productos_id, productos_codigo, productos_precio, productos_pv, liquidacion_nota, fecha_compra)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())
+        ");
+        $stmt->bind_param("isissdds", $personaId, $personaCodigo, $personaDescuento, $producto['id'], $producto['codigo'], $producto['precio'], $producto['pv'], $liquidacionNota);
+        $stmt->execute();
+        $stmt->close();
     }
 
-    $query = "INSERT INTO compras (
-                fecha_compra, 
-                personas_id, 
-                personas_codigo, 
-                personas_descuento, 
-                productos_id, 
-                productos_codigo, 
-                productos_precio, 
-                productos_pv, 
-                estado, 
-                liquidacion_nota
-            ) VALUES (
-                NOW(), 
-                '{$persona['id']}', 
-                '{$persona['codigo']}', 
-                '{$persona['descuento']}', 
-                '{$producto['id']}', 
-                '{$producto['codigo']}', 
-                '{$producto['precio']}', 
-                '{$producto['pv']}', 
-                '$estado', 
-                '$liquidacionNota'
-            )";
-
-    if (!$conn->query($query)) {
-        echo json_encode(['success' => false, 'message' => 'Error al registrar la compra: ' . $conn->error]);
-        exit;
-    }
+    $conn->commit();
+    echo json_encode(['success' => true]);
+} catch (Exception $e) {
+    $conn->rollback();
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 }
 
-// Respuesta de éxito
-echo json_encode(['success' => true, 'message' => 'Compra registrada correctamente.']);
-exit;
-?>
-
-<script>
-function procesarCompra(estado) {
-    const productos = [];
-    const filas = document.querySelectorAll('#productos-lista tr');
-
-    // Recopilar los datos de los productos
-    filas.forEach(fila => {
-        const codigo = fila.querySelector('td:nth-child(2)').textContent;
-        const nombre = fila.querySelector('td:nth-child(1)').textContent;
-        const precio = parseFloat(fila.querySelector('.precio').textContent.replace('S/', ''));
-        const cantidad = parseInt(fila.querySelector('.cantidad').value) || 0;
-
-        // Agregar el producto tantas veces como la cantidad
-        for (let i = 0; i < cantidad; i++) {
-            productos.push({ codigo, nombre, precio });
-        }
-    });
-
-    // Generar número de liquidación si el estado es "liquidado"
-    const numeroLiquidacion = estado === 'liquidado'
-        ? new Date().toISOString().replace(/[-:.TZ]/g, '') // Formato: YYYYMMDDHHMMSS
-        : null;
-
-    // Enviar los datos al backend
-    fetch('compras/procesar_compra.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            persona: personaSeleccionada,
-            productos,
-            estado,
-            numeroLiquidacion,
-        }),
-    })
-        .then(response => {
-            console.log('Estado de la respuesta:', response.status); // Verificar el estado HTTP
-            return response.json();
-        })
-        .then(data => {
-            console.log('Respuesta del servidor:', data); // Mostrar la respuesta del servidor
-            if (data.success) {
-                alert(data.message);
-                location.reload(); // Recargar la página después de guardar
-            } else {
-                alert('Error: ' + data.message);
-            }
-        })
-        .catch(error => console.error('Error:', error));
-}
-</script>
+$conn->close();

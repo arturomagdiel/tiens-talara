@@ -35,29 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['persona_id'])) {
     $stmt->close();
 }
 
-$personaBusqueda = $_GET['persona'] ?? '';
-
-//var_dump($personaBusqueda);
-
-if ($personaBusqueda) {
-    // Realizar la búsqueda de la persona en la base de datos
-    $stmt = $conn->prepare("SELECT * FROM personas WHERE nombre LIKE ? OR codigo LIKE ?");
-    $param = "%$personaBusqueda%";
-    $stmt->bind_param("ss", $param, $param);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        $persona = $result->fetch_assoc();
-        $personaId = $persona['id'];
-
-        // Mostrar un mensaje en lugar de redirigir
-        echo "<div class='alert alert-success'>Persona encontrada: {$persona['nombre']} (ID: {$persona['id']})</div>";
-    } else {
-        echo "<div class='alert alert-danger'>No se encontraron resultados para la persona: $personaBusqueda</div>";
-    }
-}
-
 $conn->close();
 ?>
 
@@ -68,59 +45,122 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compras</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="compras.css">
 </head>
 <body>
-    <div class="container mt-5">
-        <h1>Compras</h1>
+    <div class="container mt-4">
+        <div class="row align-items-center">
+            <!-- Columna izquierda: Título -->
+            <div class="col-md-6">
+                <h1 class="text-center text-md-start">Gestión de Compras</h1>
+            </div>
 
-        <!-- Formulario para buscar y seleccionar una persona -->
-        <div class="container mt-5">
-            <form id="formSeleccionarPersona">
-                <div class="mb-3">
-                    <label for="buscarPersona" class="form-label">Buscar Persona</label>
-                    <input type="text" id="buscarPersona" class="form-control" placeholder="Buscar por nombre o código">
-                    <input type="hidden" id="personaId" name="persona_id">
-                </div>
-                <ul id="listaPersonas" class="list-group">
-                    <!-- Aquí se cargarán las personas dinámicamente -->
-                </ul>
-            </form>
+            <!-- Columna derecha: Botones -->
+            <div class="col-md-6 d-flex justify-content-center justify-content-md-end">
+            <button class="btn btn-primary btn-sm me-2 d-flex align-items-center justify-content-center" 
+            onclick="window.location.href='registrar_compra.php'" 
+            title="Registrar Compra">
+        <i class="bi bi-cart-plus"></i>
+    </button>
+    <button class="btn btn-secondary btn-sm me-2 d-flex align-items-center justify-content-center" 
+            onclick="window.location.href='buscar_compra.php'" 
+            title="Buscar Producto">
+        <i class="bi bi-search"></i>
+    </button>
+    <button class="btn btn-dark btn-sm d-flex align-items-center justify-content-center" 
+            onclick="window.location.href='../index.php'" 
+            title="Menú Principal">
+        <i class="bi bi-house-door"></i>
+    </button>
+            </div>
         </div>
 
-        <!-- Tabla para mostrar las compras -->
-        <div class="container mt-5">
-            <h2>Compras de la Persona Seleccionada</h2>
-            <div class="mb-3">
-                <label class="form-label">Filtrar por estado:</label>
-                <div>
-                    <input type="radio" id="filtroPendientes" name="filtroEstado" value="pendiente" checked>
-                    <label for="filtroPendientes">Pendientes</label>
-                    <input type="radio" id="filtroLiquidadas" name="filtroEstado" value="liquidado">
-                    <label for="filtroLiquidadas">Liquidadas</label>
+        <!-- Formulario para buscar y seleccionar una persona -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">Buscar Persona</h5>
+                <form id="formSeleccionarPersona">
+                    <div class="mb-3">
+                        <input type="text" id="buscarPersona" class="form-control" placeholder="Ingrese nombre o código">
+                        <input type="hidden" id="personaId" name="persona_id">
+                    </div>
+                    <ul id="listaPersonas" class="list-group">
+                        <!-- Aquí se cargarán las personas dinámicamente -->
+                    </ul>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal para seleccionar a otra persona -->
+    <div class="modal fade" id="modalPasarCompra" tabindex="-1" aria-labelledby="modalPasarCompraLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalPasarCompraLabel">Pasar Compra</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formPasarCompra">
+                        <div class="mb-3">
+                            <label for="buscarPersonaPasar" class="form-label">Buscar Persona</label>
+                            <input type="text" id="buscarPersonaPasar" class="form-control" placeholder="Buscar por nombre o código">
+                            <ul id="listaPersonasPasar" class="list-group mt-2">
+                                <!-- Aquí se cargarán las personas dinámicamente -->
+                            </ul>
+                        </div>
+                        <div class="mb-3">
+                        <label for="notaPasarCompra" class="form-label">Nota</label>
+                        <input type="text" id="notaPasarCompra" class="form-control" placeholder="Ingrese detalles del pago">
+                        </div>
+                        <input type="hidden" id="compraIdPasar">
+                        <input type="hidden" id="personaIdPasar">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="confirmarPasarCompra">Continuar</button>
                 </div>
             </div>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Comprado</th>
-                        <th>COD</th>
-                        <th>Producto</th>
-                        <th>Precio</th>
-                        <th>PV</th>
-                        <th>DCTO</th>
-                        <th>Notas</th>
-                        <!-- Estas columnas solo aparecerán para compras liquidadas -->
-                        <th class="liquidacion-column">Liquidación #</th>
-                        <th class="liquidacion-column">Fecha</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Las compras se cargarán dinámicamente aquí -->
-                </tbody>
-            </table>
+        </div>
+    </div>
+
+        <!-- Tabla para mostrar las compras -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title" id="tituloCompras">Compras de la Persona Seleccionada</h5>
+                <div class="mb-3">
+                    <label class="form-label">Filtrar por Estado:</label>
+                    <div>
+                        <input type="radio" id="filtroPendientes" name="filtroEstado" value="pendiente" checked>
+                        <label for="filtroPendientes">Pendientes</label>
+                        <input type="radio" id="filtroLiquidadas" name="filtroEstado" value="liquidado">
+                        <label for="filtroLiquidadas">Liquidadas</label>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Fecha</th>
+                                <th>Código</th>
+                                <th>Producto</th>
+                                <th>Precio</th>
+                                <th>PV</th>
+                                <th>Estado</th>
+                                <th>Notas</th>
+                                <th class="liquidacion-column">Liquidación #</th>
+                                <th class="liquidacion-column">Fecha</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Las compras se cargarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -147,63 +187,25 @@ $conn->close();
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="confirmarLiquidacion">Confirmar Liquidacion</button>
+                    <button type="button" class="btn btn-primary" id="confirmarLiquidacion">Confirmar Liquidación</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal para seleccionar a otra persona -->
-    <div class="modal fade" id="modalPasarCompra" tabindex="-1" aria-labelledby="modalPasarCompraLabel" aria-hidden="true">
+    <!-- Modal de éxito -->
+    <div class="modal fade" id="modalExito" tabindex="-1" aria-labelledby="modalExitoLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalPasarCompraLabel">Pasar Compra</h5>
+                    <h5 class="modal-title" id="modalExitoLabel">Éxito</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="formPasarCompra">
-                        <div class="mb-3">
-                            <label for="buscarPersonaPasar" class="form-label">Buscar Persona</label>
-                            <input type="text" id="buscarPersonaPasar" class="form-control" placeholder="Buscar por nombre o código">
-                            <ul id="listaPersonasPasar" class="list-group mt-2">
-                                <!-- Aquí se cargarán las personas dinámicamente -->
-                            </ul>
-                        </div>
-                        <div class="mb-3">
-                            <label for="notaPasarCompra" class="form-label">Nota</label>
-                            <textarea id="notaPasarCompra" class="form-control" rows="3" placeholder="Ingrese una nota adicional (opcional)"></textarea>
-                        </div>
-                        <input type="hidden" id="compraIdPasar">
-                        <input type="hidden" id="personaIdPasar">
-                    </form>
+                    <p>Operación realizada con éxito.</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="confirmarPasarCompra">Continuar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de confirmación -->
-    <div class="modal fade" id="modalConfirmarPasar" tabindex="-1" aria-labelledby="modalConfirmarPasarLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalConfirmarPasarLabel">Confirmar Acción</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p id="mensajeConfirmacionPasar"></p>
-                    <div class="mb-3">
-                        <label for="notaConfirmacionPasar" class="form-label">Nota</label>
-                        <textarea id="notaConfirmacionPasar" class="form-control" rows="3" placeholder="Ingrese una nota adicional (opcional)"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirmarAccionPasar">Confirmar</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
                 </div>
             </div>
         </div>
@@ -211,6 +213,5 @@ $conn->close();
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="compras.js"></script>
-
 </body>
 </html>
