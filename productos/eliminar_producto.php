@@ -1,28 +1,23 @@
 <?php
-        // Conexión a la base de datos
-        $servername = "localhost";
-        $username = "tienslima_shopu";
-        $password = "Mar11ine!shop";
-        $dbname = "tienslima_shop";
+include '../shared/conexion.php';
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$id = isset($_POST['id']) ? $_POST['id'] : null;
 
-// Verificar la conexión
-if ($conn->connect_error) {
-  die("Error de conexión: " . $conn->connect_error);
-}
+if ($id) {
+  // Cambiar el campo activo a 0
+  $sql = "UPDATE productos SET activo = 0 WHERE id = ?";
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param("i", $id);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $id = $_POST["id"];
-
-  // Eliminar el producto de la base de datos
-  $sql = "DELETE FROM productos WHERE id = $id";
-
-  if ($conn->query($sql) === TRUE) {
-    echo "Producto eliminado con éxito";
+  if ($stmt->execute()) {
+    echo "Producto eliminado correctamente.";
   } else {
-    echo "Error al eliminar el producto: " . $conn->error;
+    echo "Error al eliminar el producto.";
   }
+
+  $stmt->close();
+} else {
+  echo "ID de producto no proporcionado.";
 }
 
 $conn->close();

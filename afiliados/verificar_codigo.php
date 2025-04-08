@@ -4,18 +4,7 @@
 header('Content-Type: application/json');
 
 // Conexión a la base de datos
-$servername = "localhost";
-$username = "tienslima_shopu";
-$password = "Mar11ine!shop";
-$dbname = "tienslima_shop";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Verificar la conexión
-if ($conn->connect_error) {
-    die("Error de conexión: " . $conn->connect_error);
-}
-
+include '../shared/conexion.php';
 // Obtener el código y el ID
 $codigo = $_GET["codigo"];
 $id = $_GET["id"];

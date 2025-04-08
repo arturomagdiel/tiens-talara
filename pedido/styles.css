@@ -1,0 +1,114 @@
+.product-button {
+    width: 100%;
+    margin-bottom: 10px;
+    text-align: center;
+    text-decoration: none; /* Elimina el subrayado */
+    color: inherit; /* Mantiene el color del texto según el diseño */
+}
+
+.product-button img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 5px;
+}
+
+.product-button:hover {
+    text-decoration: none; /* Asegura que no aparezca subrayado al pasar el mouse */
+    color: inherit; /* Mantiene el color del texto al hacer hover */
+}
+
+#carrito-lista li {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 5px;
+}
+
+#carrito-lista-movil li {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 5px;
+}
+
+#carrito {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 0 0 10px;
+    text-align: right;
+}
+
+#carrito p {
+    margin-bottom: 5px;
+}
+
+#carrito-precio {
+    color: darkgreen;
+    font-weight: bold;
+}
+
+#carrito-pv {
+    color: darkblue;
+    font-weight: bold;
+}
+
+.sidebar-fixed {
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+}
+
+.carrito-items-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.carrito-item-movil {
+    width: 48%; /* Ajuste inicial para móviles */
+    margin: 0 2% 5px 0;
+}
+
+/* Media queries */
+@media (max-width: 400px) {
+    .carrito-item-movil {
+        width: 100%; /* Un solo item por fila en pantallas muy pequeñas */
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    #carrito {
+        margin-top: 20px;
+    }
+
+    #col-der {
+        /* display: none; */
+        margin-top: 20px; /* Agrega un margen superior para pantallas pequeñas */
+    }
+
+    #col-der-movil {
+        display: block;
+    }
+
+    #product-list {
+        width: 100%;
+    }
+}
+
+#col-der {
+    display: block; /* Asegura que el carrito sea visible */
+    visibility: visible;
+    position: sticky; /* Hace que el carrito sea fijo */
+    top: 20px; /* Espacio desde la parte superior de la pantalla */
+    height: fit-content; /* Ajusta la altura al contenido */
+}
+
+/* En pantallas grandes (>= 768px), el carrito estará a la derecha */
+@media (min-width: 768px) {
+    #col-der {
+        margin-top: 0; /* Sin margen superior */
+    }
+}
+
+.card-body {
+    padding: 0.5rem;
+}

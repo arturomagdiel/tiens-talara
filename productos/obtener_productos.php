@@ -1,62 +1,45 @@
 <?php
-// Conexi車n a la base de datos
-$servername = "localhost";
-$username = "tienslima_shopu";
-$password = "Mar11ine!shop";
-$dbname = "tienslima_shop";
+include '../shared/conexion.php';
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Verificar la conexi車n
-if ($conn->connect_error) {
-  die("Error de conexi車n: " . $conn->connect_error);
-}
-
-// Obtener el tipo de precio
-$tipoPrecio = $_GET["tipo"];
-
-// Consulta SQL para obtener los productos
-$sql = "SELECT * FROM productos ORDER BY codigo";
+// Ordenar por la columna 'codigo' en orden ascendente
+$sql = "SELECT * FROM productos ORDER BY codigo ASC";
 $result = $conn->query($sql);
 
-// Mostrar los productos como botones en un grid
 if ($result->num_rows > 0) {
-  while($row = $result->fetch_assoc()) {
-    // Obtener el precio y PV correspondiente al tipo de precio
-    $precio = $row["precio_" . $tipoPrecio];
-    $pv = $row["pv_" . $tipoPrecio];
+  while ($row = $result->fetch_assoc()) {
+    // Calcular los valores con descuento y redondear a 2 decimales
+    $varPrecio5 = round($row["precio_afiliado"] - ($row["precio_afiliado"] * 0.05), 2);
+    $varPv5 = round($row["pv_afiliado"] - ($row["pv_afiliado"] * 0.05), 2);
+    $varPrecio8 = round($row["precio_afiliado"] - ($row["precio_afiliado"] * 0.08), 2);
+    $varPv8 = round($row["pv_afiliado"] - ($row["pv_afiliado"] * 0.08), 2);
+    $varPrecio15 = round($row["precio_afiliado"] - ($row["precio_afiliado"] * 0.15), 2);
+    $varPv15 = round($row["pv_afiliado"] - ($row["pv_afiliado"] * 0.15), 2);
 
-    // Imprimir los datos del producto en la consola (depuraci車n)
-    echo "<script>console.log(" . json_encode($row) . ");</script>";
+    // Determinar la clase de la fila seg繳n el estado del producto
+    $rowClass = $row["activo"] ? "" : "table-danger";
 
-    echo "<div class='col'>";
-    echo "<button class='product-button' data-id='" . $row["id"] . "' 
-                 data-nombre='" . $row["nombre"] . "' 
-                 data-imagen='" . $row["imagen"] . "'
-                 data-precio_publico='" . $row["precio_publico"] . "' 
-                 data-pv_publico='" . $row["pv_publico"] . "'
-                 data-precio_afiliado='" . $row["precio_afiliado"] . "' 
-                 data-pv_afiliado='" . $row["pv_afiliado"] . "'
-                 data-precio_junior='" . $row["precio_junior"] . "' 
-                 data-pv_junior='" . $row["pv_junior"] . "'
-                 data-precio_senior='" . $row["precio_senior"] . "' 
-                 data-pv_senior='" . $row["pv_senior"] . "'
-                 data-precio_master='" . $row["precio_master"] . "' 
-                 data-pv_master='" . $row["pv_master"] . "'>"; 
-    echo "<img src='" . $row["imagen"] . "' alt='" . $row["nombre"] . "'>";
-    echo "<br>";
-    echo $row["nombre"];
-    echo "<br>";
-    // Mostrar el precio con dos decimales
-    echo "Precio: " . number_format($precio, 2);
-    echo "<br>";
-    // Mostrar el PV con dos decimales
-    echo "PV: " . number_format($pv, 2); 
-    echo "</button>";
-    echo "</div>";
+    echo "<tr class='$rowClass'>";
+    echo "<td><img src='" . $row["imagen"] . "' alt='" . $row["nombre"] . "' class='img-thumbnail'></td>";
+    echo "<td>" . $row["codigo"] . "</td>";
+    echo "<td>" . $row["nombre"] . "</td>";
+    echo "<td>" . number_format($row["precio_publico"], 2) . "</td>";
+    echo "<td>" . number_format($row["precio_afiliado"], 2) . "</td>";
+    echo "<td>" . number_format($row["pv_afiliado"], 2) . "</td>";
+    echo "<td>" . number_format($varPrecio5, 2) . "</td>";
+    echo "<td>" . number_format($varPv5, 2) . "</td>";
+    echo "<td>" . number_format($varPrecio8, 2) . "</td>";
+    echo "<td>" . number_format($varPv8, 2) . "</td>";
+    echo "<td>" . number_format($varPrecio15, 2) . "</td>";
+    echo "<td>" . number_format($varPv15, 2) . "</td>";
+    echo "<td>";
+    echo "<button type='button' class='btn btn-primary btn-sm btnEditar' data-id='" . $row["id"] . "'>Editar</button>";
+    echo "<button type='button' class='btn btn-danger btn-sm btnEliminar' data-id='" . $row["id"] . "'>Eliminar</button>";
+    echo "</td>";
+    // echo "<td>" . ($row["activo"] ? "Activo" : "Inactivo") . "</td>";
+    // echo "</tr>";
   }
 } else {
-  echo "No se encontraron productos.";
+  echo "<tr><td colspan='15'>No se encontraron productos.</td></tr>";
 }
 
 $conn->close();

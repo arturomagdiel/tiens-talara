@@ -1,17 +1,7 @@
 <?php
 
-// Conexi®Æn a la base de datos
-$servername = "localhost";
-$username = "tienslima_shopu";
-$password = "Mar11ine!shop";
-$dbname = "tienslima_shop";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Verificar la conexi®Æn
-if ($conn->connect_error) {
-    die("Error de conexi®Æn: " . $conn->connect_error);
-}
+// Conexi√≥n a la base de datos
+include '../shared/conexion.php';
 
 // Consulta para obtener todos los contactos
 $sql = "SELECT * FROM personas";

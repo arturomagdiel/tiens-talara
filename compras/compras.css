@@ -1,0 +1,33 @@
+/* Ocultar las columnas de liquidación por defecto */
+.liquidacion-column {
+    display: none;
+}
+
+/* Mostrar las columnas de liquidación cuando se selecciona "Liquidadas" */
+body.estado-liquidado .liquidacion-column {
+    display: table-cell;
+}
+
+/* Estilo para cada nota */
+.nota-item {
+    padding: 2px 0; /* Reducir el espacio vertical dentro de cada nota */
+    font-size: 0.9rem;
+    color: #333;
+}
+
+/* Línea discontinua entre las notas */
+.nota-separador {
+    border: none;
+    border-top: 1px dashed #313131;
+    margin: 2px 0; /* Reducir el espacio vertical del separador */
+}
+
+.bg-warning {
+    background-color: #fff3cd !important; /* Un amarillo más suave */
+    color: #856404; /* Color de texto para que sea legible */
+}
+
+.bg-success {
+    background-color: #80e798 !important; /* Un verde más suave */
+    color: #10421c; /* Color de texto para que sea legible */
+}
