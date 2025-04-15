@@ -94,6 +94,43 @@
     }
 }
 
+/* Mostrar el carrito como sticky en la parte inferior en móviles */
+@media (max-width: 991.98px) {
+    #carrito-collapse {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1030; /* Asegura que esté por encima de otros elementos */
+        background-color: #fff; /* Fondo blanco */
+        border-top: 1px solid #ddd; /* Línea divisoria */
+        padding: 10px;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
+    }
+
+    /* Botón para mostrar/ocultar el carrito */
+    .d-lg-none button[data-bs-toggle="collapse"] {
+        position: fixed;
+        bottom: 60px; /* Espaciado sobre el carrito */
+        left: 10px;
+        right: 10px;
+        z-index: 1040; /* Asegura que esté por encima del carrito */
+    }
+
+    /* Agregar margen inferior al contenido para evitar que el carrito lo tape */
+    .col-12.col-lg-9 {
+        margin-bottom: 120px; /* Altura suficiente para el carrito */
+    }
+}
+
+/* Mantener el carrito en su posición normal en pantallas grandes */
+@media (min-width: 992px) {
+    #carrito-collapse {
+        position: static;
+        margin-bottom: 0;
+    }
+}
+
 #col-der {
     display: block; /* Asegura que el carrito sea visible */
     visibility: visible;
@@ -111,4 +148,65 @@
 
 .card-body {
     padding: 0.5rem;
+}
+
+/* Efecto de parpadeo para el tipo de precio seleccionado */
+.btn-check:checked + label {
+    animation: parpadeo 1s infinite;
+    border-width: 2px;
+    border-color: #ff0000; /* Cambia el color del borde si lo deseas */
+}
+
+/* Animación de parpadeo */
+@keyframes parpadeo {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Hacer sticky el div fila-sup */
+#fila-sup {
+    position: sticky;
+    top: 0;
+    z-index: 1020; /* Asegura que esté por encima de otros elementos */
+    background-color: #fff; /* Fondo blanco para que no se mezcle con el contenido */
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Hacer sticky el carrito en pantallas grandes */
+@media (min-width: 992px) {
+    #carrito {
+        position: sticky;
+        top: 20px; /* Espaciado desde la parte superior */
+        height: fit-content; /* Ajustar la altura automáticamente */
+    }
+}
+
+/* Mostrar el carrito abajo en móviles */
+@media (max-width: 991.98px) {
+    #carrito {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1030;
+        background-color: #fff;
+        border-top: 1px solid #ddd;
+        padding: 10px;
+    }
+
+    /* Agregar margen inferior al contenido para evitar que el carrito lo tape */
+    .col-12.col-lg-9 {
+        margin-bottom: 100px; /* Altura suficiente para el carrito */
+    }
+}
+
+/* Reducir el tamaño de la letra del nombre del producto */
+#product-list .product-name {
+    font-size: 0.7rem; /* Ajusta el tamaño según lo que necesites */
+    font-weight: bold; /* Mantén el texto en negritas si es necesario */
 }

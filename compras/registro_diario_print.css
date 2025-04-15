@@ -1,0 +1,45 @@
+/* Estilos para impresión */
+body {
+    font-size: 12px; /* Reducir el tamaño de la fuente */
+    line-height: 1.2; /* Compactar el espacio entre líneas */
+    color: #000; /* Asegurar texto negro para impresión */
+    background-color: #fff; /* Fondo blanco */
+}
+
+/* Ocultar elementos innecesarios */
+#btnImprimir,
+header,
+footer,
+.alert {
+    display: none; /* Ocultar botones, encabezados y alertas */
+}
+
+/* Ajustar márgenes y espaciado */
+.container {
+    margin: 0;
+    padding: 0;
+}
+
+.row {
+    margin: 0;
+    padding: 0;
+}
+
+/* Compactar tablas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10px; /* Reducir el tamaño de la fuente en tablas */
+}
+
+table th,
+table td {
+    padding: 4px;
+    border: 1px solid #000;
+    text-align: left;
+}
+
+/* Asegurar que el contenido ocupe todo el ancho */
+@page {
+    margin: 10mm;
+}

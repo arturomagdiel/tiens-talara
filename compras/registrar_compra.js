@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const pageTitle = document.getElementById('page-title');
+    if (pageTitle) {
+        pageTitle.textContent = 'Registrar Compras'; // Cambia este texto según la página
+    }
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
     const personaBusqueda = document.getElementById('persona-busqueda');
     const personaLista = document.getElementById('persona-lista');
     const productoBusqueda = document.getElementById('producto-busqueda');
@@ -25,44 +33,56 @@ document.addEventListener('DOMContentLoaded', function () {
         const query = this.value.toLowerCase();
         personaLista.innerHTML = ''; // Limpiar resultados anteriores
 
-        if (query) {
-            const resultados = personas.filter(persona =>
-                persona.nombre.toLowerCase().includes(query) || persona.codigo.toLowerCase().includes(query)
-            );
-
-            if (resultados.length === 0) {
-                personaLista.innerHTML = '<p class="text-muted">No se encontraron resultados.</p>';
-                return;
-            }
-
-            resultados.forEach(persona => {
-                const item = document.createElement('button');
-                item.type = 'button';
-                item.className = 'list-group-item list-group-item-action';
-                item.textContent = `${persona.nombre} (${persona.codigo}) - Descuento: ${persona.descuento}`;
-                item.dataset.id = persona.id;
-                item.dataset.codigo = persona.codigo;
-                item.dataset.nombre = persona.nombre;
-                item.dataset.descuento = persona.descuento;
-
-                // Seleccionar persona al hacer clic
-                item.addEventListener('click', function () {
-                    personaBusqueda.value = `${persona.nombre} (${persona.codigo})`;
-                    personaSeleccionada = persona; // Guardar la persona seleccionada
-                    console.log('Persona seleccionada:', personaSeleccionada);
-
-                    // Actualizar el valor del descuento seleccionado
-                    descuentoSeleccionado = parseInt(persona.descuento.replace('%', '')) || 0;
-
-                    // Actualizar el valor del dropdown de descuento
-                    descuentoPersona.value = descuentoSeleccionado;
-
-                    personaLista.innerHTML = ''; // Limpiar la lista
-                });
-
-                personaLista.appendChild(item);
-            });
+        // No buscar si hay menos de 3 caracteres
+        if (query.length < 3) {
+            return;
         }
+
+        const resultados = personas.filter(persona =>
+            persona.nombre.toLowerCase().includes(query) || persona.codigo.toLowerCase().includes(query)
+        );
+
+        if (resultados.length === 0) {
+            personaLista.innerHTML = '<p class="text-muted">No se encontraron resultados.</p>';
+            return;
+        }
+
+        resultados.forEach(persona => {
+            const item = document.createElement('button');
+            item.type = 'button';
+            item.className = 'list-group-item list-group-item-action';
+            item.textContent = `${persona.nombre} (${persona.codigo}) - Descuento: ${persona.descuento}`;
+            item.dataset.id = persona.id;
+            item.dataset.codigo = persona.codigo;
+            item.dataset.nombre = persona.nombre;
+            item.dataset.descuento = persona.descuento;
+
+            // Seleccionar persona al hacer clic
+            item.addEventListener('click', function () {
+                personaBusqueda.value = `${persona.nombre} (${persona.codigo})`;
+                personaSeleccionada = persona; // Guardar la persona seleccionada
+                console.log('Persona seleccionada:', personaSeleccionada);
+
+                // Actualizar el valor del descuento seleccionado
+                descuentoSeleccionado = parseInt(persona.descuento.replace('%', '')) || 0;
+
+                // Actualizar el valor del dropdown de descuento
+                descuentoPersona.value = descuentoSeleccionado;
+
+                personaLista.innerHTML = ''; // Limpiar la lista
+  
+                // Deshabilitar el campo de búsqueda para evitar cambios
+                personaBusqueda.disabled = true;
+
+                // Cambiar el fondo del campo de búsqueda a gris
+                personaBusqueda.style.backgroundColor = '#e9ecef'; // Color gris claro (Bootstrap-like)
+
+                // Mostrar el botón "Comenzar de nuevo"
+                comenzarNuevo.style.display = 'inline-block';
+            });
+
+            personaLista.appendChild(item);
+        });
     });
 
     // Manejar la búsqueda de productos
@@ -130,7 +150,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 <td>${producto.codigo}</td>
                 <td class="precio">S/${precioFinal.toFixed(2)}</td>
                 <td class="pv">${pvFinal.toFixed(2)}</td>
-                <td><input type="number" value="1" min="1" class="form-control cantidad"></td>
+                <td>
+                    <div class="input-group">
+                        <button class="btn btn-outline-secondary btn-sm disminuir-cantidad cantidad-btn" type="button">-</button>
+                        <input type="text" value="1" min="1" class="form-control cantidad text-center" style="max-width: 60px;" readonly>
+                        <button class="btn btn-outline-secondary btn-sm aumentar-cantidad cantidad-btn" type="button">+</button>
+                    </div>
+                </td>
                 <td class="subtotal">S/${precioFinal.toFixed(2)}</td>
                 <td class="subtotal-pv">${pvFinal.toFixed(2)}</td>
                 <td><button class="btn btn-danger btn-sm eliminar-producto">Eliminar</button></td>
@@ -153,25 +179,48 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
 
-        // Manejar el cambio de cantidad
-        const cantidades = document.querySelectorAll('.cantidad');
-        cantidades.forEach(cantidad => {
-            cantidad.addEventListener('input', function () {
-                const fila = this.closest('tr');
-                const precio = parseFloat(fila.querySelector('.precio').textContent.replace('S/', ''));
-                const pv = parseFloat(fila.querySelector('.pv').textContent);
-                const nuevaCantidad = parseInt(this.value) || 0;
+        // Manejar el cambio de cantidad con los botones
+        const filas = productosLista.querySelectorAll('tr');
+        filas.forEach(fila => {
+            const disminuirBtn = fila.querySelector('.disminuir-cantidad');
+            const aumentarBtn = fila.querySelector('.aumentar-cantidad');
+            const cantidadInput = fila.querySelector('.cantidad');
 
-                // Actualizar Subtotal y Subtotal PV
-                const nuevoSubtotal = precio * nuevaCantidad;
-                const nuevoSubtotalPV = pv * nuevaCantidad;
+            disminuirBtn.addEventListener('click', function () {
+                let cantidad = parseInt(cantidadInput.value) || 1;
+                if (cantidad > 1) {
+                    cantidad--;
+                    cantidadInput.value = cantidad;
+                    actualizarSubtotal(fila);
+                }
+            });
 
-                fila.querySelector('.subtotal').textContent = `S/${nuevoSubtotal.toFixed(2)}`;
-                fila.querySelector('.subtotal-pv').textContent = nuevoSubtotalPV.toFixed(2);
+            aumentarBtn.addEventListener('click', function () {
+                let cantidad = parseInt(cantidadInput.value) || 1;
+                cantidad++;
+                cantidadInput.value = cantidad;
+                actualizarSubtotal(fila);
+            });
 
-                actualizarTotales();
+            cantidadInput.addEventListener('input', function () {
+                actualizarSubtotal(fila);
             });
         });
+
+        // Función para actualizar el subtotal de una fila
+        function actualizarSubtotal(fila) {
+            const precio = parseFloat(fila.querySelector('.precio').textContent.replace('S/', ''));
+            const pv = parseFloat(fila.querySelector('.pv').textContent);
+            const cantidad = parseInt(fila.querySelector('.cantidad').value) || 0;
+
+            const nuevoSubtotal = precio * cantidad;
+            const nuevoSubtotalPV = pv * cantidad;
+
+            fila.querySelector('.subtotal').textContent = `S/${nuevoSubtotal.toFixed(2)}`;
+            fila.querySelector('.subtotal-pv').textContent = nuevoSubtotalPV.toFixed(2);
+
+            actualizarTotales();
+        }
     }
 
     // Función para actualizar los totales
@@ -365,7 +414,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Confirmar el pago y procesar la compra
     confirmarPagoBtn.addEventListener('click', function () {
         const pagoNotaInput = document.getElementById('pago-nota');
-        liquidacionNota = pagoNotaInput.value.trim(); // Obtener el valor ingresado en el campo de pago
+        liquidacionNota = `Info Pago: ${pagoNotaInput.value.trim()}`; // Obtener el valor ingresado en el campo de pago
 
         if (!liquidacionNota) {
             // Mostrar el modal de alerta si no se ingresaron detalles del pago

@@ -23,11 +23,11 @@ body.estado-liquidado .liquidacion-column {
 }
 
 .bg-warning {
-    background-color: #fff3cd !important; /* Un amarillo más suave */
-    color: #856404; /* Color de texto para que sea legible */
+    background-color: #e0e0e0 !important; /* Un amarillo más suave */
+    color: #000000; /* Color de texto para que sea legible */
 }
 
 .bg-success {
-    background-color: #80e798 !important; /* Un verde más suave */
-    color: #10421c; /* Color de texto para que sea legible */
+    background-color: #a7eec8 !important; /* Un verde más suave */
+    color: #000000; /* Color de texto para que sea legible */
 }

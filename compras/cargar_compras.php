@@ -28,6 +28,7 @@ $stmt = $conn->prepare("
     FROM compras c
     INNER JOIN productos p ON c.productos_id = p.id
     WHERE c.personas_id = ? AND c.estado = ?
+    ORDER BY c.updated_at DESC
 ");
 $stmt->bind_param("is", $persona_id, $estado);
 $stmt->execute();

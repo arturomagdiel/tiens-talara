@@ -1,4 +1,11 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const pageTitle = document.getElementById('page-title');
+    if (pageTitle) {
+        pageTitle.textContent = 'Gestion de Compras'; // Cambia este texto según la página
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
     const buscarPersona = document.getElementById('buscarPersona');
     const listaPersonas = document.getElementById('listaPersonas');
     const personaId = document.getElementById('personaId');
@@ -10,20 +17,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const tituloCompras = document.getElementById('tituloCompras'); // Referencia al título
     let personaSeleccionada = null; // Variable para almacenar la persona seleccionada
 
-    let personas = []; // Aquí se cargarán las personas desde el backend
-
-    // Cargar las personas desde el backend
-    fetch('../afiliados/obtener_personas.php')
-        .then(response => response.json())
-        .then(data => {
-            personas = data.data; // Acceder a la clave "data" del JSON
-            console.log('Personas cargadas:', personas); // Verificar el contenido del arreglo
-        })
-        .catch(error => console.error('Error al cargar las personas:', error));
+    // La variable `personas` ya está disponible desde el backend (PHP)
 
     // Filtrar personas al escribir en el textbox
     buscarPersona.addEventListener('input', function () {
         const query = this.value.toLowerCase();
+
+        // Mostrar resultados solo si hay 3 o más caracteres
+        if (query.length < 3) {
+            listaPersonas.innerHTML = ''; // Limpiar la lista si hay menos de 3 caracteres
+            return;
+        }
+
         listaPersonas.innerHTML = ''; // Limpiar resultados anteriores
 
         const resultados = personas.filter(persona =>
@@ -52,13 +57,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Cargar las compras automáticamente con el filtro por defecto (pendientes)
                 cargarCompras(persona.id, 'pendiente');
-
-                // Limpiar la lista de personas
-                listaPersonas.innerHTML = '';
             });
 
             listaPersonas.appendChild(item);
         });
+    });
+
+    // Ocultar la lista de personas al perder el foco
+    buscarPersona.addEventListener('blur', function () {
+        setTimeout(() => {
+            listaPersonas.innerHTML = ''; // Limpiar la lista después de un pequeño retraso
+        }, 200); // Retraso para permitir seleccionar un elemento antes de ocultar
     });
 
     // Función para cargar las compras de la persona seleccionada
@@ -82,15 +91,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Generar las filas de la tabla
                 data.forEach(compra => {
-                    const estadoClase = compra.estado === 'liquidado' ? 'bg-success text-white' : 'bg-warning';
+                    const estadoClase = compra.estado === 'liquidado' ? 'bg-success' : 'bg-warning';
 
                     const botonLiquidar = compra.estado === 'liquidado'
-                        ? 'Liquidado'
-                        : `<button class="btn btn-primary btn-sm liquidar-btn" data-id="${compra.id}">Liquidar</button>`;
+    ? 'Liquidado'
+    : `<button class="btn btn-primary btn-sm liquidar-btn d-flex align-items-center justify-content-center" data-id="${compra.id}" title="Liquidar" style="width: auto; height: 35px;">
+         <i class="bi bi-cash-coin" style="pointer-events: none; font-size: 1rem;"></i>
+       </button>`;
 
                     const botonPasarCompra = compra.estado === 'liquidado'
                         ? '' // No mostrar el botón si está liquidado
-                        : `<button class="btn btn-secondary btn-sm pasar-compra-btn" data-id="${compra.id}">Pasar Compra</button>`;
+                        : `<button class="btn btn-secondary btn-sm pasar-compra-btn d-flex align-items-center justify-content-center" data-id="${compra.id}" title="Transferir Compra" style="width: auto; height: 35px;">
+         <i class="bi bi-arrow-right" style="pointer-events: none; font-size: 1rem;"></i>
+       </button>`;
+
+                    // Contenedor para los botones
+                    const botonesAcciones = `
+                        <div class="d-flex gap-2">
+                            ${botonLiquidar}
+                            ${botonPasarCompra}
+                        </div>
+                    `;
 
                     const columnasLiquidacion = compra.estado === 'liquidado'
                         ? `
@@ -108,15 +129,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     const row = `
                         <tr class="${estadoClase}">
                             <td>${compra.id}</td>
-                            <td>${compra.fecha_compra}</td>
-                            <td>${compra.productos_codigo}</td>
-                            <td>${compra.producto_nombre}</td>
+                            <td>${formatearFecha(compra.fecha_compra)}</td>
+                            <td><strong>${compra.productos_codigo}</strong></td>
+                            <td><strong>${compra.producto_nombre}</strong></td>
                             <td>${parseFloat(compra.productos_precio).toFixed(2)}</td>
                             <td>${parseFloat(compra.productos_pv).toFixed(2)}</td>
                             <td>${compra.descuento}%</td>
                             <td>${notaConSeparacion}</td>
                             ${columnasLiquidacion}
-                            <td>${botonLiquidar} ${botonPasarCompra}</td>
+                            <td>${botonesAcciones}</td>
                         </tr>
                     `;
                     tablaCompras.insertAdjacentHTML('beforeend', row);
@@ -282,10 +303,48 @@ document.addEventListener('DOMContentLoaded', function () {
                 listaPersonasPasar.appendChild(item);
             });
         });
-    }
 
+        // Buscar personas dinámicamente en buscarPersonaPasar
+        buscarPersonaPasar.addEventListener('input', function () {
+            const query = this.value.toLowerCase();
+
+            // Mostrar resultados solo si hay 3 o más caracteres
+            if (query.length < 3) {
+                listaPersonasPasar.innerHTML = ''; // Limpiar la lista si hay menos de 3 caracteres
+                return;
+            }
+
+            listaPersonasPasar.innerHTML = ''; // Limpiar resultados anteriores
+
+            const resultados = personas.filter(persona =>
+                persona.nombre.toLowerCase().includes(query) || persona.codigo.toLowerCase().includes(query)
+            );
+
+            if (resultados.length === 0) {
+                listaPersonasPasar.innerHTML = '<li class="list-group-item text-muted">No se encontraron resultados.</li>';
+                return;
+            }
+
+            resultados.forEach(persona => {
+                const item = document.createElement('li');
+                item.className = 'list-group-item list-group-item-action';
+                item.textContent = `${persona.nombre} (Código: ${persona.codigo})`;
+                item.dataset.id = persona.id;
+
+                item.addEventListener('click', function () {
+                    personaIdPasar.value = persona.id;
+                    buscarPersonaPasar.value = persona.nombre;
+                    listaPersonasPasar.innerHTML = ''; // Limpiar la lista
+                });
+
+                listaPersonasPasar.appendChild(item);
+            });
+        });
+    }
     // Confirmar pasar compra
-    confirmarPasarCompraBtn.addEventListener('click', function () {
+    confirmarPasarCompraBtn.addEventListener('click', function (event) {
+        event.preventDefault(); // Prevenir el envío del formulario y la recarga de la página
+
         const compraId = document.getElementById('compraIdPasar').value;
         const personaIdPasar = document.getElementById('personaIdPasar').value;
         const notaPasarCompra = `TRANSFERIDO DE ${personaSeleccionada.nombre} > ${document.getElementById('notaPasarCompra').value}`;
@@ -306,9 +365,9 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('No se pudo encontrar la nueva persona seleccionada.');
             return;
         }
-
+debugger;
         // Validar si los descuentos son diferentes
-        if (personaSeleccionada.descuento !== personaNueva.descuento) {
+        if (parseFloat(personaSeleccionada.descuento) !== parseFloat(personaNueva.descuento)) {
             const modalErrorDescuento = new bootstrap.Modal(document.getElementById('modalErrorDescuento'));
             const mensajeErrorDescuento = document.getElementById('mensajeErrorDescuento');
             mensajeErrorDescuento.textContent = `No es posible pasar la compra porque "${personaNueva.nombre} (${personaNueva.descuento}%)" no tiene el mismo descuento que "${personaSeleccionada.nombre} (${personaSeleccionada.descuento}%)".`;
@@ -373,12 +432,27 @@ document.addEventListener('DOMContentLoaded', function () {
         const modalExitoBody = document.querySelector('#modalExito .modal-body p');
         modalExitoBody.textContent = mensaje; // Cambiar el mensaje del modal
         modalExito.show();
-
+    
+        // Obtener la instancia del modal modalPasarCompra
+        const modalPasarCompraElement = document.getElementById('modalPasarCompra');
+        const modalPasarCompra = bootstrap.Modal.getInstance(modalPasarCompraElement);
+    
         // Ocultar el modal automáticamente después de 1 segundo
         setTimeout(() => {
             modalExito.hide();
-            location.reload(); // Recargar la página
+    
+            // Cerrar el modal modalPasarCompra si está abierto
+            if (modalPasarCompra) {
+                modalPasarCompra.hide();
+            }
         }, 1000); // 1000 ms = 1 segundo
+
+        // Cerrar el modalLiquidar si está abierto
+        const modalLiquidarElement = document.getElementById('modalLiquidar');
+        const modalLiquidar = bootstrap.Modal.getInstance(modalLiquidarElement);
+        if (modalLiquidar) {
+            modalLiquidar.hide();
+        }
     }
 
     function generarFechaFormatoMySQL() {
@@ -392,4 +466,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
         return `${año}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
     }
+
+    // Función para formatear la fecha
+function formatearFecha(fechaISO) {
+    const fecha = new Date(fechaISO);
+    const opciones = {
+        day: '2-digit',
+        month: '2-digit',
+        year: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        //second: '2-digit',
+        hour12: true, // Mostrar en formato AM/PM
+    };
+    return fecha.toLocaleString('es-ES', opciones);
+}
 });

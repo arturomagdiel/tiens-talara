@@ -2,7 +2,7 @@
 include '../shared/conexion.php';
 
 // Consultar la lista de personas
-$queryPersonas = "SELECT id, codigo, nombre, descuento FROM personas";
+$queryPersonas = "SELECT id, codigo, UPPER(nombre) AS nombre, descuento FROM personas ORDER BY nombre ASC";
 $resultPersonas = $conn->query($queryPersonas);
 
 $personas = [];
@@ -38,32 +38,10 @@ if ($resultProductos->num_rows > 0) {
 </head>
 <body>
 
-<div class="container mt-4">
-        <div class="row align-items-center">
-            <!-- Columna izquierda: Título -->
-            <div class="col-md-6">
-                <h1 class="text-center text-md-start">Registrar Compras</h1>
-            </div>
+<?php include '../shared/header.php'; ?>
 
-            <!-- Columna derecha: Botones -->
-            <div class="col-md-6 d-flex justify-content-center justify-content-md-end">
-            <button class="btn btn-primary btn-sm me-2 d-flex align-items-center justify-content-center" 
-            onclick="window.location.href='registrar_compra.php'" 
-            title="Registrar Compra">
-        <i class="bi bi-cart-plus"></i>
-    </button>
-    <button class="btn btn-secondary btn-sm me-2 d-flex align-items-center justify-content-center" 
-            onclick="window.location.href='buscar_compra.php'" 
-            title="Buscar Producto">
-        <i class="bi bi-search"></i>
-    </button>
-    <button class="btn btn-dark btn-sm d-flex align-items-center justify-content-center" 
-            onclick="window.location.href='../index.php'" 
-            title="Menú Principal">
-        <i class="bi bi-house-door"></i>
-    </button>
-            </div>
-        </div>
+<div class="container mt-4">
+
 
         <div class="card mt-4">
             <div class="card-body">
@@ -185,7 +163,7 @@ if ($resultProductos->num_rows > 0) {
                         </div>
                         <div class="modal-body">
                             <label for="pago-nota" class="form-label">¿Cómo se realizó el pago?</label>
-                            <input type="text" id="pago-nota" class="form-control" placeholder="Ingrese detalles del pago">
+                            <input type="text" id="pago-nota" class="form-control" placeholder="Ingrese detalles del pago" autocomplete="off">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -254,7 +232,7 @@ if ($resultProductos->num_rows > 0) {
         const personas = <?= json_encode($personas); ?>; // Pasar datos de personas al script
         const productos = <?= json_encode($productos); ?>; // Pasar datos de productos al script
     </script>
-    <script src="scripts.js"></script>
+    <script src="registrar_compra.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

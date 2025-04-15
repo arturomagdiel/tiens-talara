@@ -1,12 +1,13 @@
 $(document).ready(function () {
     let carrito = []; // Array para almacenar los productos del carrito
+    let tipoPrecioSeleccionado = '15'; // Tipo de precio seleccionado por defecto
 
     // Cargar el carrito desde localStorage al iniciar
     function cargarCarritoDesdeLocalStorage() {
         const carritoGuardado = localStorage.getItem('carrito');
         if (carritoGuardado) {
             carrito = JSON.parse(carritoGuardado);
-            actualizarPreciosCarrito('15'); // Actualizar los precios para el tipo de precio predeterminado (15%)
+            actualizarPreciosCarrito(tipoPrecioSeleccionado); // Actualizar los precios para el tipo de precio seleccionado
             actualizarCarrito(); // Actualizar el resumen del carrito
         }
     }
@@ -62,8 +63,8 @@ $(document).ready(function () {
         const id = $(this).data('id');
         const nombre = $(this).data('nombre');
         const imagen = $(this).data('imagen');
-        const precio = parseFloat($(this).data('precio'));
-        const pv = parseFloat($(this).data('pv'));
+        const precio = parseFloat($(this).data(`precio-${tipoPrecioSeleccionado}`)); // Obtener el precio según el tipo seleccionado
+        const pv = parseFloat($(this).data(`pv-${tipoPrecioSeleccionado}`)); // Obtener el PV según el tipo seleccionado
 
         if (isNaN(precio) || isNaN(pv)) {
             alert('Error: El precio o PV no se cargaron correctamente.');
@@ -101,15 +102,22 @@ $(document).ready(function () {
             $('#carrito-lista').append(`
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
-                        <img src="${producto.imagen}" alt="${producto.nombre}" class="img-thumbnail me-2" style="width: 50px; height: 50px;">
-                        <div>
-                            ${producto.nombre}<br> <!-- Elimina <strong> para quitar la negrita -->
-                            <small>${producto.cantidad} x S/${producto.precio.toFixed(2)} (${producto.pv.toFixed(2)} PV)</small>
-                        </div>
+                    <div class="col-3">
+                        <img src="${producto.imagen}" alt="${producto.nombre}" class="img-fluid rounded" style="max-width: 100%; height: auto;">
                     </div>
-                    <button class="btn btn-sm btn-warning reducir-producto" data-id="${producto.id}">
-                        <i class="bi bi-dash-lg"></i> <!-- Icono de Bootstrap para el símbolo "-" -->
-                    </button>
+                    <div class="col-6">
+                        <div class="fw-bold">${producto.nombre}</div>
+                        <small>${producto.cantidad} x S/${producto.precio.toFixed(2)} (${producto.pv.toFixed(2)} PV)</small>
+                    </div>
+                    <div class="col-3 text-end">
+                        <button class="btn btn-sm btn-warning reducir-producto" data-id="${producto.id}">
+                            <i class="bi bi-dash-lg"></i>
+                        </button>
+                        <button class="btn btn-sm btn-success aumentar-producto ms-1" data-id="${producto.id}">
+                            <i class="bi bi-plus-lg"></i>
+                        </button>
+                    </div>                        
+                    </div>
                 </li>
             `);
         });
@@ -119,10 +127,44 @@ $(document).ready(function () {
 
         if (carrito.length > 0) {
             $('#limpiar-carrito').show();
+            $('#pedido-btn').show();
         } else {
             $('#limpiar-carrito').hide();
+            $('#pedido-btn').hide();
         }
     }
+
+    // Nueva función para cambiar la cantidad de un producto
+    function cambiarCantidad(id, accion) {
+        const producto = carrito.find(producto => producto.id === id);
+
+        if (producto) {
+            if (accion === 'aumentar') {
+                producto.cantidad++; // Aumentar la cantidad en 1
+            } else if (accion === 'reducir') {
+                producto.cantidad--; // Reducir la cantidad en 1
+                if (producto.cantidad <= 0) {
+                    carrito = carrito.filter(producto => producto.id !== id); // Eliminar el producto si la cantidad es 0
+                }
+            }
+        }
+
+        guardarCarritoEnLocalStorage(); // Guardar el carrito actualizado en localStorage
+        actualizarCarrito(); // Actualizar el resumen del carrito
+        playClickSound(); // Reproducir el sonido de clic
+    }
+
+    // Delegación de eventos para manejar el clic en el botón de reducir producto
+    $(document).on('click', '.reducir-producto', function () {
+        const id = $(this).data('id');
+        cambiarCantidad(id, 'reducir'); // Llamar a la función con la acción "reducir"
+    });
+
+    // Delegación de eventos para manejar el clic en el botón de aumentar producto
+    $(document).on('click', '.aumentar-producto', function () {
+        const id = $(this).data('id');
+        cambiarCantidad(id, 'aumentar'); // Llamar a la función con la acción "aumentar"
+    });
 
     // Función para eliminar un producto del carrito
     function eliminarDelCarrito(id) {
@@ -139,35 +181,18 @@ $(document).ready(function () {
         playClickSound(); // Reproducir el sonido de clic
     });
 
+    // Cambiar el tipo de precio al seleccionar un radio button
+    $('input[name="tipo-precio"]').change(function () {
+        tipoPrecioSeleccionado = $(this).val(); // Actualizar el tipo de precio seleccionado
+        cargarProductos(tipoPrecioSeleccionado);
+        actualizarPreciosCarrito(tipoPrecioSeleccionado); // Actualizar los precios del carrito
+    });
+
     // Cargar productos inicialmente con el tipo de precio "15"
-    cargarProductos('15');
+    cargarProductos(tipoPrecioSeleccionado);
 
     // Cargar el carrito desde localStorage
     cargarCarritoDesdeLocalStorage();
-
-    // Cambiar el tipo de precio al seleccionar un radio button
-    $('input[name="tipo-precio"]').change(function () {
-        const tipoPrecio = $(this).val();
-        cargarProductos(tipoPrecio);
-        actualizarPreciosCarrito(tipoPrecio); // Actualizar los precios del carrito
-    });
-
-    // Delegación de eventos para manejar el clic en el botón de reducir producto
-    $(document).on('click', '.reducir-producto', function () {
-        const id = $(this).data('id');
-        const producto = carrito.find(producto => producto.id === id);
-
-        if (producto) {
-            producto.cantidad--; // Reducir la cantidad en 1
-            if (producto.cantidad <= 0) {
-                carrito = carrito.filter(producto => producto.id !== id); // Eliminar el producto si la cantidad es 0
-            }
-        }
-
-        guardarCarritoEnLocalStorage(); // Guardar el carrito actualizado en localStorage
-        actualizarCarrito(); // Actualizar el resumen del carrito
-        playClickSound(); // Reproducir el sonido de clic
-    });
 
     // Función para reproducir el sonido de clic
     function playClickSound() {

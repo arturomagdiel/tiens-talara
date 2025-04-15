@@ -3,7 +3,7 @@ include '../shared/conexion.php';
 
 // Obtener la lista de personas
 $personas = [];
-$result = $conn->query("SELECT id, codigo, nombre FROM personas");
+$result = $conn->query("SELECT id, codigo, UPPER(nombre) AS nombre, apellido, descuento FROM personas ORDER BY nombre ASC");
 if ($result) {
     $personas = $result->fetch_all(MYSQLI_ASSOC);
 }
@@ -49,41 +49,20 @@ $conn->close();
     <link rel="stylesheet" href="compras.css">
 </head>
 <body>
-    <div class="container mt-4">
-        <div class="row align-items-center">
-            <!-- Columna izquierda: Título -->
-            <div class="col-md-6">
-                <h1 class="text-center text-md-start">Gestión de Compras</h1>
-            </div>
 
-            <!-- Columna derecha: Botones -->
-            <div class="col-md-6 d-flex justify-content-center justify-content-md-end">
-            <button class="btn btn-primary btn-sm me-2 d-flex align-items-center justify-content-center" 
-            onclick="window.location.href='registrar_compra.php'" 
-            title="Registrar Compra">
-        <i class="bi bi-cart-plus"></i>
-    </button>
-    <button class="btn btn-secondary btn-sm me-2 d-flex align-items-center justify-content-center" 
-            onclick="window.location.href='buscar_compra.php'" 
-            title="Buscar Producto">
-        <i class="bi bi-search"></i>
-    </button>
-    <button class="btn btn-dark btn-sm d-flex align-items-center justify-content-center" 
-            onclick="window.location.href='../index.php'" 
-            title="Menú Principal">
-        <i class="bi bi-house-door"></i>
-    </button>
-            </div>
-        </div>
+<?php include '../shared/header.php'; ?>
+
+    <div class="container-fluid mt-4">
+
 
         <!-- Formulario para buscar y seleccionar una persona -->
         <div class="card mt-4">
             <div class="card-body">
                 <h5 class="card-title">Buscar Persona</h5>
-                <form id="formSeleccionarPersona">
+                <form id="formSeleccionarPersona" autocomplete="off">
                     <div class="mb-3">
-                        <input type="text" id="buscarPersona" class="form-control" placeholder="Ingrese nombre o código">
-                        <input type="hidden" id="personaId" name="persona_id">
+                        <input type="text" id="buscarPersona" class="form-control" placeholder="Ingrese nombre o código" autocomplete="off">
+                        <input type="hidden" id="personaId" name="persona_id" autocomplete="off">
                     </div>
                     <ul id="listaPersonas" class="list-group">
                         <!-- Aquí se cargarán las personas dinámicamente -->
@@ -101,25 +80,26 @@ $conn->close();
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="formPasarCompra">
+                    <form id="formPasarCompra" onsubmit="return false;" autocomplete="off">
                         <div class="mb-3">
                             <label for="buscarPersonaPasar" class="form-label">Buscar Persona</label>
-                            <input type="text" id="buscarPersonaPasar" class="form-control" placeholder="Buscar por nombre o código">
+                            <input type="text" id="buscarPersonaPasar" class="form-control" placeholder="Buscar por nombre o código" autocomplete="off">
                             <ul id="listaPersonasPasar" class="list-group mt-2">
                                 <!-- Aquí se cargarán las personas dinámicamente -->
                             </ul>
                         </div>
                         <div class="mb-3">
                         <label for="notaPasarCompra" class="form-label">Nota</label>
-                        <input type="text" id="notaPasarCompra" class="form-control" placeholder="Ingrese detalles del pago">
+                        <input type="text" id="notaPasarCompra" class="form-control" placeholder="Ingrese detalles del pago" autocomplete="off">
                         </div>
-                        <input type="hidden" id="compraIdPasar">
-                        <input type="hidden" id="personaIdPasar">
+                        <input type="hidden" id="compraIdPasar" autocomplete="off">
+                        <input type="hidden" id="personaIdPasar" autocomplete="off">
+                        
                     </form>
                 </div>
                 <div class="modal-footer">
+                    <button id="confirmarPasarCompra" type="button" class="btn btn-primary">Confirmar</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="confirmarPasarCompra">Continuar</button>
                 </div>
             </div>
         </div>
@@ -148,7 +128,7 @@ $conn->close();
                                 <th>Producto</th>
                                 <th>Precio</th>
                                 <th>PV</th>
-                                <th>Estado</th>
+                                <th>Dcto</th>
                                 <th>Notas</th>
                                 <th class="liquidacion-column">Liquidación #</th>
                                 <th class="liquidacion-column">Fecha</th>
@@ -176,7 +156,7 @@ $conn->close();
                     <form id="formLiquidar">
                         <div class="mb-3">
                             <label for="numeroLiquidacion" class="form-label">Número de Liquidación</label>
-                            <input type="text" id="numeroLiquidacion" class="form-control" readonly>
+                            <input type="text" id="numeroLiquidacion" class="form-control">
                         </div>
                         <div class="mb-3">
                             <label for="notaLiquidacion" class="form-label">Nota</label>
@@ -211,7 +191,28 @@ $conn->close();
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Modal de Error por Descuento -->
+    <div class="modal fade" id="modalErrorDescuento" tabindex="-1" aria-labelledby="modalErrorDescuentoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="modalErrorDescuentoLabel">Error de Descuento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="mensajeErrorDescuento" class="mb-0"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const personas = <?= json_encode($personas); ?>; // Pasar las personas al frontend
+    </script>
     <script src="compras.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

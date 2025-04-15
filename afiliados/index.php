@@ -11,8 +11,9 @@ include '../shared/conexion.php';
 <head>
   <title>Lista de Personas con DataTables</title>
   <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     /* Estilos para el popup (modal) */
@@ -24,13 +25,9 @@ include '../shared/conexion.php';
 
 <body>
 
+<?php include '../shared/header.php'; ?>
+
   <div class="container">
-
-    <h1>Lista de Personas</h1>
-
-    <button id="btnNuevaPersona" class="btn btn-success">
-      <i class="fas fa-plus"></i> Crear nueva persona
-    </button>
 
     <div class="table-responsive">
       <table id="tablaPersonas" class="table table-striped">
@@ -50,6 +47,14 @@ include '../shared/conexion.php';
         <tbody>
         </tbody>
       </table>
+    </div>
+    <div class="container">
+        <!-- Botón Agregar Afiliado -->
+<button class="btn btn-success btn-sm me-2 d-flex align-items-center justify-content-center m-2" 
+    id="btnNuevaPersona" 
+    title="Agregar Afiliado">
+    <i class="bi bi-plus"></i> Agregar Afiliado
+</button>
     </div>
 
     <div id="personaPopup" class="modal fade" tabindex="-1" role="dialog">
@@ -173,279 +178,7 @@ include '../shared/conexion.php';
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-
-  <script>
-    $(document).ready(function() {
-
-      // Función para verificar si el código ya existe
-      function verificarCodigo(codigo, id) {
-        console.log("Verificando código:", codigo, "con ID:", id);
-        return $.ajax({
-          url: 'verificar_codigo.php',
-          type: 'GET',
-          data: {
-            codigo: codigo,
-            id: id
-          },
-          dataType: 'json',
-          error: function(xhr, status, error) {
-            console.error("Error en la verificación del código:", error);
-          }
-        });
-      }
-
-      // Inicializar DataTables
-      $('#tablaPersonas').DataTable({
-        "ajax": "obtener_personas.php",
-        "columns": [{
-            "data": "id",
-            "visible": false
-          }, // ID oculto
-          {
-            "data": "codigo",
-            "render": function(data, type, row) {
-              return '<a href="#" class="enlaceEditar" data-id="' + row.id + '">' + data.toUpperCase() + '</a>';
-            }
-          },
-          {
-            "data": "descuento"
-          },
-          {
-            "data": "nombre",
-            "render": function(data, type, row) {
-              return data.toUpperCase();
-            }
-          },
-          {
-            "data": "apellido",
-            "render": function(data, type, row) {
-              return data.toUpperCase();
-            }
-          },
-          {
-            "data": "telefono"
-          },
-          {
-            "data": "ruc"
-          },
-          {
-            "data": "patrocinador",
-            "render": function(data, type, row) {
-              return data.toUpperCase();
-            }
-          },
-          {
-            "data": null,
-            "render": function(data, type, row) {
-              return '<td class="d-flex flex-column"> ' +
-                '<button class="btn btn-primary btn-sm btnEditar" data-id="' + row.id + '"><i class="fas fa-edit"></i></button> ' +
-                '<button class="btn btn-danger btn-sm btnEliminar" data-id="' + row.id + '"><i class="fas fa-trash"></i></button> ' +
-                '</td>';
-            }
-          }
-        ]
-      });
-
-      // Mostrar el popup al hacer clic en "Crear nueva persona"
-      $("#btnNuevaPersona").click(function() {
-        $("#btnModalEliminar").hide(); // Ocultar el botón Eliminar
-        $("#personaPopup").modal("show");
-        $("#personaForm")[0].reset();
-        $("#personaId").val("");
-      });
-
-      // Mostrar el popup al hacer clic en el enlace del código (delegación de eventos)
-      $(document).on("click", ".enlaceEditar", function(event) {
-        event.preventDefault(); // Evitar que el enlace siga su comportamiento normal
-        var personaId = $(this).data("id");
-        console.log("Editando persona con ID:", personaId);
-
-        // Realizar la llamada AJAX para obtener los datos de la persona
-        $.ajax({
-          url: "obtener_persona.php",
-          type: "GET",
-          data: {
-            id: personaId
-          },
-          success: function(response) {
-            console.log("Respuesta AJAX (obtener_persona.php):", response);
-            // Parsear la respuesta JSON
-            var persona = JSON.parse(response);
-
-            // Rellenar el formulario con los datos de la persona
-            $("#personaId").val(persona.id);
-            $("#nombre").val(persona.nombre);
-            $("#apellido").val(persona.apellido);
-            $("#codigo").val(persona.codigo);
-            $("#telefono").val(persona.telefono);
-            $("#ruc").val(persona.ruc);
-            $("#patrocinador").val(persona.patrocinador);
-            $("#descuento").val(persona.descuento);
-
-            // Actualizar el data-id del botón Eliminar en el modal
-            $("#btnModalEliminar").data("id", persona.id);
-
-            // Mostrar el botón Eliminar
-            $("#btnModalEliminar").show();
-
-            // Mostrar el modal
-            $("#personaPopup").modal("show");
-          },
-          error: function(xhr, status, error) {
-            console.error("Error al obtener los datos de la persona:", error);
-          }
-        });
-      });
-
-      // Mostrar el popup al hacer clic en "Editar" (delegación de eventos)
-      $(document).on("click", ".btnEditar", function() {
-        var personaId = $(this).data("id");
-        console.log("ID de la persona a editar (botón):", personaId);
-
-        // Realizar la llamada AJAX para obtener los datos de la persona
-        $.ajax({
-          url: "obtener_persona.php", // Archivo PHP que devuelve los datos de la persona
-          type: "GET",
-          data: { id: personaId },
-          success: function(response) {
-            console.log("Respuesta AJAX (obtener_persona.php):", response);
-            // Parsear la respuesta JSON
-            var persona = JSON.parse(response);
-
-            // Rellenar el formulario con los datos de la persona
-            $("#personaId").val(persona.id);
-            $("#nombre").val(persona.nombre);
-            $("#apellido").val(persona.apellido);
-            $("#codigo").val(persona.codigo);
-            $("#telefono").val(persona.telefono);
-            $("#ruc").val(persona.ruc);
-            $("#patrocinador").val(persona.patrocinador);
-            $("#descuento").val(persona.descuento);
-
-            // Actualizar el data-id del botón Eliminar en el modal
-            $("#btnModalEliminar").data("id", persona.id);
-
-            // Mostrar el botón Eliminar
-            $("#btnModalEliminar").show();
-
-            // Mostrar el modal
-            $("#personaPopup").modal("show");
-          },
-          error: function(xhr, status, error) {
-            console.error("Error al obtener los datos de la persona:", error);
-          }
-        });
-      });
-
-      // Cerrar los popups
-      $("#personaPopup").on("hidden.bs.modal", function() {
-        $("#personaForm")[0].reset();
-      });
-      $("#confirmarEliminarPopup").on("hidden.bs.modal", function() {
-        $("#personaPopup").modal("show"); // Volver a mostrar el modal de edición
-      });
-
-      // Eliminar persona al hacer clic en "Eliminar" en la tabla (delegación de eventos)
-      $(document).on("click", ".btnEliminar", function() {
-        var personaId = $(this).data("id");
-        console.log("ID de la persona a eliminar:", personaId);
-
-        // Mostrar el modal de confirmación
-        $("#btnModalEliminar").data("id", personaId); // Pasar el ID al botón del modal
-        $("#confirmarEliminarPopup").modal("show");
-      });
-
-
-      // Mostrar el modal de confirmación al hacer clic en "Eliminar" en el modal de edición
-      $("#btnModalEliminar").click(function() {
-        $("#confirmarEliminarPopup").modal("show");
-      });
-
-      // Eliminar persona al hacer clic en "Eliminar" en el modal de confirmación
-      $("#btnConfirmarEliminar").click(function() {
-        var personaId = $("#btnModalEliminar").data("id");
-        console.log("ID de la persona a eliminar (confirmación):", personaId);
-
-        // Realizar la llamada AJAX para eliminar la persona
-        $.ajax({
-          url: "eliminar_persona.php",
-          type: "POST",
-          data: {
-            id: personaId
-          },
-          success: function(response) {
-            console.log("Respuesta del servidor (eliminar_persona.php):", response);
-            // Cerrar el modal de confirmación
-            $("#confirmarEliminarPopup").modal("hide");
-            // Recargar la página o actualizar la tabla
-            location.reload();
-          },
-          error: function(xhr, status, error) {
-            console.error("Error al eliminar la persona:", error);
-          }
-        });
-      });
-
-      // Enviar el formulario (AJAX)
-      $("#personaForm").submit(function(event) {
-        event.preventDefault();
-
-        // Obtener el código y el ID del formulario
-        var codigo = $("#codigo").val();
-        var id = $("#personaId").val();
-        console.log("Enviando formulario con ID:", id); // Depuración
-
-        // Verificar si se está creando un nuevo registro
-        if (id === "") {
-          // Verificar si el código ya existe (solo al crear)
-          verificarCodigo(codigo, id).done(function(response) {
-            if (response.existe) {
-              // Mostrar un mensaje de error
-              alert("El código ya existe.");
-            } else {
-              enviarFormulario("crear_persona.php");
-            }
-          }).fail(function(jqXHR, textStatus, errorThrown) {
-            console.error("Error en la llamada AJAX (verificar_codigo.php):", textStatus, errorThrown);
-          });
-        } else {
-          enviarFormulario("guardar_persona.php");
-        }
-
-        function enviarFormulario(url) {
-          // Obtener los datos del formulario
-          var formData = $("#personaForm").serialize();
-          console.log("Datos del formulario:", formData);
-
-          // Realizar la llamada AJAX para guardar los datos
-          $.ajax({
-            url: url,
-            type: "POST",
-            data: formData,
-            success: function(response) {
-              console.log("Respuesta del servidor:", response);
-              // Mostrar el modal de éxito
-              $("#mensajeExitoPopup").modal("show");
-
-              // Ocultar el modal automáticamente después de 3 segundos
-              setTimeout(function() {
-                $("#mensajeExitoPopup").modal("hide");
-                $("#personaPopup").modal("hide");
-              }, 2000);
-
-              // Recargar la tabla después de que el modal se oculte
-              $('#mensajeExitoPopup').on('hidden.bs.modal', function() {
-                $('#tablaPersonas').DataTable().ajax.reload();
-              });
-            },
-            error: function(xhr, status, error) {
-              console.error("Error al guardar los datos:", error);
-            }
-          });
-        }
-      });
-    });
-  </script>
+  <script src="index.js"></script>
 
 </body>
 
