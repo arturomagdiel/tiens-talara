@@ -85,14 +85,14 @@ if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true) {
                     <button class="btn btn-light btn-sm d-flex align-items-center justify-content-center" 
                 onclick="window.location.href='../index.php'" 
                 title="Menú Principal">
-                <i class="bi bi-house-door text-dark"></i>
+                <i class="bi bi-house-door text-dark m-1"></i> Inicio
             </button>
 
             <!-- Botón Registrar Compra -->
             <button class="btn btn-primary btn-sm d-flex align-items-center justify-content-center" 
                 onclick="window.location.href='../compras/registrar_compra.php'" 
                 title="Registrar Compra">
-                <i class="bi bi-cart-plus"></i>
+                <i class="bi bi-cart-plus m-1"></i>Comprar
             </button>
 
 
@@ -100,14 +100,14 @@ if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true) {
             <button class="btn btn-info btn-sm d-flex align-items-center justify-content-center" 
                 onclick="window.location.href='../compras/compras.php'" 
                 title="Ver Compras">
-                <i class="bi bi-list-check"></i>
+                <i class="bi bi-list-check m-1"></i>Ver Compras
             </button>
 
             <!-- Botón Buscar Producto -->
             <button class="btn btn-secondary btn-sm d-flex align-items-center justify-content-center" 
                 onclick="window.location.href='../compras/registro_diario.php'" 
                 title="Registro Diario">
-                <i class="bi bi-search"></i>
+                <i class="bi bi-search m-1"></i> Registro Diario
             </button>
 
 
@@ -116,7 +116,7 @@ if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true) {
             <button class="btn btn-danger btn-sm d-flex align-items-center justify-content-center" 
                 onclick="window.location.href='../logout.php'" 
                 title="Cerrar Sesión">
-                <i class="bi bi-box-arrow-right"></i>
+                <i class="bi bi-box-arrow-right m-1"></i> Salir
             </button>
         </div>
     </div>

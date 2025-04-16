@@ -246,3 +246,10 @@ $(document).ready(function () {
         $('#pedidoModal').modal('hide');
     });
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const pageTitle = document.getElementById('page-title');
+    if (pageTitle) {
+        pageTitle.textContent = 'Registrar Pedido'; // Cambia este texto según la página
+    }
+});

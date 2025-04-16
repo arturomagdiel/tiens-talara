@@ -14,17 +14,13 @@
     <audio id="successSound" src="../sonidos/click1.mp3" preload="auto"></audio>   
     <audio id="clickSound" src="../sonidos/click1.mp3" preload="auto"></audio>
 
+    <?php include '../shared/header-public.php'; ?>
+
     <div class="container mt-4">
         <div class="row">
             <!-- Columna izquierda: Productos -->
             <div class="col-12 col-lg-9 mb-4">
             
-            <div id="top-bar" class="d-flex justify-content-between align-items-center text-white bg-dark py-2 w-100">
-    <span class="fw-bold m-2">Productos</span>
-    <a href="../index.php" class="text-white">
-        <i class="bi bi-house fs-4 m-2"></i>
-    </a>
-</div>
 
             <div id="fila-sup" class="d-flex justify-content-center align-items-center mb-3">
     <div class="btn-group" role="group" aria-label="Tipo de precio">
@@ -122,7 +118,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="scripts.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+    <script src="scripts.js" defer></script>
 </body>
 </html>
