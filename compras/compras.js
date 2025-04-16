@@ -93,22 +93,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 data.forEach(compra => {
                     const estadoClase = compra.estado === 'liquidado' ? 'bg-success' : 'bg-warning';
 
-                    const botonLiquidar = compra.estado === 'liquidado'
-    ? 'Liquidado'
-    : `<button class="btn btn-primary btn-sm liquidar-btn d-flex align-items-center justify-content-center" data-id="${compra.id}" title="Liquidar" style="width: auto; height: 35px;">
-         <i class="bi bi-cash-coin" style="pointer-events: none; font-size: 1rem;"></i>
-       </button>`;
+                    // Generar el checkbox solo si la compra está pendiente
+                    const checkbox = compra.estado === 'pendiente'
+                        ? `<input type="checkbox" class="compra-checkbox" data-pv="${compra.productos_pv}" data-id="${compra.id}">`
+                        : '';
+
+                    
 
                     const botonPasarCompra = compra.estado === 'liquidado'
                         ? '' // No mostrar el botón si está liquidado
                         : `<button class="btn btn-secondary btn-sm pasar-compra-btn d-flex align-items-center justify-content-center" data-id="${compra.id}" title="Transferir Compra" style="width: auto; height: 35px;">
-         <i class="bi bi-arrow-right" style="pointer-events: none; font-size: 1rem;"></i>
-       </button>`;
+                             <i class="bi bi-arrow-right" style="pointer-events: none; font-size: 1rem;"></i>
+                           </button>`;
 
                     // Contenedor para los botones
                     const botonesAcciones = `
                         <div class="d-flex gap-2">
-                            ${botonLiquidar}
                             ${botonPasarCompra}
                         </div>
                     `;
@@ -128,6 +128,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     const row = `
                         <tr class="${estadoClase}">
+                            <td>${checkbox}</td>
                             <td>${compra.id}</td>
                             <td>${formatearFecha(compra.fecha_compra)}</td>
                             <td><strong>${compra.productos_codigo}</strong></td>
@@ -167,13 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Delegación de eventos para los botones "Liquidar"
-    tablaCompras.addEventListener('click', function (event) {
-        if (event.target.classList.contains('liquidar-btn')) {
-            const compraId = event.target.dataset.id; // Obtener el ID de la compra desde el atributo data-id
-            abrirModalLiquidar(compraId); // Llamar a la función para abrir el modal de liquidación
-        }
-    });
+
 
     // Delegación de eventos para los botones "Pasar Compra"
     tablaCompras.addEventListener('click', function (event) {
@@ -481,4 +476,90 @@ function formatearFecha(fechaISO) {
     };
     return fecha.toLocaleString('es-ES', opciones);
 }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const checkboxes = document.querySelectorAll('.compra-checkbox');
+    const selectAllCheckbox = document.getElementById('selectAll');
+    const totalPvElement = document.getElementById('total-pv');
+    const totalPvModalElement = document.getElementById('totalPvModal');
+    const liquidarSeleccionadosButton = document.getElementById('liquidar-seleccionados');
+    const confirmarLiquidacionSeleccionadosButton = document.getElementById('confirmarLiquidacionSeleccionados');
+    const numeroLiquidacionSeleccionados = document.getElementById('numeroLiquidacionSeleccionados');
+    const notaLiquidacionSeleccionados = document.getElementById('notaLiquidacionSeleccionados');
+
+    let totalPv = 0;
+    let selectedIds = [];
+
+    // Actualizar el total de PV seleccionados
+    function updateTotalPv() {
+        totalPv = 0;
+        selectedIds = [];
+        document.querySelectorAll('.compra-checkbox').forEach(checkbox => {
+            if (checkbox.checked) {
+                totalPv += parseFloat(checkbox.dataset.pv);
+                selectedIds.push(checkbox.dataset.id);
+            }
+        });
+        totalPvElement.textContent = totalPv.toFixed(2);
+        totalPvModalElement.textContent = totalPv.toFixed(2);
+        liquidarSeleccionadosButton.disabled = selectedIds.length === 0;
+    }
+
+    // Manejar el checkbox de "Seleccionar todos"
+    selectAllCheckbox.addEventListener('change', function () {
+        const isChecked = this.checked;
+        document.querySelectorAll('.compra-checkbox').forEach(checkbox => {
+            checkbox.checked = isChecked;
+        });
+        updateTotalPv();
+    });
+
+    // Manejar los checkboxes individuales
+    document.addEventListener('change', function (event) {
+        if (event.target.classList.contains('compra-checkbox')) {
+            updateTotalPv();
+        }
+    });
+
+    // Confirmar la liquidación de los seleccionados
+    confirmarLiquidacionSeleccionadosButton.addEventListener('click', function () {
+        const numeroLiquidacion = numeroLiquidacionSeleccionados.value.trim();
+        const notaLiquidacion = notaLiquidacionSeleccionados.value.trim();
+
+        if (!numeroLiquidacion) {
+            alert('Por favor, ingrese el número de liquidación.');
+            return;
+        }
+
+        if (selectedIds.length === 0) {
+            alert('No hay compras seleccionadas para liquidar.');
+            return;
+        }
+
+        // Enviar los datos al backend
+        fetch('liquidar_compras.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                ids: selectedIds,
+                numeroLiquidacion: numeroLiquidacion,
+                notaLiquidacion: notaLiquidacion,
+            }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Compras liquidadas con éxito.');
+                    location.reload(); // Recargar la página para actualizar la lista
+                } else {
+                    alert('Error al liquidar las compras: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
 });

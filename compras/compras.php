@@ -109,19 +109,31 @@ $conn->close();
         <div class="card mt-4">
             <div class="card-body">
                 <h5 class="card-title" id="tituloCompras">Compras de la Persona Seleccionada</h5>
-                <div class="mb-3">
-                    <label class="form-label">Filtrar por Estado:</label>
-                    <div>
-                        <input type="radio" id="filtroPendientes" name="filtroEstado" value="pendiente" checked>
-                        <label for="filtroPendientes">Pendientes</label>
-                        <input type="radio" id="filtroLiquidadas" name="filtroEstado" value="liquidado">
-                        <label for="filtroLiquidadas">Liquidadas</label>
+                <div class="row mb-3">
+                    <!-- Columna izquierda: Filtrar por Estado -->
+                    <div class="col-md-6"></div>
+                        <label class="form-label">Filtrar por Estado:</label>
+                        <div>
+                            <input type="radio" id="filtroPendientes" name="filtroEstado" value="pendiente" checked>
+                            <label for="filtroPendientes">Pendientes</label>
+                            <input type="radio" id="filtroLiquidadas" name="filtroEstado" value="liquidado">
+                            <label for="filtroLiquidadas">Liquidadas</label>
+                        </div>
+                    </div>
+
+                    <!-- Columna derecha: Vacía -->
+                    <div class="col-md-6">
+                                        <div>
+                    <p><strong>Total PV seleccionados:</strong> <span id="total-pv">0</span></p>
+                    <button id="liquidar-seleccionados" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalLiquidarSeleccionados" disabled>Liquidar Seleccionados</button>
+                </div>
                     </div>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
                         <thead class="table-dark">
                             <tr>
+                                <th><input type="checkbox" id="selectAll"></th> <!-- Checkbox para seleccionar todos -->
                                 <th>ID</th>
                                 <th>Fecha</th>
                                 <th>Código</th>
@@ -135,11 +147,12 @@ $conn->close();
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <!-- Las compras se cargarán dinámicamente aquí -->
+                        <tbody id="compras-list">
+                            
                         </tbody>
                     </table>
                 </div>
+
             </div>
         </div>
     </div>
@@ -168,6 +181,35 @@ $conn->close();
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-primary" id="confirmarLiquidacion">Confirmar Liquidación</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para liquidar múltiples compras -->
+    <div class="modal fade" id="modalLiquidarSeleccionados" tabindex="-1" aria-labelledby="modalLiquidarSeleccionadosLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLiquidarSeleccionadosLabel">Liquidar Compras Seleccionadas</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formLiquidarSeleccionados">
+                        <div class="mb-3">
+                            <label for="numeroLiquidacionSeleccionados" class="form-label">Número de Liquidación</label>
+                            <input type="text" id="numeroLiquidacionSeleccionados" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="notaLiquidacionSeleccionados" class="form-label">Nota</label>
+                            <textarea id="notaLiquidacionSeleccionados" class="form-control" rows="3" placeholder="Ingrese una nota (opcional)"></textarea>
+                        </div>
+                        <p><strong>Total PV seleccionados:</strong> <span id="totalPvModal">0</span></p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="confirmarLiquidacionSeleccionados">Confirmar Liquidación</button>
                 </div>
             </div>
         </div>
