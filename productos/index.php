@@ -5,9 +5,29 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     .img-thumbnail {
-      max-width: 100px;
-      max-height: 100px;
+      max-width: 60%; /* Cambia el tamaño al 60% */
+      max-height: 60%; /* Cambia el tamaño al 60% */
     }
+    .color5 {
+    background-color: #DCE6F1 !important;
+  }
+  .color5h {
+    background-color: #366092 !important;
+  }
+
+    .color8h {
+      background-color: #FFC000 !important;
+    }
+    .color8 {
+      background-color: #CCC0DA !important;
+    }
+
+    .color15 {
+        background-color: #CCFF99 !important;
+  }
+  .color15h {
+        background-color: #F79646 !important;
+  }
   </style>
 </head>
 <body>
@@ -23,15 +43,15 @@
           <th>Imagen</th>
           <th>Código</th>
           <th>Nombre</th>
-          <th>Precio Público</th>
-          <th>Precio Afiliado</th>
-          <th>PV Afiliado</th>
-          <th>Precio Junior</th>
-          <th>PV Junior</th>
-          <th>Precio Senior</th>
-          <th>PV Senior</th>
-          <th>Precio Master</th>
-          <th>PV Master</th>
+          <th class="text-center">PV</th>
+          <th class="text-end">Precio Unit</th>
+          <th class="text-center color5h">PV  5%</th>
+          <th class="text-end color5h">Precio 5%</th>
+          <th class="text-center color8h">PV 8%</th>
+          <th class="text-end color8h">Precio 8%</th>
+          <th class="text-center color15h">PV 15%</th>
+          <th class="text-end color15h">Precio 15%</th>
+          <th class="text-end">Precio Público</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -169,7 +189,9 @@
       // Guardar producto (Agregar o Editar)
       $('#btnGuardarProducto').click(function() {
         var formData = new FormData($('#formProducto')[0]); // Crear un FormData para manejar archivos y datos
+        formData.delete('activo');
         formData.append('activo', $('#activo').is(':checked') ? 1 : 0); // Agregar el estado activo al FormData
+        
 
         $.ajax({
           url: 'guardar_producto.php', // Archivo PHP para guardar los datos

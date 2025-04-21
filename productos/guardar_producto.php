@@ -7,6 +7,7 @@ $nombre = isset($_POST['nombre']) ? $_POST['nombre'] : null;
 $precio_publico = isset($_POST['precio_publico']) ? $_POST['precio_publico'] : null;
 $precio_afiliado = isset($_POST['precio_afiliado']) ? $_POST['precio_afiliado'] : null;
 $pv_afiliado = isset($_POST['pv_afiliado']) ? $_POST['pv_afiliado'] : null;
+
 $activo = isset($_POST['activo']) ? $_POST['activo'] : 1; // Por defecto, activo
 
 $imagen = null;
@@ -16,7 +17,7 @@ if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0) {
   $nombreImagen = uniqid() . '_' . $_FILES['imagen']['name'];
   $rutaDestino = '../uploads/' . $nombreImagen;
   if (move_uploaded_file($_FILES['imagen']['tmp_name'], $rutaDestino)) {
-    $imagen = $rutaDestino; // Guardar la ruta completa de la imagen
+    $imagen = $rutaDestino; // Guardar la ruta completa de lsa imagen
   }
 }
 
@@ -45,10 +46,16 @@ if ($id) {
   if ($imagen) {
     $sql = "UPDATE productos SET codigo = ?, nombre = ?, precio_publico = ?, precio_afiliado = ?, pv_afiliado = ?, imagen = ?, activo = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssddssii", $codigo, $nombre, $precio_publico, $precio_afiliado, $pv_afiliado, $imagen, $activo, $id);
+    error_log("Consulta SQL: " . $sql);
+    error_log("Consulta SQL con valores: UPDATE productos SET codigo = '$codigo', nombre = '$nombre', precio_publico = $precio_publico, precio_afiliado = $precio_afiliado, pv_afiliado = $pv_afiliado, activo = $activo WHERE id = $id");
+    error_log("Valor final de PV Afiliado antes de la consulta: " . $pv_afiliado);
+    $stmt->bind_param("ssddssi", $codigo, $nombre, $precio_publico, $precio_afiliado, $pv_afiliado, $imagen, $activo);
   } else {
     $sql = "UPDATE productos SET codigo = ?, nombre = ?, precio_publico = ?, precio_afiliado = ?, pv_afiliado = ?, activo = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
+    error_log("Consulta SQL: " . $sql);
+    error_log("Consulta SQL con valores: UPDATE productos SET codigo = '$codigo', nombre = '$nombre', precio_publico = $precio_publico, precio_afiliado = $precio_afiliado, pv_afiliado = $pv_afiliado, activo = $activo WHERE id = $id");
+    error_log("Valor final de PV Afiliado antes de la consulta: " . $pv_afiliado);
     $stmt->bind_param("ssddiii", $codigo, $nombre, $precio_publico, $precio_afiliado, $pv_afiliado, $activo, $id);
   }
 } else {
