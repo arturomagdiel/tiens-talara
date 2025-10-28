@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tiens Talara v1.3.5 - Sistema de Gestión</title>
+  <title>Tiens Talara v1.3.6 - Sistema de Gestión</title>
   
   <!-- PWA Meta Tags -->
   <meta name="description" content="Sistema de gestión de compras, productos y afiliados para Tiens Talara">
@@ -192,7 +192,7 @@
         <i class="bi bi-leaf logo-icon"></i>
         <h1 class="main-title">Tiens Talara</h1>
         <p class="subtitle">Sistema de Gestión Integral</p>
-        <span class="badge version-badge">v1.3.5</span>
+        <span class="badge version-badge">v1.3.6</span>
       </div>
       
       <!-- Options Grid -->
@@ -241,7 +241,7 @@
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('sw.js')
           .then(function(registration) {
-            console.log('✅ Tiens Talara v1.3.5 - Service Worker registrado:', registration.scope);
+            console.log('✅ Tiens Talara v1.3.6 - Service Worker registrado:', registration.scope);
           })
           .catch(function(error) {
             console.log('❌ Error al registrar Service Worker:', error);
@@ -250,8 +250,8 @@
     }
     
     // Mostrar versión en consola
-    console.log('%c🌿 Tiens Talara v1.3.5', 'color: #28a745; font-size: 16px; font-weight: bold;');
-    console.log('Sistema de Gestión - PWA v1.3.5 con Seguridad Completa');
+    console.log('%c🌿 Tiens Talara v1.3.6', 'color: #28a745; font-size: 16px; font-weight: bold;');
+    console.log('Sistema de Gestión - PWA v1.3.6 con Diseño Moderno Completo');
 
     // PWA Install Prompt
     let deferredPrompt;
@@ -306,6 +306,6 @@
   </script>
   
   <!-- Indicador de versión para PWA -->
-  <div class="version-indicator">v1.3.5</div>
+  <div class="version-indicator">v1.3.6</div>
 </body>
 </html>
