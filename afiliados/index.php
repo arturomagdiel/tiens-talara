@@ -203,6 +203,8 @@ include '../shared/conexion.php';
       /* Ocultar columnas en móvil */
       #tablaPersonas th:nth-child(2), /* Código */
       #tablaPersonas td:nth-child(2),
+      #tablaPersonas th:nth-child(3), /* Descuento/Acciones */
+      #tablaPersonas td:nth-child(3),
       #tablaPersonas th:nth-child(5), /* Apellido */
       #tablaPersonas td:nth-child(5),
       #tablaPersonas th:nth-child(6), /* Teléfono */
@@ -210,19 +212,18 @@ include '../shared/conexion.php';
       #tablaPersonas th:nth-child(7), /* RUC */
       #tablaPersonas td:nth-child(7),
       #tablaPersonas th:nth-child(8), /* Patrocinador */
-      #tablaPersonas td:nth-child(8) {
+      #tablaPersonas td:nth-child(8),
+      #tablaPersonas th:nth-child(9), /* Acciones */
+      #tablaPersonas td:nth-child(9) {
         display: none;
       }
       
-      /* Ajustar columna de descuento para mostrar iconos */
-      #tablaPersonas th:nth-child(3) {
-        width: 80px;
+      /* Solo mostrar columna nombre en móvil */
+      #tablaPersonas th:nth-child(4),
+      #tablaPersonas td:nth-child(4) {
+        width: 100%;
         text-align: center;
-      }
-      
-      #tablaPersonas td:nth-child(3) {
-        text-align: center;
-        padding: 0.5rem 0.25rem;
+        padding: 1rem 0.5rem;
       }
       
       /* Hacer la fila clickeable */
@@ -282,8 +283,44 @@ include '../shared/conexion.php';
       
       /* Mejorar botones en móvil */
       .btn-action {
-        padding: 0.25rem 0.5rem;
-        margin: 0 0.125rem;
+        padding: 0.5rem 1rem;
+        margin: 0 0.25rem;
+        font-size: 0.9rem;
+        min-width: 80px;
+      }
+      
+      /* Estilo especial para botones en detalles */
+      .details-content .btn-action {
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        margin: 0 0.5rem;
+        border-radius: 12px;
+      }
+      
+      .details-content .btn-edit {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        border: none;
+        color: white;
+      }
+      
+      .details-content .btn-edit:hover {
+        background: linear-gradient(45deg, #218838, #1e9b8a);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        color: white;
+      }
+      
+      .details-content .btn-delete {
+        background: linear-gradient(45deg, #dc3545, #c82333);
+        border: none;
+        color: white;
+      }
+      
+      .details-content .btn-delete:hover {
+        background: linear-gradient(45deg, #c82333, #bd2130);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        color: white;
       }
     }
 
@@ -337,9 +374,9 @@ include '../shared/conexion.php';
             <thead>
               <tr>
                 <th class="d-none">ID</th>
-                <th><i class="bi bi-hash me-1"></i>Código</th>
-                <th><i class="bi bi-percent me-1 d-none d-md-inline"></i><i class="bi bi-gear me-1 d-md-none"></i><span class="d-none d-md-inline">Descuento</span><span class="d-md-none">Acciones</span></th>
-                <th><i class="bi bi-person me-1"></i><span class="d-none d-md-inline">Nombre</span><span class="d-md-none">Afiliado</span></th>
+                <th class="d-none d-md-table-cell"><i class="bi bi-hash me-1"></i>Código</th>
+                <th class="d-none d-md-table-cell"><i class="bi bi-percent me-1"></i>Descuento</th>
+                <th><i class="bi bi-person me-1"></i><span class="d-none d-md-inline">Nombre</span><span class="d-md-none">Afiliados</span></th>
                 <th class="d-none d-md-table-cell"><i class="bi bi-person-badge me-1"></i>Apellido</th>
                 <th class="d-none d-md-table-cell"><i class="bi bi-telephone me-1"></i>Teléfono</th>
                 <th class="d-none d-md-table-cell"><i class="bi bi-building me-1"></i>RUC</th>

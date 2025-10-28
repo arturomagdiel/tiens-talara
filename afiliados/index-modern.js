@@ -45,22 +45,8 @@ $(document).ready(function () {
             },
             { 
                 data: "descuento",
-                render: function (data, type, row) {
-                    // En móvil mostrar iconos, en desktop mostrar descuento
-                    if (window.innerWidth <= 768) {
-                        return `
-                            <div class="btn-group" role="group">
-                                <button class="btn btn-action btn-edit btn-sm btnEditar" data-id="${row.id}" title="Editar">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <button class="btn btn-action btn-delete btn-sm btnEliminar" data-id="${row.id}" title="Eliminar">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </div>
-                        `;
-                    } else {
-                        return `<span class="badge bg-success">${data}%</span>`;
-                    }
+                render: function (data) {
+                    return `<span class="badge bg-success">${data}%</span>`;
                 }
             },
             {
@@ -68,7 +54,10 @@ $(document).ready(function () {
                 render: function (data, type, row) {
                     // En móvil mostrar nombre completo, en desktop solo nombre
                     if (window.innerWidth <= 768) {
-                        return `<strong>${data.toUpperCase()} ${row.apellido.toUpperCase()}</strong>`;
+                        return `<div class="text-center">
+                            <strong class="fs-5">${data.toUpperCase()} ${row.apellido.toUpperCase()}</strong>
+                            <div class="small text-muted mt-1">Toca para ver detalles</div>
+                        </div>`;
                     } else {
                         return data.toUpperCase();
                     }
@@ -141,7 +130,9 @@ $(document).ready(function () {
                                     <span class="detail-label">
                                         <i class="bi bi-percent me-1"></i>Descuento:
                                     </span>
-                                    <span class="detail-value">${rowData.descuento}%</span>
+                                    <span class="detail-value">
+                                        <span class="badge bg-success">${rowData.descuento}%</span>
+                                    </span>
                                 </div>
                                 <div class="detail-item">
                                     <span class="detail-label">
@@ -160,6 +151,21 @@ $(document).ready(function () {
                                         <i class="bi bi-person-check me-1"></i>Patrocinador:
                                     </span>
                                     <span class="detail-value">${rowData.patrocinador ? rowData.patrocinador.toUpperCase() : 'No asignado'}</span>
+                                </div>
+                                <div class="detail-item mt-3 pt-2" style="border-top: 2px solid rgba(102, 126, 234, 0.2);">
+                                    <span class="detail-label">
+                                        <i class="bi bi-gear me-1"></i>Acciones:
+                                    </span>
+                                    <span class="detail-value">
+                                        <div class="btn-group" role="group">
+                                            <button class="btn btn-action btn-edit btnEditar" data-id="${rowData.id}" title="Editar Afiliado">
+                                                <i class="bi bi-pencil me-1"></i>Editar
+                                            </button>
+                                            <button class="btn btn-action btn-delete btnEliminar" data-id="${rowData.id}" title="Eliminar Afiliado">
+                                                <i class="bi bi-trash me-1"></i>Eliminar
+                                            </button>
+                                        </div>
+                                    </span>
                                 </div>
                             </div>
                         </td>
@@ -181,13 +187,14 @@ $(document).ready(function () {
     // Reajustar tabla al cambiar tamaño de ventana
     $(window).on('resize', function() {
         if ($.fn.DataTable.isDataTable('#tablaPersonas')) {
-            tabla.columns.adjust().draw();
             // Limpiar expansiones al cambiar a desktop
             if (window.innerWidth > 768) {
                 $('.details-row').remove();
                 expandedRows = {};
                 $('#tablaPersonas tbody tr').removeClass('expanded');
             }
+            // Redibujar tabla para actualizar renderizado responsivo
+            tabla.columns.adjust().draw(false);
         }
     });
 
