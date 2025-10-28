@@ -1,7 +1,7 @@
 {
-  "name": "Tiens Talara v1.1.0 - Sistema de Gestión",
-  "short_name": "Tiens v1.1.0",
-  "description": "Sistema de gestión de compras, productos y afiliados para Tiens Talara v1.1.0",
+  "name": "Tiens Talara v1.2.0 - Sistema de Gestión",
+  "short_name": "Tiens v1.2.0",
+  "description": "Sistema de gestión de compras, productos y afiliados para Tiens Talara v1.2.0",
   "start_url": "/talara/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -10,16 +10,22 @@
   "scope": "/talara/",
   "icons": [
     {
-      "src": "images/icon-192.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml",
+      "src": "images/tiens.ico",
+      "sizes": "16x16 32x32 48x48",
+      "type": "image/x-icon",
       "purpose": "any"
     },
     {
-      "src": "images/icon-512.svg", 
+      "src": "images/tiens.ico",
+      "sizes": "192x192",
+      "type": "image/x-icon",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "images/tiens.ico", 
       "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any"
+      "type": "image/x-icon",
+      "purpose": "any maskable"
     }
   ],
   "categories": ["business", "productivity"],

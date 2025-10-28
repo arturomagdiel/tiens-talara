@@ -58,18 +58,25 @@
   
   /* Espaciado mejorado en tarjetas */
   .option-card {
-    padding: 25px 20px;
+    padding: 20px 15px;
     margin-bottom: 15px;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
   
   .option-icon {
-    font-size: 3rem !important;
-    margin-bottom: 15px;
+    font-size: 2.5rem !important;
+    margin-bottom: 10px;
   }
   
   .option-title {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     font-weight: 600;
+    text-align: center;
+    line-height: 1.2;
   }
   
   /* Tabla responsive mejorada */

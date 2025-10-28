@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tiens Talara v1.1.0 - Sistema de Gestión</title>
+  <title>Tiens Talara v1.2.0 - Sistema de Gestión</title>
   
   <!-- PWA Meta Tags -->
   <meta name="description" content="Sistema de gestión de compras, productos y afiliados para Tiens Talara">
@@ -15,7 +15,8 @@
   
   <!-- PWA Links -->
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="images/icon-192.png">
+  <link rel="apple-touch-icon" href="images/tiens.ico">
+  <link rel="icon" type="image/x-icon" href="images/tiens.ico">
   
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -48,11 +49,11 @@
     <div class="text-center mb-4">
       <h1 class="mb-2">Tiens Talara</h1>
       <p class="text-muted mb-1">Sistema de Gestión</p>
-      <small class="badge bg-primary">v1.1.0</small>
+      <small class="badge bg-primary">v1.2.0</small>
     </div>
     <div class="row g-4">
       <!-- Pedidos -->
-      <div class="col-md-3">
+      <div class="col-6 col-md-3">
         <a href="pedido/" class="text-decoration-none">
           <div class="option-card">
             <i class="fas fa-shopping-cart option-icon"></i>
@@ -61,7 +62,7 @@
         </a>
       </div>
       <!-- Compras -->
-      <div class="col-md-3">
+      <div class="col-6 col-md-3">
         <a href="compras/" class="text-decoration-none">
           <div class="option-card">
             <i class="fas fa-box option-icon"></i>
@@ -70,7 +71,7 @@
         </a>
       </div>
       <!-- Mantenimiento de Productos -->
-      <div class="col-md-3">
+      <div class="col-6 col-md-3">
         <a href="productos/" class="text-decoration-none">
           <div class="option-card">
             <i class="fas fa-tags option-icon"></i>
@@ -79,7 +80,7 @@
         </a>
       </div>
       <!-- Mantenimiento de Afiliados -->
-      <div class="col-md-3">
+      <div class="col-6 col-md-3">
         <a href="afiliados/" class="text-decoration-none">
           <div class="option-card">
             <i class="fas fa-users option-icon"></i>
@@ -100,7 +101,7 @@
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('sw.js')
           .then(function(registration) {
-            console.log('✅ Tiens Talara v1.1.0 - Service Worker registrado:', registration.scope);
+            console.log('✅ Tiens Talara v1.2.0 - Service Worker registrado:', registration.scope);
           })
           .catch(function(error) {
             console.log('❌ Error al registrar Service Worker:', error);
@@ -109,7 +110,7 @@
     }
     
     // Mostrar versión en consola
-    console.log('%c🌿 Tiens Talara v1.1.0', 'color: #0d6efd; font-size: 16px; font-weight: bold;');
+    console.log('%c🌿 Tiens Talara v1.2.0', 'color: #0d6efd; font-size: 16px; font-weight: bold;');
     console.log('Sistema de Gestión - PWA Actualizada');
 
     // PWA Install Prompt
@@ -149,6 +150,6 @@
   </script>
   
   <!-- Indicador de versión para PWA -->
-  <div class="version-indicator">v1.1.0</div>
+  <div class="version-indicator">v1.2.0</div>
 </body>
 </html>
