@@ -1,6 +1,10 @@
 <?php
 // filepath: c:\Users\artur\Documents\GitHub\tiens-talara\compras\obtener_compras.php
 
+// Proteger endpoint con autenticación
+require_once '../shared/auth.php';
+requireAuth();
+
 // Habilitar la visualización de errores para depuración
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);

@@ -1,4 +1,8 @@
 <?php
+// Proteger endpoint con autenticación
+require_once '../shared/auth.php';
+requireAuth();
+
 include '../shared/conexion.php';
 
 header('Content-Type: application/json'); // Asegúrate de que la respuesta sea JSON

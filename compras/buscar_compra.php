@@ -1,5 +1,10 @@
 <?php
 // filepath: d:\Users\artur\Documents\GitHub\tiens-talara\compras\buscar_compra.php
+
+// Proteger endpoint con autenticación
+require_once '../shared/auth.php';
+requireAuth();
+
 include '../shared/conexion.php';
 
 $id = $_POST['id'] ?? '';

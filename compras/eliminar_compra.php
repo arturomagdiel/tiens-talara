@@ -1,5 +1,10 @@
 <?php
 // filepath: d:\Users\artur\Documents\GitHub\tiens-talara\compras\eliminar_compra.php
+
+// Proteger endpoint con autenticación
+require_once '../shared/auth.php';
+requireAuth();
+
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 

@@ -1,3 +1,8 @@
+<?php
+// Proteger la página con autenticación
+require_once __DIR__ . '/../shared/auth.php';
+requireAuth();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,12 +38,6 @@
     </style>
 </head>
 <body>
-
-<?php
-// Incluir sistema de autenticación y requerir login
-require_once '../shared/auth.php';
-requireAuth();
-?>
 
 <?php include '../shared/header_compras.php'; ?>
 
