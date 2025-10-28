@@ -43,6 +43,7 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 15px;
             overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
         
         .product-card:hover { 
@@ -54,8 +55,39 @@
         .product-img {
             height: 140px;
             object-fit: contain;
-            padding: 10px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 15px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #e9ecef 100%);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+        
+        /* Sombra sutil para imágenes con fondo blanco */
+        .product-img::before {
+            content: '';
+            position: absolute;
+            inset: 12px;
+            border-radius: 8px;
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+            pointer-events: none;
+        }
+        
+        /* Contenido de la tarjeta */
+        .product-card .card-body {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        
+        .product-card .card-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+            color: #2c3e50;
+        }
+        
+        .product-card .text-success {
+            font-weight: 700;
+            font-size: 1.1rem;
         }
         
         /* Panel de carrito moderno */
@@ -134,9 +166,122 @@
             }
             .main-container {
                 margin: 0.5rem;
-                padding: 1.5rem;
+                padding: 1rem;
             }
         }
+        
+        /* Optimizaciones móvil */
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 0.25rem;
+                padding: 0.75rem;
+                border-radius: 15px;
+            }
+            
+            .product-card {
+                margin-bottom: 0.75rem;
+            }
+            
+            .product-img {
+                height: 120px;
+                padding: 10px;
+            }
+            
+            .product-card .card-body {
+                padding: 0.75rem;
+            }
+            
+            .product-card .card-title {
+                font-size: 0.85rem;
+                margin-bottom: 0.25rem;
+            }
+            
+            .price-container {
+                font-size: 0.85rem;
+            }
+            
+            .price-main {
+                font-size: 0.9rem;
+            }
+            
+            .price-pv {
+                font-size: 0.75rem;
+            }
+            
+            .product-card .text-success {
+                font-size: 1rem;
+            }
+            
+            /* Botones más compactos en móvil */
+            .btn-modern {
+                padding: 0.375rem 0.75rem;
+                font-size: 0.875rem;
+            }
+            
+            /* Navbar más compacta */
+            .modern-navbar .container {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+            
+            .modern-navbar .btn-group {
+                gap: 0.25rem;
+            }
+            
+            .modern-navbar .btn-modern {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* Estilos para el precio y PV en una línea */
+        .price-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .price-main {
+            font-weight: 600;
+            color: #198754;
+            font-size: 0.95rem;
+        }
+        
+        .price-pv {
+            font-size: 0.8rem;
+            color: #0d6efd;
+            font-weight: 500;
+        }
+        
+        /* Pantallas móviles */
+        @media (max-width: 576px) {
+            .main-container {
+                margin: 0.125rem;
+                padding: 0.5rem;
+            }
+            
+            .product-img {
+                height: 100px;
+                padding: 8px;
+            }
+            
+            .product-card .card-body {
+                padding: 0.5rem;
+            }
+            
+            .product-card .card-title {
+                font-size: 0.8rem;
+                line-height: 1.2;
+            }
+            
+            .modern-navbar .btn-modern {
+                padding: 0.2rem 0.4rem;
+                font-size: 0.75rem;
+            }
+        }
+        
         @media (min-width: 992px) {
             .offcanvas-cart { display: none !important; }
         }
@@ -317,9 +462,9 @@
                         <img src="${prod.imagen}" class="product-img card-img-top" alt="${prod.nombre}">
                         <div class="card-body d-flex flex-column">
                             <h6 class="card-title fw-bold mb-1">${prod.nombre}</h6>
-                            <div class="mb-2">
-                                <span class="fw-bold text-success">S/${precio.toFixed(2)}</span>
-                                <span class="text-primary ms-2">${pv.toFixed(2)} PV</span>
+                            <div class="price-container">
+                                <span class="price-main">S/${precio.toFixed(2)}</span>
+                                <span class="price-pv">(${pv.toFixed(2)} PV)</span>
                             </div>
                             <button class="btn btn-outline-success mt-auto w-100 btn-add-cart">Agregar</button>
                         </div>
@@ -344,7 +489,10 @@
                     <img src="${item.imagen}" class="cart-product-img me-2" alt="${item.nombre}">
                     <div class="flex-grow-1">
                         <div class="fw-bold">${item.nombre}</div>
-                        <div class="small text-success">S/${precio.toFixed(2)} <span class="text-primary ms-2">${pv.toFixed(2)} PV</span></div>
+                        <div class="price-container" style="font-size: 0.8rem;">
+                            <span class="price-main" style="font-size: 0.85rem;">S/${precio.toFixed(2)}</span>
+                            <span class="price-pv" style="font-size: 0.75rem;">(${pv.toFixed(2)} PV)</span>
+                        </div>
                     </div>
                     <div class="d-flex align-items-center gap-1">
                         <button class="btn btn-sm btn-outline-secondary btn-restar" data-id="${item.id}">-</button>
