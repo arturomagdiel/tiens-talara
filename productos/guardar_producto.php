@@ -1,12 +1,7 @@
 <?php
-session_start(); // Iniciar la sesión
-
-// Verificar si el usuario está autenticado
-if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true) {
-    http_response_code(401);
-    echo json_encode(['error' => 'Acceso no autorizado']);
-    exit;
-}
+// Proteger endpoint con autenticación
+require_once '../shared/auth.php';
+requireAuth();
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);

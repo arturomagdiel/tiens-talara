@@ -1,4 +1,7 @@
 <?php
+// Proteger endpoint con autenticación
+require_once '../shared/auth.php';
+requireAuth();
 
 // Asegurar que se envía la cabecera JSON
 header('Content-Type: application/json');

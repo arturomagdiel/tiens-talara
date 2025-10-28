@@ -1,4 +1,7 @@
 <?php
+// Proteger endpoint con autenticación
+require_once '../shared/auth.php';
+requireAuth();
 
 // Conexión a la base de datos
 include '../shared/conexion.php';

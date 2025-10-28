@@ -1,4 +1,7 @@
 <?php
+// Proteger página con autenticación
+require_once __DIR__ . '/../shared/auth.php';
+requireAuth();
 
 // Conexión a la base de datos
 include '../shared/conexion.php';
