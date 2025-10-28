@@ -343,12 +343,6 @@
         console.log('🗑️ Carrito limpiado');
     });
     
-    // Test del modal (solo para debug)
-    $('#testModal').click(function() {
-        console.log('🧪 Probando modal...');
-        mostrarModalProductoAgregado('Producto de Prueba');
-    });
-
     $('input[name="tipo-precio"]').change(function() {
         tipoPrecio = $(this).val();
         localStorage.setItem('tipoPrecio', tipoPrecio);
@@ -488,24 +482,6 @@ $(document).on('click', '.btn-add-cart, .btn-restar, .btn-sumar, #cart-clear, #c
 });
 
     </script>
-
-    <!-- Modal de confirmación de producto agregado - SIMPLIFICADO -->
-    <div class="modal fade" id="modalProductoAgregado" tabindex="-1" aria-hidden="true" data-bs-backdrop="false">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-body text-center p-3">
-                    <div class="mb-2">
-                        <i class="bi bi-check-circle-fill text-success" style="font-size: 2.5rem;"></i>
-                    </div>
-                    <h6 class="modal-title mb-1">¡Agregado!</h6>
-                    <p class="mb-0 small"><strong id="nombreProductoAgregado">Producto</strong></p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Botón de prueba del modal (solo para debug) -->
-    <button id="testModal" class="btn btn-warning position-fixed" style="bottom: 80px; right: 20px; z-index: 1000; font-size: 0.8rem;">Test Modal</button>
 
 </body>
 </html>

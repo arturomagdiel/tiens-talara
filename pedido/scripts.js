@@ -88,84 +88,10 @@ $(document).ready(function () {
         guardarCarritoEnLocalStorage(); // Guardar el carrito en localStorage
         actualizarCarrito();
         
-        // Debug para verificar que se llama la función
-        console.log('Mostrando modal para:', nombre);
+        // Debug para verificar que se agregó el producto
+        console.log('✅ Producto agregado al carrito:', nombre);
         
-        // Mostrar modal de confirmación
-        mostrarModalProductoAgregado(nombre);
-    }
-    
-    // Función para mostrar modal de producto agregado - VERSIÓN SIMPLIFICADA
-    function mostrarModalProductoAgregado(nombreProducto) {
-        console.log('🎯 Intentando mostrar modal para:', nombreProducto);
-        
-        // Método 1: Intentar con jQuery + Bootstrap
-        try {
-            $('#nombreProductoAgregado').text(nombreProducto);
-            $('#modalProductoAgregado').modal('show');
-            console.log('✅ Modal mostrado con jQuery');
-            
-            // Auto-cerrar después de 2.5 segundos
-            setTimeout(() => {
-                $('#modalProductoAgregado').modal('hide');
-                console.log('✅ Modal cerrado automáticamente');
-            }, 2500);
-            return; // Si funciona, salir
-        } catch (error) {
-            console.log('⚠️ Error con jQuery modal:', error);
-        }
-        
-        // Método 2: Vanilla JavaScript + Bootstrap
-        try {
-            const nombreElement = document.getElementById('nombreProductoAgregado');
-            if (nombreElement) {
-                nombreElement.textContent = nombreProducto;
-            }
-            
-            const modalElement = document.getElementById('modalProductoAgregado');
-            if (modalElement && typeof bootstrap !== 'undefined') {
-                const modal = new bootstrap.Modal(modalElement);
-                modal.show();
-                console.log('✅ Modal mostrado con Bootstrap vanilla');
-                
-                setTimeout(() => {
-                    modal.hide();
-                    console.log('✅ Modal cerrado con Bootstrap vanilla');
-                }, 2500);
-                return;
-            }
-        } catch (error) {
-            console.log('⚠️ Error con Bootstrap vanilla:', error);
-        }
-        
-        // Método 3: Mostrar modal manualmente
-        try {
-            const modalElement = document.getElementById('modalProductoAgregado');
-            const nombreElement = document.getElementById('nombreProductoAgregado');
-            
-            if (modalElement && nombreElement) {
-                nombreElement.textContent = nombreProducto;
-                modalElement.style.display = 'block';
-                modalElement.classList.add('show');
-                modalElement.style.backgroundColor = 'rgba(0,0,0,0.5)';
-                document.body.style.overflow = 'hidden';
-                console.log('✅ Modal mostrado manualmente');
-                
-                setTimeout(() => {
-                    modalElement.style.display = 'none';
-                    modalElement.classList.remove('show');
-                    document.body.style.overflow = '';
-                    console.log('✅ Modal cerrado manualmente');
-                }, 2500);
-                return;
-            }
-        } catch (error) {
-            console.log('⚠️ Error con modal manual:', error);
-        }
-        
-        // Método 4: Fallback - Alert simple
-        alert(`✅ ${nombreProducto} agregado al carrito`);
-        console.log('✅ Usado alert como fallback');
+        playClickSound(); // Reproducir el sonido de clic
     }
 
     // Función para actualizar el resumen del carrito
