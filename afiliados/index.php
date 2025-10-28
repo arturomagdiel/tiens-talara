@@ -200,10 +200,10 @@ include '../shared/conexion.php';
         font-size: 0.9rem;
       }
       
-      /* Ocultar columnas en móvil */
+      /* Ocultar columnas en móvil - SOLO mostrar nombre */
       #tablaPersonas th:nth-child(2), /* Código */
       #tablaPersonas td:nth-child(2),
-      #tablaPersonas th:nth-child(3), /* Descuento/Acciones */
+      #tablaPersonas th:nth-child(3), /* Descuento */
       #tablaPersonas td:nth-child(3),
       #tablaPersonas th:nth-child(5), /* Apellido */
       #tablaPersonas td:nth-child(5),
@@ -289,12 +289,18 @@ include '../shared/conexion.php';
         min-width: 80px;
       }
       
-      /* Estilo especial para botones en detalles */
+      /* Estilo especial para iconos pequeños en detalles */
       .details-content .btn-action {
-        padding: 0.75rem 1.5rem;
+        padding: 0.5rem;
         font-weight: 600;
         margin: 0 0.5rem;
-        border-radius: 12px;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
       }
       
       .details-content .btn-edit {
@@ -305,8 +311,8 @@ include '../shared/conexion.php';
       
       .details-content .btn-edit:hover {
         background: linear-gradient(45deg, #218838, #1e9b8a);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        transform: translateY(-2px) scale(1.1);
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
         color: white;
       }
       
@@ -318,8 +324,8 @@ include '../shared/conexion.php';
       
       .details-content .btn-delete:hover {
         background: linear-gradient(45deg, #c82333, #bd2130);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        transform: translateY(-2px) scale(1.1);
+        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
         color: white;
       }
     }

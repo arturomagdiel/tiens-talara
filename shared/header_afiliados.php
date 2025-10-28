@@ -15,6 +15,12 @@
     border-radius: 10px;
     transition: all 0.3s ease;
     font-weight: 500;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
 }
 
 .header-btn:hover {
@@ -93,68 +99,31 @@
         <!-- Título del módulo -->
         <h1 class="page-title">
             <i class="bi bi-people-fill"></i>
-            Gestión de Afiliados
+            Afiliados
         </h1>
         
         <!-- Botones de acción -->
         <div class="d-flex align-items-center gap-2">
-            <div class="d-none d-md-flex gap-2">
-                <!-- Botón Agregar Afiliado -->
-                <button class="btn header-btn btn-success" id="btnNuevaPersonaHeader">
-                    <i class="bi bi-person-plus me-1"></i>
-                    Agregar Afiliado
-                </button>
-                
-                <!-- Botón Salir -->
-                <a href="../index.php" class="btn header-btn btn-secondary">
-                    <i class="bi bi-house me-1"></i>
-                    Salir
-                </a>
-            </div>
+            <!-- Botón Agregar Afiliado -->
+            <button class="btn header-btn btn-success" id="btnNuevaPersonaHeader" title="Agregar Afiliado">
+                <i class="bi bi-person-plus"></i>
+            </button>
             
-            <!-- Menú móvil -->
-            <div class="dropdown d-md-none">
-                <button class="btn header-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-three-dots-vertical"></i>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li>
-                        <button class="dropdown-item" id="btnNuevaPersonaMobile">
-                            <i class="bi bi-person-plus me-2"></i>
-                            Agregar Afiliado
-                        </button>
-                    </li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li>
-                        <a class="dropdown-item" href="../index.php">
-                            <i class="bi bi-house me-2"></i>
-                            Salir
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            <!-- Botón Salir -->
+            <a href="../index.php" class="btn header-btn btn-secondary" title="Salir">
+                <i class="bi bi-house"></i>
+            </a>
         </div>
     </div>
 </nav>
 
 <script>
-// Script para sincronizar botones de agregar afiliado
+// Script para sincronizar botón de agregar afiliado
 document.addEventListener('DOMContentLoaded', function() {
-    // Botón desktop
-    const btnHeaderDesktop = document.getElementById('btnNuevaPersonaHeader');
-    if (btnHeaderDesktop) {
-        btnHeaderDesktop.addEventListener('click', function() {
-            const btnNuevaPersona = document.getElementById('btnNuevaPersona');
-            if (btnNuevaPersona) {
-                btnNuevaPersona.click();
-            }
-        });
-    }
-    
-    // Botón móvil
-    const btnHeaderMobile = document.getElementById('btnNuevaPersonaMobile');
-    if (btnHeaderMobile) {
-        btnHeaderMobile.addEventListener('click', function() {
+    // Botón header
+    const btnHeader = document.getElementById('btnNuevaPersonaHeader');
+    if (btnHeader) {
+        btnHeader.addEventListener('click', function() {
             const btnNuevaPersona = document.getElementById('btnNuevaPersona');
             if (btnNuevaPersona) {
                 btnNuevaPersona.click();

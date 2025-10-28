@@ -122,13 +122,13 @@ $(document).ready(function () {
                             <div class="details-content">
                                 <div class="detail-item">
                                     <span class="detail-label">
-                                        <i class="bi bi-hash me-1"></i>Código:
+                                        <i class="bi bi-hash me-1"></i>Cod:
                                     </span>
                                     <span class="detail-value">${rowData.codigo.toUpperCase()}</span>
                                 </div>
                                 <div class="detail-item">
                                     <span class="detail-label">
-                                        <i class="bi bi-percent me-1"></i>Descuento:
+                                        <i class="bi bi-percent me-1"></i>Desc:
                                     </span>
                                     <span class="detail-value">
                                         <span class="badge bg-success">${rowData.descuento}%</span>
@@ -136,7 +136,7 @@ $(document).ready(function () {
                                 </div>
                                 <div class="detail-item">
                                     <span class="detail-label">
-                                        <i class="bi bi-telephone me-1"></i>Teléfono:
+                                        <i class="bi bi-telephone me-1"></i>Tel:
                                     </span>
                                     <span class="detail-value">${rowData.telefono || 'No registrado'}</span>
                                 </div>
@@ -148,7 +148,7 @@ $(document).ready(function () {
                                 </div>
                                 <div class="detail-item">
                                     <span class="detail-label">
-                                        <i class="bi bi-person-check me-1"></i>Patrocinador:
+                                        <i class="bi bi-person-check me-1"></i>Pat:
                                     </span>
                                     <span class="detail-value">${rowData.patrocinador ? rowData.patrocinador.toUpperCase() : 'No asignado'}</span>
                                 </div>
@@ -157,12 +157,12 @@ $(document).ready(function () {
                                         <i class="bi bi-gear me-1"></i>Acciones:
                                     </span>
                                     <span class="detail-value">
-                                        <div class="btn-group" role="group">
+                                        <div class="d-flex justify-content-center gap-2">
                                             <button class="btn btn-action btn-edit btnEditar" data-id="${rowData.id}" title="Editar Afiliado">
-                                                <i class="bi bi-pencil me-1"></i>Editar
+                                                <i class="bi bi-pencil"></i>
                                             </button>
                                             <button class="btn btn-action btn-delete btnEliminar" data-id="${rowData.id}" title="Eliminar Afiliado">
-                                                <i class="bi bi-trash me-1"></i>Eliminar
+                                                <i class="bi bi-trash"></i>
                                             </button>
                                         </div>
                                     </span>
