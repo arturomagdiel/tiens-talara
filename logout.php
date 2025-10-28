@@ -8,6 +8,6 @@ session_unset();
 session_destroy();
 
 // Redirigir al usuario a la página de inicio o de acceso
-header('Location: https://tienslima.com/talara/index.php');
+header('Location: /talara/index.php');
 exit;
 ?>
