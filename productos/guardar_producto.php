@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include '../shared/conexion.php';
 
 $id = isset($_POST['id']) ? $_POST['id'] : null;
@@ -15,15 +19,16 @@ $imagen = null;
 // Manejar la subida de la imagen
 if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0) {
   $nombreImagen = uniqid() . '_' . $_FILES['imagen']['name'];
-  $rutaDestino = '../uploads/' . $nombreImagen;
+  $rutaDestino = __DIR__ . '/../uploads/' . $nombreImagen; // Ruta absoluta
+  $rutaBD = '../uploads/' . $nombreImagen; // Ruta relativa para la BD
   if (move_uploaded_file($_FILES['imagen']['tmp_name'], $rutaDestino)) {
-    $imagen = $rutaDestino; // Guardar la ruta completa de lsa imagen
+    $imagen = $rutaBD;
   }
 }
 
 // Si no se proporciona una imagen al crear un producto nuevo, usar la imagen predeterminada
 if (!$id && !$imagen) {
-  $imagen = '../uploads/tiens-logo-verde.jpg'; // Ruta completa de la imagen predeterminada
+  $imagen = '../uploads/tiens-logo-verde.jpg';
 }
 
 // Verificar si el código ya existe
@@ -46,16 +51,10 @@ if ($id) {
   if ($imagen) {
     $sql = "UPDATE productos SET codigo = ?, nombre = ?, precio_publico = ?, precio_afiliado = ?, pv_afiliado = ?, imagen = ?, activo = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    error_log("Consulta SQL: " . $sql);
-    error_log("Consulta SQL con valores: UPDATE productos SET codigo = '$codigo', nombre = '$nombre', precio_publico = $precio_publico, precio_afiliado = $precio_afiliado, pv_afiliado = $pv_afiliado, activo = $activo WHERE id = $id");
-    error_log("Valor final de PV Afiliado antes de la consulta: " . $pv_afiliado);
-    $stmt->bind_param("ssddssi", $codigo, $nombre, $precio_publico, $precio_afiliado, $pv_afiliado, $imagen, $activo);
+    $stmt->bind_param("ssddssii", $codigo, $nombre, $precio_publico, $precio_afiliado, $pv_afiliado, $imagen, $activo, $id);
   } else {
     $sql = "UPDATE productos SET codigo = ?, nombre = ?, precio_publico = ?, precio_afiliado = ?, pv_afiliado = ?, activo = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    error_log("Consulta SQL: " . $sql);
-    error_log("Consulta SQL con valores: UPDATE productos SET codigo = '$codigo', nombre = '$nombre', precio_publico = $precio_publico, precio_afiliado = $precio_afiliado, pv_afiliado = $pv_afiliado, activo = $activo WHERE id = $id");
-    error_log("Valor final de PV Afiliado antes de la consulta: " . $pv_afiliado);
     $stmt->bind_param("ssddiii", $codigo, $nombre, $precio_publico, $precio_afiliado, $pv_afiliado, $activo, $id);
   }
 } else {

@@ -75,6 +75,22 @@
     }
 }
 
+@media (max-width: 576px) {
+    #product-list .card {
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 12px;
+    }
+    #product-list .card-img-top {
+        border-radius: 16px 16px 0 0;
+        height: 140px;
+        object-fit: cover;
+    }
+    #product-list .card-body {
+        padding: 1rem;
+    }
+}
+
 @media (max-width: 768px) {
     #carrito {
         margin-top: 20px;

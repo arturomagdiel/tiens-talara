@@ -19,21 +19,22 @@ if ($result->num_rows > 0) {
     $rowClass = $row["activo"] ? "" : "table-danger";
 
     echo "<tr class='$rowClass'>";
-    echo "<td><img src='" . $row["imagen"] . "' alt='" . $row["nombre"] . "' class='img-thumbnail'></td>";
-    echo "<td>" . $row["codigo"] . "</td>";
-    echo "<td>" . $row["nombre"] . "</td>";
-    echo "<td class='text-end'>" . number_format($row["pv_afiliado"], 2) . "</td>";
-    echo "<td class='text-end'>" . number_format($row["precio_afiliado"], 2) . "</td>";
-    echo "<td class='text-end color5'>" . number_format($varPv5, 2) . "</td>";
-    echo "<td class='text-end color5'>" . number_format($varPrecio5, 2) . "</td>";
-    echo "<td class='text-end color8'>" . number_format($varPv8, 2) . "</td>";
-    echo "<td class='text-end color8'>" . number_format($varPrecio8, 2) . "</td>";
-    echo "<td class='text-end color15'>" . number_format($varPv15, 2) . "</td>";
-    echo "<td class='text-end color15'>" . number_format($varPrecio15, 2) . "</td>";
-    echo "<td class='text-end'>" . number_format($row["precio_publico"], 2) . "</td>";
-    echo "<td>";
-    echo "<button type='button' class='btn btn-primary btn-sm btnEditar' data-id='" . $row["id"] . "'>Editar</button>";
-    echo "<button type='button' class='btn btn-danger btn-sm btnEliminar' data-id='" . $row["id"] . "'>Eliminar</button>";
+    $src = (!empty($row['imagen'])) ? $row['imagen'] : '../uploads/tiens-logo-verde.jpg';
+    echo '<td><img src="' . htmlspecialchars($src) . '" alt="' . htmlspecialchars($row['nombre']) . '" class="img-thumbnail"></td>';
+    echo "<td class='align-middle'>" . $row["codigo"] . "</td>";
+    echo "<td class='align-middle'>" . $row["nombre"] . "</td>";
+    echo "<td class='text-end align-middle'>" . number_format($row["pv_afiliado"], 2) . "</td>";
+    echo "<td class='text-end align-middle fw-bold'>" . number_format($row["precio_afiliado"], 2) . "</td>";
+    echo "<td class='text-end align-middle color5'>" . number_format($varPv5, 2) . "</td>";
+    echo "<td class='text-end align-middle color5 fw-bold'>" . number_format($varPrecio5, 2) . "</td>";
+    echo "<td class='text-end align-middle color8'>" . number_format($varPv8, 2) . "</td>";
+    echo "<td class='text-end align-middle color8 fw-bold'>" . number_format($varPrecio8, 2) . "</td>";
+    echo "<td class='text-end align-middle color15'>" . number_format($varPv15, 2) . "</td>";
+    echo "<td class='text-end align-middle color15 fw-bold'>" . number_format($varPrecio15, 2) . "</td>";
+    echo "<td class='text-end align-middle'>" . number_format($row["precio_publico"], 2) . "</td>";
+    echo "<td class='align-middle'>";
+    echo "<button type='button' class='btn btn-primary btn-sm btnEditar' data-id='" . $row["id"] . "' title='Editar'><i class='bi bi-pencil'></i></button>";
+    echo "<button type='button' class='btn btn-danger btn-sm btnEliminar' data-id='" . $row["id"] . "' title='Eliminar'><i class='bi bi-trash'></i></button>";
     echo "</td>";
     echo "</tr>";
   }

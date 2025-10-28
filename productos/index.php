@@ -3,20 +3,23 @@
 <head>
   <title>Lista de Productos</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <style>
     .img-thumbnail {
-      max-width: 60%; /* Cambia el tamaño al 60% */
-      max-height: 60%; /* Cambia el tamaño al 60% */
+      max-width: 35%; /* Cambia el tamaño al 60% */
+      max-height: 35%; /* Cambia el tamaño al 60% */
     }
     .color5 {
     background-color: #DCE6F1 !important;
   }
   .color5h {
     background-color: #366092 !important;
+    color: #FFFFFF !important;
   }
 
     .color8h {
       background-color: #FFC000 !important;
+      color: #FFFFFF !important;
     }
     .color8 {
       background-color: #CCC0DA !important;
@@ -27,32 +30,45 @@
   }
   .color15h {
         background-color: #F79646 !important;
+        color: #FFFFFF !important;
   }
+
+.headernegro {
+  background-color:rgb(0, 0, 0) !important;
+        color: #FFFFFF !important;
+}
   </style>
+
 </head>
 <body>
+<?php include '../shared/header-public.php'; ?>
   <div class="container">
     <h2>Lista de Productos</h2>
     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalProducto" id="btnAgregarProducto">
       Agregar Producto
     </button>
 
-    <table class="table table-striped">
+    <table class="table table-bordered ">
       <thead>
         <tr>
-          <th>Imagen</th>
-          <th>Código</th>
-          <th>Nombre</th>
-          <th class="text-center">PV</th>
-          <th class="text-end">Precio Unit</th>
-          <th class="text-center color5h">PV  5%</th>
-          <th class="text-end color5h">Precio 5%</th>
-          <th class="text-center color8h">PV 8%</th>
-          <th class="text-end color8h">Precio 8%</th>
-          <th class="text-center color15h">PV 15%</th>
-          <th class="text-end color15h">Precio 15%</th>
-          <th class="text-end">Precio Público</th>
-          <th>Acciones</th>
+          <th rowspan="2" class="headernegro align-middle">Imagen</th> <!-- Combina las celdas de "Imagen" -->
+          <th rowspan="2" class="headernegro align-middle">Código</th>
+          <th rowspan="2" class="headernegro align-middle">Nombre</th>
+          <th rowspan="2" class="text-center headernegro align-middle">PV</th>
+          <th rowspan="2" class="text-end headernegro align-middle">Precio Unit</th>
+          <th class="text-center color5h align-middle" colspan="2">Dcto 5%</th>
+          <th class="text-center color8h align-middle" colspan="2">Dcto 8%</th>
+          <th class="text-center color15h align-middle" colspan="2">Dcto 15%</th>
+          <th rowspan="2" class="text-end headernegro align-middle">Precio Público</th>
+          <th rowspan="2" class="headernegro align-middle">Acciones</th>
+        </tr>
+        <tr>
+          <th class="text-center color5h align-middle">PV</th>
+          <th class="text-end color5h align-middle">Precio</th>
+          <th class="text-center color8h align-middle">PV</th>
+          <th class="text-end color8h align-middle">Precio</th>
+          <th class="text-center color15h align-middle">PV</th>
+          <th class="text-end color15h align-middle">Precio</th>
         </tr>
       </thead>
       <tbody id="tablaProductos">
@@ -243,10 +259,11 @@
             // Cargar el estado activo
             $('#activo').prop('checked', producto.activo == 1);
 
-            if (producto.imagen) {
+            // Mostrar imagen o placeholder
+            if (producto.imagen && producto.imagen.trim() !== "") {
               $('#imagenPreview').attr('src', producto.imagen).show();
             } else {
-              $('#imagenPreview').hide();
+              $('#imagenPreview').attr('src', '../uploads/tiens-logo-verde.jpg').show();
             }
 
             $('#modalProducto').modal('show');

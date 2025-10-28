@@ -1,3 +1,134 @@
+// Función global para cargar las compras de la persona seleccionada
+function cargarCompras(personaId, estado) {
+    fetch('cargar_compras.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ persona_id: personaId, estado: estado }),
+    })
+        .then(response => response.json())
+        .then(data => {
+            const tablaCompras = document.querySelector('table tbody');
+            tablaCompras.innerHTML = ''; // Limpiar la tabla
+
+            if (data.length === 0) {
+                tablaCompras.innerHTML = '<tr><td colspan="13" class="text-center">No hay compras registradas</td></tr>';
+                return;
+            }
+
+            data.forEach(compra => {
+                // Determinar la clase de estilo según el estado
+                let estadoClase = '';
+                switch(compra.estado) {
+                    case 'liquidado':
+                        estadoClase = 'bg-success text-white';
+                        break;
+                    case 'eliminado':
+                        estadoClase = 'bg-danger text-white';
+                        break;
+                    case 'pendiente':
+                    default:
+                        estadoClase = 'bg-warning';
+                        break;
+                }
+
+                // Generar el checkbox solo si la compra está pendiente
+                const checkbox = compra.estado === 'pendiente'
+                    ? `<input type="checkbox" class="compra-checkbox" data-pv="${compra.productos_pv}" data-id="${compra.id}">`
+                    : '';
+
+                const botonPasarCompra = compra.estado === 'liquidado' || compra.estado === 'eliminado'
+                    ? '' // No mostrar el botón si está liquidado o eliminado
+                    : `<button class="btn btn-secondary btn-sm pasar-compra-btn d-flex align-items-center justify-content-center" data-id="${compra.id}" title="Transferir Compra" style="width: auto; height: 35px;">
+                         <i class="bi bi-arrow-right" style="pointer-events: none; font-size: 1rem;"></i>
+                       </button>`;
+
+                const botonEliminar = compra.estado === 'liquidado' || compra.estado === 'eliminado'
+                    ? '' // No mostrar el botón si está liquidado o eliminado
+                    : `<button class="btn btn-danger btn-sm" onclick="confirmarEliminar(${compra.id})" title="Eliminar Compra">
+                         <i class="bi bi-trash"></i>
+                       </button>`;
+
+                // Contenedor para los botones
+                const botonesAcciones = `
+                    <div class="d-flex gap-2">
+                        ${botonPasarCompra}
+                        ${botonEliminar}
+                    </div>
+                `;
+
+                // Generar columnas de liquidación solo si el filtro actual es 'liquidado'
+                const mostrarLiquidacion = document.body.classList.contains('estado-liquidado');
+                const columnasLiquidacion = mostrarLiquidacion
+                    ? `
+                        <td>${compra.liquidacion_numero || 'N/A'}</td>
+                        <td>${compra.liquidacion_fecha || 'N/A'}</td>
+                    `
+                    : '';
+
+                // Reemplazar saltos de línea en la nota por una línea discontinua
+                const notaConSeparacion = (compra.liquidacion_nota || 'Sin notas')
+                    .split('\n') // Dividir las notas por saltos de línea
+                    .map(nota => `<div class="nota-item">${nota}</div>`) // Envolver cada nota en un contenedor
+                    .join('<hr class="nota-separador">'); // Agregar una línea discontinua entre las notas
+
+                // Determinar el badge del estado
+                let estadoBadge = '';
+                switch(compra.estado) {
+                    case 'pendiente':
+                        estadoBadge = '<span class="badge bg-warning text-dark">Pendiente</span>';
+                        break;
+                    case 'liquidado':
+                        estadoBadge = '<span class="badge bg-success">Liquidado</span>';
+                        break;
+                    case 'eliminado':
+                        estadoBadge = '<span class="badge bg-danger">Eliminado</span>';
+                        break;
+                    case 'procesado':
+                        estadoBadge = '<span class="badge bg-info">Procesado</span>';
+                        break;
+                    case 'transferido':
+                        estadoBadge = '<span class="badge bg-primary">Transferido</span>';
+                        break;
+                    default:
+                        estadoBadge = '<span class="badge bg-secondary">Sin estado</span>';
+                }
+
+                const row = `
+                    <tr class="${estadoClase}">
+                        <td>${checkbox}</td>
+                        <td>${compra.id}</td>
+                        <td>${formatearFecha(compra.fecha_compra)}</td>
+                        <td><strong>${compra.productos_codigo}</strong></td>
+                        <td><strong>${compra.producto_nombre}</strong></td>
+                        <td>${parseFloat(compra.productos_precio).toFixed(2)}</td>
+                        <td>${parseFloat(compra.productos_pv).toFixed(2)}</td>
+                        <td>${compra.descuento}%</td>
+                        <td>${estadoBadge}</td>
+                        <td>${notaConSeparacion}</td>
+                        ${columnasLiquidacion}
+                        <td>${botonesAcciones}</td>
+                    </tr>
+                `;
+                tablaCompras.insertAdjacentHTML('beforeend', row);
+            });
+        })
+        .catch(error => console.error('Error al cargar las compras:', error));
+}
+
+// Exponer la función globalmente
+window.cargarCompras = cargarCompras;
+
+// Función global para formatear fechas
+function formatearFecha(fechaString) {
+    const fecha = new Date(fechaString);
+    const dia = fecha.getDate().toString().padStart(2, '0');
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+    const año = fecha.getFullYear();
+    return `${dia}/${mes}/${año}`;
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const pageTitle = document.getElementById('page-title');
     if (pageTitle) {
@@ -85,35 +216,55 @@ document.addEventListener('DOMContentLoaded', function () {
                 tablaCompras.innerHTML = ''; // Limpiar la tabla
 
                 if (data.length === 0) {
-                    tablaCompras.innerHTML = '<tr><td colspan="11" class="text-center">No se encontraron compras para la persona seleccionada.</td></tr>';
+                    tablaCompras.innerHTML = '<tr><td colspan="13" class="text-center">No se encontraron compras para la persona seleccionada.</td></tr>';
                     return;
                 }
 
                 // Generar las filas de la tabla
                 data.forEach(compra => {
-                    const estadoClase = compra.estado === 'liquidado' ? 'bg-success' : 'bg-warning';
+                    // Determinar clase de fila según el estado
+                    let estadoClase = '';
+                    switch(compra.estado) {
+                        case 'liquidado':
+                            estadoClase = 'bg-success text-white';
+                            break;
+                        case 'eliminado':
+                            estadoClase = 'bg-danger text-white';
+                            break;
+                        case 'pendiente':
+                        default:
+                            estadoClase = 'bg-warning';
+                            break;
+                    }
 
                     // Generar el checkbox solo si la compra está pendiente
                     const checkbox = compra.estado === 'pendiente'
                         ? `<input type="checkbox" class="compra-checkbox" data-pv="${compra.productos_pv}" data-id="${compra.id}">`
                         : '';
 
-                    
-
-                    const botonPasarCompra = compra.estado === 'liquidado'
-                        ? '' // No mostrar el botón si está liquidado
+                    const botonPasarCompra = compra.estado === 'liquidado' || compra.estado === 'eliminado'
+                        ? '' // No mostrar el botón si está liquidado o eliminado
                         : `<button class="btn btn-secondary btn-sm pasar-compra-btn d-flex align-items-center justify-content-center" data-id="${compra.id}" title="Transferir Compra" style="width: auto; height: 35px;">
                              <i class="bi bi-arrow-right" style="pointer-events: none; font-size: 1rem;"></i>
+                           </button>`;
+
+                    const botonEliminar = compra.estado === 'liquidado' || compra.estado === 'eliminado'
+                        ? '' // No mostrar el botón si está liquidado o eliminado
+                        : `<button class="btn btn-danger btn-sm" onclick="confirmarEliminar(${compra.id})" title="Eliminar Compra">
+                             <i class="bi bi-trash"></i>
                            </button>`;
 
                     // Contenedor para los botones
                     const botonesAcciones = `
                         <div class="d-flex gap-2">
                             ${botonPasarCompra}
+                            ${botonEliminar}
                         </div>
                     `;
 
-                    const columnasLiquidacion = compra.estado === 'liquidado'
+                    // Generar columnas de liquidación solo si el filtro actual es 'liquidado'
+                    const mostrarLiquidacion = document.body.classList.contains('estado-liquidado');
+                    const columnasLiquidacion = mostrarLiquidacion
                         ? `
                             <td>${compra.liquidacion_numero || 'N/A'}</td>
                             <td>${compra.liquidacion_fecha || 'N/A'}</td>
@@ -126,6 +277,28 @@ document.addEventListener('DOMContentLoaded', function () {
                         .map(nota => `<div class="nota-item">${nota}</div>`) // Envolver cada nota en un contenedor
                         .join('<hr class="nota-separador">'); // Agregar una línea discontinua entre las notas
 
+                    // Determinar el badge del estado
+                    let estadoBadge = '';
+                    switch(compra.estado) {
+                        case 'pendiente':
+                            estadoBadge = '<span class="badge bg-warning text-dark">Pendiente</span>';
+                            break;
+                        case 'liquidado':
+                            estadoBadge = '<span class="badge bg-success">Liquidado</span>';
+                            break;
+                        case 'eliminado':
+                            estadoBadge = '<span class="badge bg-danger">Eliminado</span>';
+                            break;
+                        case 'procesado':
+                            estadoBadge = '<span class="badge bg-info">Procesado</span>';
+                            break;
+                        case 'transferido':
+                            estadoBadge = '<span class="badge bg-primary">Transferido</span>';
+                            break;
+                        default:
+                            estadoBadge = '<span class="badge bg-secondary">Sin estado</span>';
+                    }
+
                     const row = `
                         <tr class="${estadoClase}">
                             <td>${checkbox}</td>
@@ -136,6 +309,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <td>${parseFloat(compra.productos_precio).toFixed(2)}</td>
                             <td>${parseFloat(compra.productos_pv).toFixed(2)}</td>
                             <td>${compra.descuento}%</td>
+                            <td>${estadoBadge}</td>
                             <td>${notaConSeparacion}</td>
                             ${columnasLiquidacion}
                             <td>${botonesAcciones}</td>
@@ -151,6 +325,7 @@ document.addEventListener('DOMContentLoaded', function () {
     filtroPendientes.addEventListener('change', function () {
         if (filtroPendientes.checked) {
             document.body.classList.remove('estado-liquidado');
+            document.body.classList.remove('estado-eliminado');
             const personaIdValue = personaId.value;
             if (personaIdValue) {
                 cargarCompras(personaIdValue, 'pendiente');
@@ -161,6 +336,7 @@ document.addEventListener('DOMContentLoaded', function () {
     filtroLiquidadas.addEventListener('change', function () {
         if (filtroLiquidadas.checked) {
             document.body.classList.add('estado-liquidado');
+            document.body.classList.remove('estado-eliminado');
             const personaIdValue = personaId.value;
             if (personaIdValue) {
                 cargarCompras(personaIdValue, 'liquidado');
@@ -168,7 +344,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-
+    // Agregar listener para filtro eliminadas
+    const filtroEliminadas = document.getElementById('filtroEliminadas');
+    if (filtroEliminadas) {
+        filtroEliminadas.addEventListener('change', function () {
+            if (filtroEliminadas.checked) {
+                document.body.classList.add('estado-eliminado');
+                document.body.classList.remove('estado-liquidado');
+                const personaIdValue = personaId.value;
+                if (personaIdValue) {
+                    cargarCompras(personaIdValue, 'eliminado');
+                }
+            }
+        });
+    }
 
     // Delegación de eventos para los botones "Pasar Compra"
     tablaCompras.addEventListener('click', function (event) {
@@ -298,44 +487,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 listaPersonasPasar.appendChild(item);
             });
         });
-
-        // Buscar personas dinámicamente en buscarPersonaPasar
-        buscarPersonaPasar.addEventListener('input', function () {
-            const query = this.value.toLowerCase();
-
-            // Mostrar resultados solo si hay 3 o más caracteres
-            if (query.length < 3) {
-                listaPersonasPasar.innerHTML = ''; // Limpiar la lista si hay menos de 3 caracteres
-                return;
-            }
-
-            listaPersonasPasar.innerHTML = ''; // Limpiar resultados anteriores
-
-            const resultados = personas.filter(persona =>
-                persona.nombre.toLowerCase().includes(query) || persona.codigo.toLowerCase().includes(query)
-            );
-
-            if (resultados.length === 0) {
-                listaPersonasPasar.innerHTML = '<li class="list-group-item text-muted">No se encontraron resultados.</li>';
-                return;
-            }
-
-            resultados.forEach(persona => {
-                const item = document.createElement('li');
-                item.className = 'list-group-item list-group-item-action';
-                item.textContent = `${persona.nombre} (Código: ${persona.codigo})`;
-                item.dataset.id = persona.id;
-
-                item.addEventListener('click', function () {
-                    personaIdPasar.value = persona.id;
-                    buscarPersonaPasar.value = persona.nombre;
-                    listaPersonasPasar.innerHTML = ''; // Limpiar la lista
-                });
-
-                listaPersonasPasar.appendChild(item);
-            });
-        });
     }
+    
     // Confirmar pasar compra
     confirmarPasarCompraBtn.addEventListener('click', function (event) {
         event.preventDefault(); // Prevenir el envío del formulario y la recarga de la página
@@ -360,7 +513,7 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('No se pudo encontrar la nueva persona seleccionada.');
             return;
         }
-debugger;
+
         // Validar si los descuentos son diferentes
         if (parseFloat(personaSeleccionada.descuento) !== parseFloat(personaNueva.descuento)) {
             const modalErrorDescuento = new bootstrap.Modal(document.getElementById('modalErrorDescuento'));
@@ -463,19 +616,19 @@ debugger;
     }
 
     // Función para formatear la fecha
-function formatearFecha(fechaISO) {
-    const fecha = new Date(fechaISO);
-    const opciones = {
-        day: '2-digit',
-        month: '2-digit',
-        year: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        //second: '2-digit',
-        hour12: true, // Mostrar en formato AM/PM
-    };
-    return fecha.toLocaleString('es-ES', opciones);
-}
+    function formatearFecha(fechaISO) {
+        const fecha = new Date(fechaISO);
+        const opciones = {
+            day: '2-digit',
+            month: '2-digit',
+            year: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            //second: '2-digit',
+            hour12: true, // Mostrar en formato AM/PM
+        };
+        return fecha.toLocaleString('es-ES', opciones);
+    }
 });
 
 document.addEventListener('DOMContentLoaded', function () {

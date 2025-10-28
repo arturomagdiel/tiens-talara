@@ -11,8 +11,8 @@ if (!$persona_id) {
     exit;
 }
 
-// Consultar las compras de la persona seleccionada con el estado especificado
-$stmt = $conn->prepare("
+// Consulta base para todos los estados
+$sql = "
     SELECT 
         c.id, 
         c.fecha_compra, 
@@ -26,22 +26,24 @@ $stmt = $conn->prepare("
         c.liquidacion_nota, 
         c.personas_descuento AS descuento
     FROM compras c
-    INNER JOIN productos p ON c.productos_id = p.id
+    LEFT JOIN productos p ON c.productos_id = p.id
     WHERE c.personas_id = ? AND c.estado = ?
     ORDER BY c.updated_at DESC
-");
-$stmt->bind_param("is", $persona_id, $estado);
+";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param('is', $persona_id, $estado);
 $stmt->execute();
 $result = $stmt->get_result();
 
 $compras = [];
-if ($result) {
-    $compras = $result->fetch_all(MYSQLI_ASSOC);
+while ($row = $result->fetch_assoc()) {
+    $compras[] = $row;
 }
-
-header('Content-Type: application/json');
-echo json_encode($compras);
 
 $stmt->close();
 $conn->close();
+
+header('Content-Type: application/json');
+echo json_encode($compras);
 ?>
