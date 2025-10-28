@@ -1,6 +1,6 @@
-// Service Worker para Tiens Talara PWA v1.3.8
-const CACHE_NAME = 'tiens-talara-v1.3.8';
-const APP_VERSION = '1.3.8';
+// Service Worker para Tiens Talara PWA v1.4.0
+const CACHE_NAME = 'tiens-talara-v1.4.0';
+const APP_VERSION = '1.4.0';
 const urlsToCache = [
   '/talara/',
   '/talara/index.php',
@@ -17,8 +17,10 @@ const urlsToCache = [
   '/talara/pedido/scripts.js',
   '/talara/productos/index.php',
   '/talara/afiliados/index.php',
+  '/talara/afiliados/index-modern.js',
   '/talara/shared/header.php',
   '/talara/shared/header_compras.php',
+  '/talara/shared/header_afiliados.php',
   '/talara/shared/auth.php',
   '/talara/shared/conexion.php',
   '/talara/pwa-styles.css',
