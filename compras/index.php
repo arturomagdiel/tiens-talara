@@ -33,34 +33,68 @@
     </style>
 </head>
 <body>
-<?php include '../shared/header.php'; ?>
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Gestión de Compras</h1>
-        <div class="row">
+
+<!-- Header simplificado para compras -->
+<div class="container-fluid bg-dark text-white py-2 sticky-top mb-3">
+    <div class="row align-items-center">
+        <!-- Título de la página -->
+        <div class="col-md-6">
+            <h6 class="text-center text-md-start mb-0">Gestión de Compras</h6>
+        </div>
+
+        <!-- Botones simplificados -->
+        <div class="col-md-6 d-flex justify-content-center justify-content-md-end gap-2">
+            <!-- Botón Inicio -->
+            <button class="btn btn-light btn-sm d-flex align-items-center justify-content-center" 
+                onclick="window.location.href='../index.php'" 
+                title="Volver al menú principal">
+                <i class="bi bi-house-door text-dark me-1"></i> Inicio
+            </button>
+
+            <!-- Botón Salir -->
+            <button class="btn btn-danger btn-sm d-flex align-items-center justify-content-center" 
+                onclick="window.location.href='../logout.php'" 
+                title="Cerrar Sesión">
+                <i class="bi bi-box-arrow-right me-1"></i> Salir
+            </button>
+        </div>
+    </div>
+</div>
+
+<?php
+// Verificación de autenticación simplificada
+session_start();
+if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true) {
+    header('Location: ../index.php');
+    exit;
+}
+?>
+    <div class="container mt-4">
+        <div class="row g-4 row-cols-2 row-cols-md-3">
             <!-- Botón Registrar Compra -->
-            <div class="col-md-4">
-                <a href="registrar_compra.php" class="card text-center text-decoration-none bg-primary text-white">
-                    <div class="card-body">
-                        <i class="bi bi-cart-plus-fill" style="font-size: 3rem;"></i>
-                        <h5 class="card-title mt-2">Registrar Compra</h5>
+            <div class="col">
+                <a href="registrar_compra.php" class="card text-center text-decoration-none bg-primary text-white h-100">
+                    <div class="card-body d-flex flex-column justify-content-center">
+                        <i class="bi bi-cart-plus-fill mb-3" style="font-size: 3rem;"></i>
+                        <h5 class="card-title">Registrar Compra</h5>
                     </div>
                 </a>
             </div>
             <!-- Botón Ver Compras -->
-            <div class="col-md-4">
-                <a href="compras.php" class="card text-center text-decoration-none bg-success text-white">
-                    <div class="card-body">
-                        <i class="bi bi-list-ul" style="font-size: 3rem;"></i>
-                        <h5 class="card-title mt-2">Ver Compras</h5>
+            <div class="col">
+                <a href="compras.php" class="card text-center text-decoration-none bg-success text-white h-100">
+                    <div class="card-body d-flex flex-column justify-content-center">
+                        <i class="bi bi-list-ul mb-3" style="font-size: 3rem;"></i>
+                        <h5 class="card-title">Ver Compras</h5>
                     </div>
                 </a>
             </div>
             <!-- Botón Registro Diario -->
-            <div class="col-md-4">
-                <a href="registro_diario.php" class="card text-center text-decoration-none bg-danger text-white">
-                    <div class="card-body">
-                        <i class="bi bi-calendar-check-fill" style="font-size: 3rem;"></i>
-                        <h5 class="card-title mt-2">Registro Diario</h5>
+            <div class="col">
+                <a href="registro_diario.php" class="card text-center text-decoration-none bg-danger text-white h-100">
+                    <div class="card-body d-flex flex-column justify-content-center">
+                        <i class="bi bi-calendar-check-fill mb-3" style="font-size: 3rem;"></i>
+                        <h5 class="card-title">Registro Diario</h5>
                     </div>
                 </a>
             </div>
