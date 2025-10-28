@@ -1,6 +1,6 @@
-// Service Worker para Tiens Talara PWA v1.2.1
-const CACHE_NAME = 'tiens-talara-v1.2.1';
-const APP_VERSION = '1.2.1';
+// Service Worker para Tiens Talara PWA v1.2.6
+const CACHE_NAME = 'tiens-talara-v1.2.6';
+const APP_VERSION = '1.2.6';
 const urlsToCache = [
   '/talara/',
   '/talara/index.php',
@@ -34,21 +34,26 @@ self.addEventListener('install', function(event) {
         console.log('❌ Service Worker: Error al cachear:', error);
       })
   );
+  // Forzar activación inmediata
+  self.skipWaiting();
 });
 
 // Activación del Service Worker
 self.addEventListener('activate', function(event) {
-  console.log('Service Worker: Activando...');
+  console.log(`🔄 Service Worker v${APP_VERSION}: Activando...`);
   event.waitUntil(
     caches.keys().then(function(cacheNames) {
       return Promise.all(
         cacheNames.map(function(cacheName) {
           if (cacheName !== CACHE_NAME) {
-            console.log('Service Worker: Eliminando cache antiguo:', cacheName);
+            console.log('🗑️ Service Worker: Eliminando cache antiguo:', cacheName);
             return caches.delete(cacheName);
           }
         })
       );
+    }).then(function() {
+      console.log(`✅ Service Worker v${APP_VERSION}: Activado y tomando control`);
+      return self.clients.claim(); // Tomar control inmediatamente
     })
   );
 });
