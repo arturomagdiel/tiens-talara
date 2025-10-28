@@ -35,8 +35,16 @@ function isAuthenticated() {
  */
 function requireAuth($redirectTo = '/talara/login.php') {
     if (!isAuthenticated()) {
-        // Guardar la URL actual para redirigir después del login
-        $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
+        // Guardar la URL actual completa para redirigir después del login
+        $currentUrl = $_SERVER['REQUEST_URI'];
+        
+        // Solo guardar si no es ya la página de login
+        if (strpos($currentUrl, '/login.php') === false) {
+            $_SESSION['redirect_after_login'] = $currentUrl;
+            // Debug: Log para verificar URL guardada (quitar en producción)
+            error_log("AUTH DEBUG: Guardando URL para redirección: " . $currentUrl);
+        }
+        
         header('Location: ' . $redirectTo);
         exit;
     }

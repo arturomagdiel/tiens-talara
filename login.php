@@ -6,7 +6,7 @@ $error = '';
 
 // Si ya está autenticado, redirigir
 if (isAuthenticated()) {
-    $redirect = isset($_SESSION['redirect_after_login']) ? $_SESSION['redirect_after_login'] : '/talara/compras/';
+    $redirect = isset($_SESSION['redirect_after_login']) ? $_SESSION['redirect_after_login'] : '/talara/';
     unset($_SESSION['redirect_after_login']);
     header('Location: ' . $redirect);
     exit;
@@ -17,8 +17,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['clave_acceso'])) {
     $password = $_POST['clave_acceso'];
     
     if (processLogin($password)) {
-        // Login exitoso - redirigir a la página original o compras por defecto
-        $redirect = isset($_SESSION['redirect_after_login']) ? $_SESSION['redirect_after_login'] : '/talara/compras/';
+        // Login exitoso - redirigir a la página original o index por defecto
+        $redirect = isset($_SESSION['redirect_after_login']) ? $_SESSION['redirect_after_login'] : '/talara/';
+        
+        // Debug: Log para verificar redirección (quitar en producción)
+        error_log("LOGIN DEBUG: Redirigiendo a: " . $redirect);
+        
         unset($_SESSION['redirect_after_login']);
         header('Location: ' . $redirect);
         exit;
