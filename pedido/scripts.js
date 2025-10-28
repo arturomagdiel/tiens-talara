@@ -95,68 +95,77 @@ $(document).ready(function () {
         mostrarModalProductoAgregado(nombre);
     }
     
-    // Función para mostrar modal de producto agregado
+    // Función para mostrar modal de producto agregado - VERSIÓN SIMPLIFICADA
     function mostrarModalProductoAgregado(nombreProducto) {
+        console.log('🎯 Intentando mostrar modal para:', nombreProducto);
+        
+        // Método 1: Intentar con jQuery + Bootstrap
         try {
-            // Actualizar el nombre del producto en el modal
-            const nombreElement = document.getElementById('nombreProductoAgregado');
-            if (nombreElement) {
-                nombreElement.textContent = nombreProducto;
-            }
-            
-            // Verificar que Bootstrap esté disponible
-            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-                const modalElement = document.getElementById('modalProductoAgregado');
-                if (modalElement) {
-                    const modal = new bootstrap.Modal(modalElement, {
-                        backdrop: false,
-                        keyboard: true
-                    });
-                    modal.show();
-                    
-                    // Auto-cerrar el modal después de 2.5 segundos
-                    setTimeout(() => {
-                        modal.hide();
-                    }, 2500);
-                } else {
-                    console.warn('Modal element not found');
-                }
-            } else {
-                // Fallback: mostrar modal manualmente si Bootstrap no está disponible
-                mostrarModalFallback(nombreProducto);
-            }
-        } catch (error) {
-            console.error('Error showing modal:', error);
-            // Fallback en caso de error
-            mostrarModalFallback(nombreProducto);
-        }
-    }
-    
-    // Función fallback para mostrar modal sin Bootstrap
-    function mostrarModalFallback(nombreProducto) {
-        const modalElement = document.getElementById('modalProductoAgregado');
-        if (modalElement) {
-            // Actualizar contenido
-            const nombreElement = document.getElementById('nombreProductoAgregado');
-            if (nombreElement) {
-                nombreElement.textContent = nombreProducto;
-            }
-            
-            // Mostrar con clases CSS
-            modalElement.style.display = 'block';
-            modalElement.classList.add('show');
-            document.body.classList.add('modal-open');
+            $('#nombreProductoAgregado').text(nombreProducto);
+            $('#modalProductoAgregado').modal('show');
+            console.log('✅ Modal mostrado con jQuery');
             
             // Auto-cerrar después de 2.5 segundos
             setTimeout(() => {
-                modalElement.style.display = 'none';
-                modalElement.classList.remove('show');
-                document.body.classList.remove('modal-open');
+                $('#modalProductoAgregado').modal('hide');
+                console.log('✅ Modal cerrado automáticamente');
             }, 2500);
-        } else {
-            // Última opción: alert simple
-            alert(`✅ ${nombreProducto} agregado al carrito`);
+            return; // Si funciona, salir
+        } catch (error) {
+            console.log('⚠️ Error con jQuery modal:', error);
         }
+        
+        // Método 2: Vanilla JavaScript + Bootstrap
+        try {
+            const nombreElement = document.getElementById('nombreProductoAgregado');
+            if (nombreElement) {
+                nombreElement.textContent = nombreProducto;
+            }
+            
+            const modalElement = document.getElementById('modalProductoAgregado');
+            if (modalElement && typeof bootstrap !== 'undefined') {
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
+                console.log('✅ Modal mostrado con Bootstrap vanilla');
+                
+                setTimeout(() => {
+                    modal.hide();
+                    console.log('✅ Modal cerrado con Bootstrap vanilla');
+                }, 2500);
+                return;
+            }
+        } catch (error) {
+            console.log('⚠️ Error con Bootstrap vanilla:', error);
+        }
+        
+        // Método 3: Mostrar modal manualmente
+        try {
+            const modalElement = document.getElementById('modalProductoAgregado');
+            const nombreElement = document.getElementById('nombreProductoAgregado');
+            
+            if (modalElement && nombreElement) {
+                nombreElement.textContent = nombreProducto;
+                modalElement.style.display = 'block';
+                modalElement.classList.add('show');
+                modalElement.style.backgroundColor = 'rgba(0,0,0,0.5)';
+                document.body.style.overflow = 'hidden';
+                console.log('✅ Modal mostrado manualmente');
+                
+                setTimeout(() => {
+                    modalElement.style.display = 'none';
+                    modalElement.classList.remove('show');
+                    document.body.style.overflow = '';
+                    console.log('✅ Modal cerrado manualmente');
+                }, 2500);
+                return;
+            }
+        } catch (error) {
+            console.log('⚠️ Error con modal manual:', error);
+        }
+        
+        // Método 4: Fallback - Alert simple
+        alert(`✅ ${nombreProducto} agregado al carrito`);
+        console.log('✅ Usado alert como fallback');
     }
 
     // Función para actualizar el resumen del carrito
@@ -248,7 +257,9 @@ $(document).ready(function () {
         carrito = []; // Vaciar el carrito
         guardarCarritoEnLocalStorage(); // Guardar el carrito vacío en localStorage
         actualizarCarrito(); // Actualizar el resumen del carrito
+        
         playClickSound(); // Reproducir el sonido de clic
+        console.log('🗑️ Carrito limpiado');
     });
 
     // Cambiar el tipo de precio al seleccionar un radio button

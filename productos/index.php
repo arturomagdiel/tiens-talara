@@ -41,7 +41,7 @@
 
 </head>
 <body>
-<?php include '../shared/header-public.php'; ?>
+<?php include '../shared/header.php'; ?>
   <div class="container">
     <h2>Lista de Productos</h2>
     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalProducto" id="btnAgregarProducto">

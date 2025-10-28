@@ -12,19 +12,37 @@
         .product-card { transition: box-shadow .2s; cursor: pointer; }
         .product-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
         .product-img {
-  height: 140px;
-  object-fit: contain;
-  padding: 10px;
-  background-color: #fff;
-}
+            height: 140px;
+            object-fit: contain;
+            padding: 10px;
+            background-color: #fff;
+        }
         .offcanvas-cart .offcanvas-body { padding: 0; }
         .cart-product-img { width: 48px; height: 48px; object-fit: cover; border-radius: 8px; }
+        
+        /* Estilos para botones seleccionados - FONDO NEGRO FIJO */
+        .btn-check:checked + .btn-outline-dark,
+        .btn-check:checked + .btn-outline-success,
+        .btn-check:checked + .btn-outline-secondary,
+        .btn-check:checked + .btn-outline-primary,
+        .btn-check:checked + .btn-outline-warning,
+        .btn-check:checked + .btn-outline-danger {
+            background-color: #000000 !important;
+            border-color: #000000 !important;
+            color: #ffffff !important;
+        }
+        
+        /* Remover animaciones de parpadeo */
+        .btn-check:checked + .btn {
+            animation: none !important;
+        }
+        
         @media (max-width: 991px) {
             .cart-panel { display: none !important; }
             .offcanvas-cart {
-    top: 56px !important; /* Altura navbar Bootstrap por defecto */
-    height: calc(100% - 56px) !important;
-  }
+                top: 56px !important; /* Altura navbar Bootstrap por defecto */
+                height: calc(100% - 56px) !important;
+            }
         }
         @media (min-width: 992px) {
             .offcanvas-cart { display: none !important; }
@@ -39,7 +57,9 @@
       <!-- Fila 1: Mi Compra + Público / Afiliado -->
       <div class="row align-items-center gy-2">
         <div class="col-12 col-lg-auto d-flex align-items-center gap-2 flex-wrap">
-          <a class="navbar-brand fw-bold text-success me-2" href="#"><i class="bi bi-leaf"></i> Mi Compra</a>
+          <a class="btn btn-outline-dark fw-bold" href="https://tienslima.com/talara/" title="Volver al menú principal">
+            <i class="bi bi-house-door-fill"></i> INICIO
+          </a>
           <div class="btn-group" role="group" aria-label="Tipo de precio">
             <input type="radio" class="btn-check" name="tipo-precio" id="publico" value="publico" autocomplete="off">
             <label class="btn btn-outline-dark" for="publico">Público</label>
@@ -314,10 +334,19 @@
         }
     });
 
+    // Función unificada para limpiar carrito (desktop y móvil)
     $('#cart-clear, #cart-clear-mobile').click(function() {
         carrito = [];
         saveCarrito();
         renderCarrito();
+        
+        console.log('🗑️ Carrito limpiado');
+    });
+    
+    // Test del modal (solo para debug)
+    $('#testModal').click(function() {
+        console.log('🧪 Probando modal...');
+        mostrarModalProductoAgregado('Producto de Prueba');
     });
 
     $('input[name="tipo-precio"]').change(function() {
@@ -460,20 +489,23 @@ $(document).on('click', '.btn-add-cart, .btn-restar, .btn-sumar, #cart-clear, #c
 
     </script>
 
-    <!-- Modal de confirmación de producto agregado -->
-    <div class="modal fade" id="modalProductoAgregado" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-body text-center p-4">
-                    <div class="mb-3">
-                        <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+    <!-- Modal de confirmación de producto agregado - SIMPLIFICADO -->
+    <div class="modal fade" id="modalProductoAgregado" tabindex="-1" aria-hidden="true" data-bs-backdrop="false">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-body text-center p-3">
+                    <div class="mb-2">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 2.5rem;"></i>
                     </div>
-                    <h5 class="modal-title mb-2">¡Producto agregado!</h5>
-                    <p class="mb-0" id="mensajeProductoAgregado">Se agregó <strong id="nombreProductoAgregado"></strong> al carrito</p>
+                    <h6 class="modal-title mb-1">¡Agregado!</h6>
+                    <p class="mb-0 small"><strong id="nombreProductoAgregado">Producto</strong></p>
                 </div>
             </div>
         </div>
     </div>
+    
+    <!-- Botón de prueba del modal (solo para debug) -->
+    <button id="testModal" class="btn btn-warning position-fixed" style="bottom: 80px; right: 20px; z-index: 1000; font-size: 0.8rem;">Test Modal</button>
 
 </body>
 </html>

@@ -166,21 +166,12 @@
     padding: 0.5rem;
 }
 
-/* Efecto de parpadeo para el tipo de precio seleccionado */
+/* Estilo fijo para botones seleccionados - SIN PARPADEO */
 .btn-check:checked + label {
-    animation: parpadeo 1s infinite;
+    background-color: #000000 !important;
+    border-color: #000000 !important;
+    color: #ffffff !important;
     border-width: 2px;
-    border-color: #ff0000; /* Cambia el color del borde si lo deseas */
-}
-
-/* Animación de parpadeo */
-@keyframes parpadeo {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.5;
-    }
 }
 
 /* Hacer sticky el div fila-sup */

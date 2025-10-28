@@ -137,13 +137,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Función para agregar un producto a la lista
     function agregarProductoALista(producto, descuento) {
-        const precioBase = parseFloat(producto.precio_afiliado);
-        const pvBase = parseFloat(producto.pv_afiliado) || 0;
+        // Verificar si el producto ya está en la lista
+        const filas = document.querySelectorAll('#productos-lista tr');
+        for (let fila of filas) {
+            if (fila.dataset.id === producto.id.toString()) {
+                // Mostrar el modal si el producto ya está en la lista
+                const modalProductoExistente = new bootstrap.Modal(document.getElementById('modalProductoExistente'));
+                modalProductoExistente.show();
+
+                // Limpiar el campo de búsqueda y el desplegable
+                productoBusqueda.value = '';
+                productoLista.innerHTML = '';
+                return; // Salir de la función
+            }
+        }
 
         // Calcular precio y PV con descuento
+        const precioBase = parseFloat(producto.precio_afiliado);
+        const pvBase = parseFloat(producto.pv_afiliado) || 0;
         const precioFinal = redondearHaciaArriba(precioBase - (precioBase * (descuento / 100)));
         const pvFinal = redondearHaciaArriba(pvBase - (pvBase * (descuento / 100)));
 
+        // Crear la fila del producto
         const row = `
             <tr data-id="${producto.id}" data-precio-afiliado="${precioBase}" data-pv-afiliado="${pvBase}">
                 <td>${producto.nombre}</td>
@@ -162,11 +177,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 <td><button class="btn btn-danger btn-sm eliminar-producto">Eliminar</button></td>
             </tr>
         `;
+
+        // Agregar la fila a la tabla
         productosLista.insertAdjacentHTML('beforeend', row);
 
         // Verificar si hay productos en la lista
         verificarProductosEnLista();
 
+        // Actualizar los totales
         actualizarTotales();
 
         // Manejar la eliminación de productos
@@ -178,69 +196,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 actualizarTotales();
             });
         });
-
-        // Manejar el cambio de cantidad con los botones
-        const filas = productosLista.querySelectorAll('tr');
-        filas.forEach(fila => {
-            const disminuirBtn = fila.querySelector('.disminuir-cantidad');
-            const aumentarBtn = fila.querySelector('.aumentar-cantidad');
-            const cantidadInput = fila.querySelector('.cantidad');
-
-            disminuirBtn.addEventListener('click', function () {
-                let cantidad = parseInt(cantidadInput.value) || 1;
-                if (cantidad > 1) {
-                    cantidad--;
-                    cantidadInput.value = cantidad;
-                    actualizarSubtotal(fila);
-                }
-            });
-
-            aumentarBtn.addEventListener('click', function () {
-                let cantidad = parseInt(cantidadInput.value) || 1;
-                cantidad++;
-                cantidadInput.value = cantidad;
-                actualizarSubtotal(fila);
-            });
-
-            cantidadInput.addEventListener('input', function () {
-                actualizarSubtotal(fila);
-            });
-        });
-
-        // Función para actualizar el subtotal de una fila
-        function actualizarSubtotal(fila) {
-            const precio = parseFloat(fila.querySelector('.precio').textContent.replace('S/', ''));
-            const pv = parseFloat(fila.querySelector('.pv').textContent);
-            const cantidad = parseInt(fila.querySelector('.cantidad').value) || 0;
-
-            const nuevoSubtotal = precio * cantidad;
-            const nuevoSubtotalPV = pv * cantidad;
-
-            fila.querySelector('.subtotal').textContent = `S/${nuevoSubtotal.toFixed(2)}`;
-            fila.querySelector('.subtotal-pv').textContent = nuevoSubtotalPV.toFixed(2);
-
-            actualizarTotales();
-        }
     }
 
-    // Función para actualizar los totales
-    function actualizarTotales() {
-        let total = 0;
-        let totalPV = 0;
-
-        const filas = productosLista.querySelectorAll('tr');
-        filas.forEach(fila => {
-            const subtotal = parseFloat(fila.querySelector('.subtotal').textContent.replace('S/', '')) || 0;
-            const subtotalPV = parseFloat(fila.querySelector('.subtotal-pv').textContent) || 0;
-
-            total += subtotal;
-            totalPV += subtotalPV; // Sumar correctamente los subtotales de PV
-        });
-
-        totalPagar.textContent = redondearHaciaArriba(total).toFixed(2);
-        totalPVDisplay.textContent = redondearHaciaArriba(totalPV).toFixed(2); // Actualizar el nuevo elemento con el total PV
-        console.log('Total PV:', totalPV); // Depuración
-    }
+  
 
     // Manejar el botón "Comenzar de nuevo"
     comenzarNuevo.addEventListener('click', function () {
@@ -425,5 +383,76 @@ document.addEventListener('DOMContentLoaded', function () {
         modalPago.hide(); // Ocultar el modal de pago
         procesarCompra('pendiente', liquidacionNota); // Llamar a la función para procesar la compra
     });
+
+    // Delegación de eventos para manejar los botones de cantidad
+    productosLista.addEventListener('click', function (event) {
+        const target = event.target;
+
+        // Verificar si se hizo clic en un botón de disminuir cantidad
+        if (target.classList.contains('disminuir-cantidad')) {
+            const fila = target.closest('tr');
+            const cantidadInput = fila.querySelector('.cantidad');
+            let cantidad = parseInt(cantidadInput.value) || 1;
+
+            if (cantidad > 1) {
+                cantidad--;
+                cantidadInput.value = cantidad;
+                actualizarSubtotal(fila);
+
+            }
+        }
+
+        // Verificar si se hizo clic en un botón de aumentar cantidad
+        if (target.classList.contains('aumentar-cantidad')) {
+            const fila = target.closest('tr');
+            const cantidadInput = fila.querySelector('.cantidad');
+            let cantidad = parseInt(cantidadInput.value) || 1;
+
+            cantidad++;
+            cantidadInput.value = cantidad;
+            actualizarSubtotal(fila);
+        }
+
+
+    });
 });
 
+function actualizarSubtotal(fila) {
+    const precio = parseFloat(fila.querySelector('.precio').textContent.replace('S/', ''));
+    const pv = parseFloat(fila.querySelector('.pv').textContent);
+    const cantidad = parseInt(fila.querySelector('.cantidad').value) || 0;
+
+    const nuevoSubtotal = precio * cantidad;
+    const nuevoSubtotalPV = pv * cantidad;
+
+    fila.querySelector('.subtotal').textContent = `S/${nuevoSubtotal.toFixed(2)}`;
+    fila.querySelector('.subtotal-pv').textContent = nuevoSubtotalPV.toFixed(2);
+
+    // Llamar a actualizarTotales después de actualizar los subtotales
+    actualizarTotales();
+}
+
+  // Función para actualizar los totales
+  function actualizarTotales() {
+    let total = 0;
+    let totalPV = 0;
+
+    // Seleccionar todas las filas de productos en la tabla
+    const filas = document.querySelectorAll('#productos-lista tr');
+
+    // Iterar sobre cada fila para sumar los subtotales
+    filas.forEach(fila => {
+        const subtotal = parseFloat(fila.querySelector('.subtotal').textContent.replace('S/', '')) || 0;
+        const subtotalPV = parseFloat(fila.querySelector('.subtotal-pv').textContent) || 0;
+
+        total += subtotal;
+        totalPV += subtotalPV;
+    });
+
+    // Actualizar los totales en el DOM
+    const totalPagar = document.getElementById('total-pagar');
+    const totalPVDisplay = document.getElementById('total-pv-display');
+
+    totalPagar.textContent = total.toFixed(2); // Mostrar el total a pagar con 2 decimales
+    totalPVDisplay.textContent = totalPV.toFixed(2); // Mostrar el total PV con 2 decimales
+}

@@ -1,4 +1,13 @@
 <?php
+session_start(); // Iniciar la sesión
+
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true) {
+    http_response_code(401);
+    echo json_encode(['error' => 'Acceso no autorizado']);
+    exit;
+}
+
 include '../shared/conexion.php';
 
 // Ordenar por la columna 'codigo' en orden ascendente
