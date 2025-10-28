@@ -1,11 +1,15 @@
-// Service Worker para Tiens Talara PWA v1.3.4
-const CACHE_NAME = 'tiens-talara-v1.3.4';
-const APP_VERSION = '1.3.4';
+// Service Worker para Tiens Talara PWA v1.3.5
+const CACHE_NAME = 'tiens-talara-v1.3.5';
+const APP_VERSION = '1.3.5';
 const urlsToCache = [
   '/talara/',
   '/talara/index.php',
   '/talara/login.php',
+  '/talara/logout.php',
+  '/talara/compras/index.php',
   '/talara/compras/compras.php',
+  '/talara/compras/registrar_compra.php',
+  '/talara/compras/registro_diario.php',
   '/talara/compras/compras.js',
   '/talara/compras/compras.css',
   '/talara/pedido/index.php',
@@ -14,7 +18,10 @@ const urlsToCache = [
   '/talara/productos/index.php',
   '/talara/afiliados/index.php',
   '/talara/shared/header.php',
+  '/talara/shared/header_compras.php',
+  '/talara/shared/auth.php',
   '/talara/shared/conexion.php',
+  '/talara/pwa-styles.css',
   // Bootstrap y dependencias externas
   'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
   'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js',
