@@ -459,5 +459,21 @@ $(document).on('click', '.btn-add-cart, .btn-restar, .btn-sumar, #cart-clear, #c
 });
 
     </script>
+
+    <!-- Modal de confirmación de producto agregado -->
+    <div class="modal fade" id="modalProductoAgregado" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-body text-center p-4">
+                    <div class="mb-3">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="modal-title mb-2">¡Producto agregado!</h5>
+                    <p class="mb-0" id="mensajeProductoAgregado">Se agregó <strong id="nombreProductoAgregado"></strong> al carrito</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

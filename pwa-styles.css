@@ -1,0 +1,114 @@
+/* PWA y Mejoras Móviles - Conservativo */
+
+/* Mejoras para PWA en modo standalone */
+@media (display-mode: standalone) {
+  body {
+    user-select: none; /* Evitar selección accidental en móvil */
+    -webkit-touch-callout: none; /* Evitar menú contextual en iOS */
+  }
+}
+
+/* Mejoras táctiles para móviles */
+@media (max-width: 768px) {
+  /* Botones más grandes para táctil */
+  .btn {
+    min-height: 44px; /* Tamaño mínimo recomendado para táctil */
+    padding: 12px 16px;
+  }
+  
+  .btn-sm {
+    min-height: 38px;
+    padding: 8px 12px;
+  }
+  
+  /* Inputs más grandes */
+  .form-control {
+    min-height: 44px;
+    font-size: 16px; /* Evitar zoom automático en iOS */
+  }
+  
+  /* Espaciado mejorado en tarjetas */
+  .option-card {
+    padding: 25px 20px;
+    margin-bottom: 15px;
+  }
+  
+  .option-icon {
+    font-size: 3rem !important;
+    margin-bottom: 15px;
+  }
+  
+  .option-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  
+  /* Tabla responsive mejorada */
+  .table {
+    font-size: 0.9rem;
+  }
+  
+  .table td, .table th {
+    padding: 8px 4px;
+    vertical-align: middle;
+  }
+  
+  /* Modal mejorado para móvil */
+  .modal-dialog {
+    margin: 10px;
+    max-width: calc(100% - 20px);
+  }
+  
+  /* Navegación mejorada */
+  .navbar-brand {
+    font-size: 1.1rem;
+  }
+}
+
+/* Animaciones suaves para interacciones */
+.btn, .form-control, .option-card {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Indicador de carga discreto */
+.loading-indicator {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  background: rgba(0,0,0,0.8);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 8px;
+  display: none;
+}
+
+/* Ocultar scrollbars en webkit para look más nativo */
+@media (display-mode: standalone) {
+  ::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+  }
+}
+
+/* Safe area para dispositivos con notch */
+@supports(padding: max(0px)) {
+  .container, .container-fluid {
+    padding-left: max(15px, env(safe-area-inset-left));
+    padding-right: max(15px, env(safe-area-inset-right));
+  }
+  
+  .navbar {
+    padding-top: max(0.5rem, env(safe-area-inset-top));
+  }
+}
+
+/* Mejoras para accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

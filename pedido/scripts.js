@@ -87,6 +87,24 @@ $(document).ready(function () {
 
         guardarCarritoEnLocalStorage(); // Guardar el carrito en localStorage
         actualizarCarrito();
+        
+        // Mostrar modal de confirmación
+        mostrarModalProductoAgregado(nombre);
+    }
+    
+    // Función para mostrar modal de producto agregado
+    function mostrarModalProductoAgregado(nombreProducto) {
+        // Actualizar el nombre del producto en el modal
+        document.getElementById('nombreProductoAgregado').textContent = nombreProducto;
+        
+        // Mostrar el modal
+        const modal = new bootstrap.Modal(document.getElementById('modalProductoAgregado'));
+        modal.show();
+        
+        // Auto-cerrar el modal después de 2 segundos
+        setTimeout(() => {
+            modal.hide();
+        }, 2000);
     }
 
     // Función para actualizar el resumen del carrito

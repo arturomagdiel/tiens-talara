@@ -226,3 +226,65 @@
     font-size: 0.7rem; /* Ajusta el tamaño según lo que necesites */
     font-weight: bold; /* Mantén el texto en negritas si es necesario */
 }
+
+/* Estilos para modal de producto agregado */
+#modalProductoAgregado .modal-content {
+    border-radius: 15px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+#modalProductoAgregado .modal-body {
+    padding: 2rem;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Responsivo para móviles */
+@media (max-width: 576px) {
+    #modalProductoAgregado .modal-dialog {
+        margin: 1rem;
+        max-width: calc(100% - 2rem);
+    }
+    
+    #modalProductoAgregado .modal-body {
+        padding: 1.5rem;
+    }
+    
+    #modalProductoAgregado h5 {
+        font-size: 1.1rem;
+    }
+    
+    #modalProductoAgregado p {
+        font-size: 0.9rem;
+    }
+}
+
+/* Efecto de pulse para el icono de check */
+#modalProductoAgregado .bi-check-circle-fill {
+    animation: checkPulse 0.6s ease-out;
+}
+
+@keyframes checkPulse {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
