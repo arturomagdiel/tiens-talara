@@ -88,23 +88,75 @@ $(document).ready(function () {
         guardarCarritoEnLocalStorage(); // Guardar el carrito en localStorage
         actualizarCarrito();
         
+        // Debug para verificar que se llama la función
+        console.log('Mostrando modal para:', nombre);
+        
         // Mostrar modal de confirmación
         mostrarModalProductoAgregado(nombre);
     }
     
     // Función para mostrar modal de producto agregado
     function mostrarModalProductoAgregado(nombreProducto) {
-        // Actualizar el nombre del producto en el modal
-        document.getElementById('nombreProductoAgregado').textContent = nombreProducto;
-        
-        // Mostrar el modal
-        const modal = new bootstrap.Modal(document.getElementById('modalProductoAgregado'));
-        modal.show();
-        
-        // Auto-cerrar el modal después de 2 segundos
-        setTimeout(() => {
-            modal.hide();
-        }, 2000);
+        try {
+            // Actualizar el nombre del producto en el modal
+            const nombreElement = document.getElementById('nombreProductoAgregado');
+            if (nombreElement) {
+                nombreElement.textContent = nombreProducto;
+            }
+            
+            // Verificar que Bootstrap esté disponible
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                const modalElement = document.getElementById('modalProductoAgregado');
+                if (modalElement) {
+                    const modal = new bootstrap.Modal(modalElement, {
+                        backdrop: false,
+                        keyboard: true
+                    });
+                    modal.show();
+                    
+                    // Auto-cerrar el modal después de 2.5 segundos
+                    setTimeout(() => {
+                        modal.hide();
+                    }, 2500);
+                } else {
+                    console.warn('Modal element not found');
+                }
+            } else {
+                // Fallback: mostrar modal manualmente si Bootstrap no está disponible
+                mostrarModalFallback(nombreProducto);
+            }
+        } catch (error) {
+            console.error('Error showing modal:', error);
+            // Fallback en caso de error
+            mostrarModalFallback(nombreProducto);
+        }
+    }
+    
+    // Función fallback para mostrar modal sin Bootstrap
+    function mostrarModalFallback(nombreProducto) {
+        const modalElement = document.getElementById('modalProductoAgregado');
+        if (modalElement) {
+            // Actualizar contenido
+            const nombreElement = document.getElementById('nombreProductoAgregado');
+            if (nombreElement) {
+                nombreElement.textContent = nombreProducto;
+            }
+            
+            // Mostrar con clases CSS
+            modalElement.style.display = 'block';
+            modalElement.classList.add('show');
+            document.body.classList.add('modal-open');
+            
+            // Auto-cerrar después de 2.5 segundos
+            setTimeout(() => {
+                modalElement.style.display = 'none';
+                modalElement.classList.remove('show');
+                document.body.classList.remove('modal-open');
+            }, 2500);
+        } else {
+            // Última opción: alert simple
+            alert(`✅ ${nombreProducto} agregado al carrito`);
+        }
     }
 
     // Función para actualizar el resumen del carrito

@@ -1,7 +1,7 @@
 {
-  "name": "Tiens Talara v1.2.0 - Sistema de Gestión",
-  "short_name": "Tiens v1.2.0",
-  "description": "Sistema de gestión de compras, productos y afiliados para Tiens Talara v1.2.0",
+  "name": "Tiens Talara v1.2.1 - Sistema de Gestión",
+  "short_name": "Tiens v1.2.1",
+  "description": "Sistema de gestión de compras, productos y afiliados para Tiens Talara v1.2.1",
   "start_url": "/talara/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -16,15 +16,21 @@
       "purpose": "any"
     },
     {
-      "src": "images/tiens.ico",
+      "src": "images/apple-touch-icon.svg",
+      "sizes": "180x180",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "images/icon-192.png.svg",
       "sizes": "192x192",
-      "type": "image/x-icon",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "images/tiens.ico", 
+      "src": "images/icon-512.png.svg", 
       "sizes": "512x512",
-      "type": "image/x-icon",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     }
   ],

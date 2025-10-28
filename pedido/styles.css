@@ -232,10 +232,37 @@
     border-radius: 15px;
     background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
     animation: modalSlideIn 0.3s ease-out;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
 #modalProductoAgregado .modal-body {
     padding: 2rem;
+}
+
+#modalProductoAgregado.show {
+    display: block !important;
+}
+
+/* Backdrop personalizado para mejor compatibilidad móvil */
+#modalProductoAgregado {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1055;
+    background-color: rgba(0,0,0,0.5);
+    display: none;
+}
+
+#modalProductoAgregado .modal-dialog {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0 auto;
+    max-width: 90%;
+    width: 400px;
 }
 
 @keyframes modalSlideIn {
@@ -252,8 +279,10 @@
 /* Responsivo para móviles */
 @media (max-width: 576px) {
     #modalProductoAgregado .modal-dialog {
-        margin: 1rem;
         max-width: calc(100% - 2rem);
+        width: auto;
+        margin: 1rem;
+        top: 40%;
     }
     
     #modalProductoAgregado .modal-body {
@@ -267,11 +296,16 @@
     #modalProductoAgregado p {
         font-size: 0.9rem;
     }
+    
+    #modalProductoAgregado .bi-check-circle-fill {
+        font-size: 2.5rem !important;
+    }
 }
 
 /* Efecto de pulse para el icono de check */
 #modalProductoAgregado .bi-check-circle-fill {
     animation: checkPulse 0.6s ease-out;
+    color: #198754;
 }
 
 @keyframes checkPulse {
@@ -287,4 +321,13 @@
         transform: scale(1);
         opacity: 1;
     }
+}
+
+/* Asegurar que el modal sea visible por encima de otros elementos */
+body.modal-open {
+    overflow: hidden;
+}
+
+#modalProductoAgregado {
+    z-index: 9999 !important;
 }
