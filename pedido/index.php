@@ -8,28 +8,98 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="styles.css">
     <style>
-        body { background: #f8f9fa; }
-        .product-card { transition: box-shadow .2s; cursor: pointer; }
-        .product-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+        body { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        /* Navbar moderno */
+        .modern-navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Contenedor principal */
+        .main-container {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        /* Tarjetas de productos modernas */
+        .product-card { 
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .product-card:hover { 
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
         .product-img {
             height: 140px;
             object-fit: contain;
             padding: 10px;
-            background-color: #fff;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
         }
+        
+        /* Panel de carrito moderno */
+        .cart-panel {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
         .offcanvas-cart .offcanvas-body { padding: 0; }
         .cart-product-img { width: 48px; height: 48px; object-fit: cover; border-radius: 8px; }
         
-        /* Estilos para botones seleccionados - FONDO NEGRO FIJO */
+        /* Botones modernos */
+        .btn-modern {
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .btn-outline-dark.btn-modern {
+            background: rgba(52, 58, 64, 0.1);
+            border-color: rgba(52, 58, 64, 0.3);
+        }
+        
+        .btn-outline-dark.btn-modern:hover {
+            background: rgba(52, 58, 64, 0.8);
+            transform: translateY(-2px);
+        }
+        
+        /* Estilos para botones seleccionados */
         .btn-check:checked + .btn-outline-dark,
         .btn-check:checked + .btn-outline-success,
         .btn-check:checked + .btn-outline-secondary,
         .btn-check:checked + .btn-outline-primary,
         .btn-check:checked + .btn-outline-warning,
         .btn-check:checked + .btn-outline-danger {
-            background-color: #000000 !important;
-            border-color: #000000 !important;
+            background: linear-gradient(45deg, #28a745, #20c997) !important;
+            border-color: #28a745 !important;
             color: #ffffff !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
         }
         
         /* Remover animaciones de parpadeo */
@@ -37,34 +107,70 @@
             animation: none !important;
         }
         
+        /* Animaciones de entrada */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .product-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        /* Responsive */
         @media (max-width: 991px) {
             .cart-panel { display: none !important; }
             .offcanvas-cart {
-                top: 56px !important; /* Altura navbar Bootstrap por defecto */
+                top: 56px !important;
                 height: calc(100% - 56px) !important;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+            }
+            .main-container {
+                margin: 0.5rem;
+                padding: 1.5rem;
             }
         }
         @media (min-width: 992px) {
             .offcanvas-cart { display: none !important; }
         }
+        
+        /* Efectos adicionales */
+        .badge {
+            border-radius: 10px;
+        }
+        
+        .card-title {
+            font-weight: 600;
+        }
+        
+        .text-success {
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
-    <!-- Barra superior -->
-<nav class="navbar navbar-expand-lg bg-white shadow-sm mb-3 sticky-top" style="top:0;z-index:1040;">
+    <!-- Barra superior moderna -->
+<nav class="navbar navbar-expand-lg modern-navbar mb-3 sticky-top" style="top:0;z-index:1040;">
   <div class="container">
     <div class="w-100">
       <!-- Fila 1: Mi Compra + Público / Afiliado -->
       <div class="row align-items-center gy-2">
         <div class="col-12 col-lg-auto d-flex align-items-center gap-2 flex-wrap">
-          <a class="btn btn-outline-dark fw-bold" href="https://tienslima.com/talara/" title="Volver al menú principal">
+          <a class="btn btn-outline-dark btn-modern fw-bold" href="https://tienslima.com/talara/" title="Volver al menú principal">
             <i class="bi bi-house-door-fill"></i> INICIO
           </a>
           <div class="btn-group" role="group" aria-label="Tipo de precio">
             <input type="radio" class="btn-check" name="tipo-precio" id="publico" value="publico" autocomplete="off">
-            <label class="btn btn-outline-dark" for="publico">Público</label>
+            <label class="btn btn-outline-dark btn-modern" for="publico">Público</label>
             <input type="radio" class="btn-check" name="tipo-precio" id="afiliado" value="afiliado" autocomplete="off" checked>
-            <label class="btn btn-outline-success" for="afiliado">Afiliado</label>
+            <label class="btn btn-outline-success btn-modern" for="afiliado">Afiliado</label>
           </div>
         </div>
 
@@ -72,17 +178,17 @@
         <div class="col-12 col-lg text-lg-end d-flex flex-wrap justify-content-start justify-content-lg-end gap-2 mt-2 mt-lg-0">
           <div class="btn-group" role="group" aria-label="Descuentos">
             <input type="radio" class="btn-check" name="descuento" id="desc0" value="0" autocomplete="off">
-            <label class="btn btn-outline-secondary" for="desc0">Sin desc.</label>
+            <label class="btn btn-outline-secondary btn-modern" for="desc0">Sin desc.</label>
             <input type="radio" class="btn-check" name="descuento" id="desc5" value="5" autocomplete="off">
-            <label class="btn btn-outline-primary" for="desc5">5%</label>
+            <label class="btn btn-outline-primary btn-modern" for="desc5">5%</label>
             <input type="radio" class="btn-check" name="descuento" id="desc8" value="8" autocomplete="off">
-            <label class="btn btn-outline-warning" for="desc8">8%</label>
+            <label class="btn btn-outline-warning btn-modern" for="desc8">8%</label>
             <input type="radio" class="btn-check" name="descuento" id="desc15" value="15" autocomplete="off" checked>
-            <label class="btn btn-outline-danger" for="desc15">15%</label>
+            <label class="btn btn-outline-danger btn-modern" for="desc15">15%</label>
           </div>
 
-          <!-- Carrito -->
-          <button class="btn btn-success d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+          <!-- Carrito moderno -->
+          <button class="btn btn-success btn-modern d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
             <i class="bi bi-cart4 fs-5"></i>
             <span class="cart-count-mobile badge bg-danger ms-1">0</span>
           </button>
@@ -94,9 +200,10 @@
 
 
     <div class="container">
-        <div class="row">
-            <!-- Grid de productos -->
-            <div class="col-12 col-lg-9 mb-4">
+        <div class="main-container">
+            <div class="row">
+                <!-- Grid de productos -->
+                <div class="col-12 col-lg-9 mb-4">
                 <!-- Elimina el botón "Ver resumen de compra" aquí -->
                 <div class="row g-4 row-cols-2 row-cols-md-3 row-cols-lg-5" id="product-list">
                     <!-- Productos AJAX aquí -->
@@ -104,8 +211,8 @@
             </div>
             <!-- Panel lateral carrito escritorio -->
             <div class="col-lg-3 cart-panel">
-                <div class="card shadow-sm sticky-top" style="top: 80px;">
-                    <div class="card-header bg-success text-white text-center">
+                <div class="card cart-panel shadow-sm sticky-top" style="top: 80px;">
+                    <div class="card-header text-white text-center" style="background: linear-gradient(45deg, #28a745, #20c997);">
                         <h5 class="mb-0"><i class="bi bi-cart4"></i> Resumen de Compra</h5>
                     </div>
                     <div class="card-body p-0">
@@ -120,14 +227,15 @@
                                 <span class="fw-bold text-primary"><span id="cart-pv">0.00</span> PV</span>
                             </div>
                             <div class="d-flex gap-2">
-                                <button class="btn btn-danger w-50 btn-sm" id="cart-clear">Limpiar</button>
-                                <button class="btn btn-success w-50 btn-sm" id="cart-order" data-bs-toggle="modal" data-bs-target="#orderModal">Pedido</button>
+                                <button class="btn btn-danger btn-modern w-50 btn-sm" id="cart-clear">Limpiar</button>
+                                <button class="btn btn-success btn-modern w-50 btn-sm" id="cart-order" data-bs-toggle="modal" data-bs-target="#orderModal">Pedido</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <!-- Offcanvas carrito móvil -->
@@ -454,6 +562,19 @@ ${productosTxt}
         renderProductos();
         renderCarrito();
         cargarProductos();
+        
+        // Animación de entrada suave
+        const mainContainer = document.querySelector('.main-container');
+        if (mainContainer) {
+            mainContainer.style.opacity = '0';
+            mainContainer.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                mainContainer.style.transition = 'all 0.6s ease';
+                mainContainer.style.opacity = '1';
+                mainContainer.style.transform = 'translateY(0)';
+            }, 100);
+        }
     });
     </script>
 
