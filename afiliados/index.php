@@ -183,8 +183,8 @@ include '../shared/conexion.php';
     /* Responsive design */
     @media (max-width: 768px) {
       .main-container {
-        margin: 1rem;
-        padding: 1rem;
+        margin: 0.5rem;
+        padding: 0.75rem;
       }
       
       .page-title {
@@ -192,12 +192,98 @@ include '../shared/conexion.php';
       }
       
       .table-container {
-        padding: 1rem;
+        padding: 0.75rem;
       }
       
       .btn-modern {
         padding: 0.5rem 1rem;
         font-size: 0.9rem;
+      }
+      
+      /* Ocultar columnas en móvil */
+      #tablaPersonas th:nth-child(2), /* Código */
+      #tablaPersonas td:nth-child(2),
+      #tablaPersonas th:nth-child(5), /* Apellido */
+      #tablaPersonas td:nth-child(5),
+      #tablaPersonas th:nth-child(6), /* Teléfono */
+      #tablaPersonas td:nth-child(6),
+      #tablaPersonas th:nth-child(7), /* RUC */
+      #tablaPersonas td:nth-child(7),
+      #tablaPersonas th:nth-child(8), /* Patrocinador */
+      #tablaPersonas td:nth-child(8) {
+        display: none;
+      }
+      
+      /* Ajustar columna de descuento para mostrar iconos */
+      #tablaPersonas th:nth-child(3) {
+        width: 80px;
+        text-align: center;
+      }
+      
+      #tablaPersonas td:nth-child(3) {
+        text-align: center;
+        padding: 0.5rem 0.25rem;
+      }
+      
+      /* Hacer la fila clickeable */
+      #tablaPersonas tbody tr {
+        cursor: pointer;
+      }
+      
+      #tablaPersonas tbody tr:hover {
+        background-color: rgba(102, 126, 234, 0.15);
+      }
+      
+      /* Estilo para la fila expandida */
+      .details-row {
+        background-color: rgba(102, 126, 234, 0.05) !important;
+      }
+      
+      .details-content {
+        padding: 1rem;
+        border-left: 3px solid #667eea;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        border-radius: 8px;
+        margin: 0.5rem 0;
+      }
+      
+      .detail-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.25rem 0;
+        border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+      }
+      
+      .detail-item:last-child {
+        border-bottom: none;
+      }
+      
+      .detail-label {
+        font-weight: 600;
+        color: #667eea;
+      }
+      
+      .detail-value {
+        color: #2d3748;
+      }
+      
+      /* Indicador visual para filas expandibles */
+      #tablaPersonas tbody tr:not(.details-row)::after {
+        content: '👆';
+        position: absolute;
+        right: 10px;
+        opacity: 0.3;
+        font-size: 0.8rem;
+      }
+      
+      #tablaPersonas tbody tr.expanded::after {
+        content: '👇';
+      }
+      
+      /* Mejorar botones en móvil */
+      .btn-action {
+        padding: 0.25rem 0.5rem;
+        margin: 0 0.125rem;
       }
     }
 
@@ -252,13 +338,13 @@ include '../shared/conexion.php';
               <tr>
                 <th class="d-none">ID</th>
                 <th><i class="bi bi-hash me-1"></i>Código</th>
-                <th><i class="bi bi-percent me-1"></i>Descuento</th>
-                <th><i class="bi bi-person me-1"></i>Nombre</th>
-                <th><i class="bi bi-person-badge me-1"></i>Apellido</th>
-                <th><i class="bi bi-telephone me-1"></i>Teléfono</th>
-                <th><i class="bi bi-building me-1"></i>RUC</th>
-                <th><i class="bi bi-person-check me-1"></i>Patrocinador</th>
-                <th><i class="bi bi-gear me-1"></i>Acciones</th>
+                <th><i class="bi bi-percent me-1 d-none d-md-inline"></i><i class="bi bi-gear me-1 d-md-none"></i><span class="d-none d-md-inline">Descuento</span><span class="d-md-none">Acciones</span></th>
+                <th><i class="bi bi-person me-1"></i><span class="d-none d-md-inline">Nombre</span><span class="d-md-none">Afiliado</span></th>
+                <th class="d-none d-md-table-cell"><i class="bi bi-person-badge me-1"></i>Apellido</th>
+                <th class="d-none d-md-table-cell"><i class="bi bi-telephone me-1"></i>Teléfono</th>
+                <th class="d-none d-md-table-cell"><i class="bi bi-building me-1"></i>RUC</th>
+                <th class="d-none d-md-table-cell"><i class="bi bi-person-check me-1"></i>Patrocinador</th>
+                <th class="d-none d-md-table-cell"><i class="bi bi-gear me-1"></i>Acciones</th>
               </tr>
             </thead>
             <tbody>

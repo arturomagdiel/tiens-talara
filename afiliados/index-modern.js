@@ -29,7 +29,7 @@ $(document).ready(function () {
     // Inicializar DataTables con configuración moderna
     const tabla = $('#tablaPersonas').DataTable({
         ajax: "obtener_personas.php",
-        responsive: true,
+        responsive: false, // Deshabilitamos responsive automático para control manual
         language: {
             url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
         },
@@ -45,14 +45,33 @@ $(document).ready(function () {
             },
             { 
                 data: "descuento",
-                render: function (data) {
-                    return `<span class="badge bg-success">${data}%</span>`;
+                render: function (data, type, row) {
+                    // En móvil mostrar iconos, en desktop mostrar descuento
+                    if (window.innerWidth <= 768) {
+                        return `
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-action btn-edit btn-sm btnEditar" data-id="${row.id}" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-action btn-delete btn-sm btnEliminar" data-id="${row.id}" title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        return `<span class="badge bg-success">${data}%</span>`;
+                    }
                 }
             },
             {
                 data: "nombre",
-                render: function (data) {
-                    return data.toUpperCase();
+                render: function (data, type, row) {
+                    // En móvil mostrar nombre completo, en desktop solo nombre
+                    if (window.innerWidth <= 768) {
+                        return `<strong>${data.toUpperCase()} ${row.apellido.toUpperCase()}</strong>`;
+                    } else {
+                        return data.toUpperCase();
+                    }
                 }
             },
             {
@@ -86,6 +105,90 @@ $(document).ready(function () {
                 }
             }
         ]
+    });
+
+    // Funcionalidad para expandir filas en móvil
+    let expandedRows = {};
+
+    // Click en fila para expandir/contraer (solo en móvil)
+    $('#tablaPersonas tbody').on('click', 'tr', function(e) {
+        // Solo en móvil y si no se hizo click en un botón
+        if (window.innerWidth <= 768 && !$(e.target).closest('button').length && !$(e.target).closest('a').length) {
+            const tr = $(this);
+            const row = tabla.row(tr);
+            const rowData = row.data();
+            
+            if (!rowData) return;
+            
+            if (expandedRows[rowData.id]) {
+                // Contraer
+                tr.next('.details-row').remove();
+                delete expandedRows[rowData.id];
+                tr.removeClass('expanded');
+            } else {
+                // Expandir
+                const detailsHtml = `
+                    <tr class="details-row">
+                        <td colspan="9">
+                            <div class="details-content">
+                                <div class="detail-item">
+                                    <span class="detail-label">
+                                        <i class="bi bi-hash me-1"></i>Código:
+                                    </span>
+                                    <span class="detail-value">${rowData.codigo.toUpperCase()}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">
+                                        <i class="bi bi-percent me-1"></i>Descuento:
+                                    </span>
+                                    <span class="detail-value">${rowData.descuento}%</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">
+                                        <i class="bi bi-telephone me-1"></i>Teléfono:
+                                    </span>
+                                    <span class="detail-value">${rowData.telefono || 'No registrado'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">
+                                        <i class="bi bi-building me-1"></i>RUC:
+                                    </span>
+                                    <span class="detail-value">${rowData.ruc || 'No registrado'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">
+                                        <i class="bi bi-person-check me-1"></i>Patrocinador:
+                                    </span>
+                                    <span class="detail-value">${rowData.patrocinador ? rowData.patrocinador.toUpperCase() : 'No asignado'}</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                
+                tr.after(detailsHtml);
+                expandedRows[rowData.id] = true;
+                tr.addClass('expanded');
+            }
+        }
+    });
+
+    // Limpiar filas expandidas al recargar tabla
+    tabla.on('draw', function() {
+        expandedRows = {};
+    });
+
+    // Reajustar tabla al cambiar tamaño de ventana
+    $(window).on('resize', function() {
+        if ($.fn.DataTable.isDataTable('#tablaPersonas')) {
+            tabla.columns.adjust().draw();
+            // Limpiar expansiones al cambiar a desktop
+            if (window.innerWidth > 768) {
+                $('.details-row').remove();
+                expandedRows = {};
+                $('#tablaPersonas tbody tr').removeClass('expanded');
+            }
+        }
     });
 
     // Evento: Nuevo afiliado
