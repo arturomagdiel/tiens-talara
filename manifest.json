@@ -1,7 +1,7 @@
 {
-  "name": "Tiens Talara v1.4.4 - Sistema de Gestión",
-  "short_name": "Tiens v1.4.4",
-  "description": "Sistema de gestión de compras, productos y afiliados para Tiens Talara v1.4.4",
+  "name": "Tiens Talara v1.4.5 - Sistema de Gestión",
+  "short_name": "Tiens v1.4.5",
+  "description": "Sistema de gestión de compras, productos y afiliados para Tiens Talara v1.4.5",
   "start_url": "/talara/",
   "display": "standalone",
   "background_color": "#ffffff",

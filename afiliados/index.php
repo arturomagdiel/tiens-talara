@@ -289,44 +289,31 @@ include '../shared/conexion.php';
         min-width: 80px;
       }
       
-      /* Estilo especial para iconos pequeños en detalles */
-      .details-content .btn-action {
+      /* Estilo para iconos simples sin círculo */
+      .btn-icon {
+        background: none;
+        border: none;
         padding: 0.5rem;
-        font-weight: 600;
-        margin: 0 0.5rem;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-radius: 8px;
       }
       
-      .details-content .btn-edit {
-        background: linear-gradient(45deg, #28a745, #20c997);
-        border: none;
-        color: white;
+      .btn-icon:hover {
+        background: rgba(102, 126, 234, 0.1);
+        transform: scale(1.2);
       }
       
-      .details-content .btn-edit:hover {
-        background: linear-gradient(45deg, #218838, #1e9b8a);
-        transform: translateY(-2px) scale(1.1);
-        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
-        color: white;
+      .btn-icon i {
+        transition: all 0.3s ease;
       }
       
-      .details-content .btn-delete {
-        background: linear-gradient(45deg, #dc3545, #c82333);
-        border: none;
-        color: white;
+      .btn-icon:hover i.text-success {
+        color: #198754 !important;
       }
       
-      .details-content .btn-delete:hover {
-        background: linear-gradient(45deg, #c82333, #bd2130);
-        transform: translateY(-2px) scale(1.1);
-        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
-        color: white;
+      .btn-icon:hover i.text-danger {
+        color: #dc3545 !important;
       }
     }
 

@@ -86,8 +86,7 @@ $(document).ready(function () {
                     // En móvil mostrar nombre completo, en desktop solo nombre
                     if (window.innerWidth <= 768) {
                         return `<div class="text-center">
-                            <strong class="fs-5">${data.toUpperCase()} ${row.apellido.toUpperCase()}</strong>
-                            <div class="small text-muted mt-1">Toca para ver detalles</div>
+                            <span class="fs-6 fw-normal">${data.toUpperCase()} ${row.apellido.toUpperCase()}</span>
                         </div>`;
                     } else {
                         return data.toUpperCase();
@@ -210,16 +209,14 @@ $(document).ready(function () {
                                     <span class="detail-value">${rowData.patrocinador ? rowData.patrocinador.toUpperCase() : 'No asignado'}</span>
                                 </div>
                                 <div class="detail-item mt-3 pt-2" style="border-top: 2px solid rgba(102, 126, 234, 0.2);">
-                                    <span class="detail-label">
-                                        <i class="bi bi-gear me-1"></i>Acciones:
-                                    </span>
+                                    <span class="detail-label"></span>
                                     <span class="detail-value">
-                                        <div class="d-flex justify-content-center gap-2">
-                                            <button class="btn btn-action btn-edit btnEditar" data-id="${rowData.id}" title="Editar Afiliado">
-                                                <i class="bi bi-pencil"></i>
+                                        <div class="d-flex justify-content-end gap-3">
+                                            <button class="btn-icon btnEditar" data-id="${rowData.id}" title="Editar Afiliado">
+                                                <i class="bi bi-pencil-square text-success fs-4"></i>
                                             </button>
-                                            <button class="btn btn-action btn-delete btnEliminar" data-id="${rowData.id}" title="Eliminar Afiliado">
-                                                <i class="bi bi-trash"></i>
+                                            <button class="btn-icon btnEliminar" data-id="${rowData.id}" title="Eliminar Afiliado">
+                                                <i class="bi bi-trash3 text-danger fs-4"></i>
                                             </button>
                                         </div>
                                     </span>
