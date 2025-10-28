@@ -1,13 +1,9 @@
 <?php
-session_start(); // Iniciar la sesión
+// Incluir sistema de autenticación y cerrar sesión
+require_once 'shared/auth.php';
+logout();
 
-// Destruir todas las variables de sesión
-session_unset();
-
-// Destruir la sesión
-session_destroy();
-
-// Redirigir al usuario a la página de inicio o de acceso
+// Redirigir al usuario a la página de inicio
 header('Location: /talara/index.php');
 exit;
 ?>

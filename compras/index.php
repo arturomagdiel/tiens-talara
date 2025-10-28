@@ -34,6 +34,12 @@
 </head>
 <body>
 
+<?php
+// Incluir sistema de autenticación y requerir login
+require_once '../shared/auth.php';
+requireAuth();
+?>
+
 <?php include '../shared/header_compras.php'; ?>
 
 <script>

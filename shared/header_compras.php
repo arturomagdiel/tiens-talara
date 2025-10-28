@@ -1,14 +1,3 @@
-<?php
-session_start(); // Iniciar la sesión
-
-// Verificar si el usuario está autenticado
-if (!isset($_SESSION['autenticado']) || $_SESSION['autenticado'] !== true) {
-    // Redirigir al index para autenticación
-    header('Location: /talara/index.php');
-    exit;
-}
-?>
-
 <!-- Header simplificado para el módulo de compras -->
 <div class="container-fluid bg-dark text-white py-2 sticky-top mb-3">
     <div class="row align-items-center">
