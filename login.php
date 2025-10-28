@@ -81,6 +81,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['clave_acceso'])) {
             font-size: 4rem;
             color: #28a745;
             margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
@@ -143,5 +150,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['clave_acceso'])) {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Animación de entrada suave
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginCard = document.querySelector('.login-card');
+            loginCard.style.opacity = '0';
+            loginCard.style.transform = 'translateY(30px) scale(0.9)';
+            
+            setTimeout(() => {
+                loginCard.style.transition = 'all 0.6s ease';
+                loginCard.style.opacity = '1';
+                loginCard.style.transform = 'translateY(0) scale(1)';
+            }, 200);
+        });
+        
+        // Efecto de typing en el placeholder
+        const passwordInput = document.querySelector('input[name="clave_acceso"]');
+        if (passwordInput) {
+            passwordInput.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+                this.parentElement.style.transition = 'transform 0.2s ease';
+            });
+            
+            passwordInput.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        }
+    </script>
 </body>
 </html>
