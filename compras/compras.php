@@ -25,7 +25,12 @@ $conn->close();
 </head>
 <body>
 
-<?php include '../shared/header.php'; ?>
+<?php include '../shared/header_compras.php'; ?>
+
+<script>
+// Establecer el título específico para esta página
+setPageTitle('Ver Compras');
+</script>
 
     <div class="container-fluid mt-4">
 

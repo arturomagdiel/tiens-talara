@@ -38,7 +38,12 @@ if ($resultProductos->num_rows > 0) {
 </head>
 <body>
 
-<?php include '../shared/header.php'; ?>
+<?php include '../shared/header_compras.php'; ?>
+
+<script>
+// Establecer el título específico para esta página
+setPageTitle('Registrar Compra');
+</script>
 
 <div class="container mt-4">
 

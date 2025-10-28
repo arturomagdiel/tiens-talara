@@ -17,7 +17,14 @@ $fecha_actual = date('Y-m-d');
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
-<?php include '../shared/header.php'; ?>
+
+<?php include '../shared/header_compras.php'; ?>
+
+<script>
+// Establecer el título específico para esta página
+setPageTitle('Registro Diario');
+</script>
+
 <div class="container mt-5">
  
 <!-- Selección de rango de fechas -->
