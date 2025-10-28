@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tiens Talara v1.3.2 - Sistema de Gestión</title>
+  <title>Tiens Talara v1.3.3 - Sistema de Gestión</title>
   
   <!-- PWA Meta Tags -->
   <meta name="description" content="Sistema de gestión de compras, productos y afiliados para Tiens Talara">
@@ -49,7 +49,7 @@
     <div class="text-center mb-4">
       <h1 class="mb-2">Tiens Talara</h1>
       <p class="text-muted mb-1">Sistema de Gestión</p>
-      <small class="badge bg-primary">v1.3.2</small>
+      <small class="badge bg-primary">v1.3.3</small>
     </div>
     <div class="row g-4">
       <!-- Pedidos -->
