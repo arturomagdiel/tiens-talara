@@ -3,7 +3,7 @@
 require_once 'shared/auth.php';
 logout();
 
-// Redirigir al usuario a la página de inicio
-header('Location: /talara/index.php');
+// Redirigir al usuario a la página de login
+header('Location: /talara/login.php');
 exit;
 ?>

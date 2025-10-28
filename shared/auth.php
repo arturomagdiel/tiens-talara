@@ -27,8 +27,10 @@ function isAuthenticated() {
  * Requerir autenticación - redirige si no está autenticado
  * @param string $redirectTo URL donde redirigir si no está autenticado (opcional)
  */
-function requireAuth($redirectTo = '/talara/index.php') {
+function requireAuth($redirectTo = '/talara/login.php') {
     if (!isAuthenticated()) {
+        // Guardar la URL actual para redirigir después del login
+        $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
         header('Location: ' . $redirectTo);
         exit;
     }
