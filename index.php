@@ -248,8 +248,8 @@
     }
     
     // Mostrar versión en consola
-    console.log('%c🌿 Tiens Talara v1.4.3', 'color: #28a745; font-size: 16px; font-weight: bold;');
-    console.log('Sistema de Gestión - PWA v1.4.3 con Header Simplificado y UX Optimizada');
+    console.log('%c🌿 Tiens Talara v1.4.4', 'color: #28a745; font-size: 16px; font-weight: bold;');
+    console.log('Sistema de Gestión - PWA v1.4.4 con Columnas Móvil Forzadas');
 
     // PWA Install Prompt
     let deferredPrompt;

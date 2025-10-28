@@ -35,6 +35,37 @@ $(document).ready(function () {
         },
         pageLength: 25,
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+        columnDefs: [
+            // Ocultar columnas en móvil
+            {
+                targets: [1], // Columna código
+                visible: window.innerWidth > 768
+            },
+            {
+                targets: [2], // Columna descuento  
+                visible: window.innerWidth > 768
+            },
+            {
+                targets: [4], // Columna apellido
+                visible: window.innerWidth > 768
+            },
+            {
+                targets: [5], // Columna teléfono
+                visible: window.innerWidth > 768
+            },
+            {
+                targets: [6], // Columna RUC
+                visible: window.innerWidth > 768
+            },
+            {
+                targets: [7], // Columna patrocinador
+                visible: window.innerWidth > 768
+            },
+            {
+                targets: [8], // Columna acciones
+                visible: window.innerWidth > 768
+            }
+        ],
         columns: [
             { data: "id", visible: false },
             {
@@ -94,6 +125,32 @@ $(document).ready(function () {
                 }
             }
         ]
+    });
+
+    // Función para controlar visibilidad inicial de columnas
+    function ajustarColumnasSegunPantalla() {
+        const isMobile = window.innerWidth <= 768;
+        
+        if (isMobile) {
+            // En móvil, ocultar todas las columnas excepto nombre
+            tabla.column(1).visible(false); // Código
+            tabla.column(2).visible(false); // Descuento
+            tabla.column(4).visible(false); // Apellido
+            tabla.column(5).visible(false); // Teléfono
+            tabla.column(6).visible(false); // RUC
+            tabla.column(7).visible(false); // Patrocinador
+            tabla.column(8).visible(false); // Acciones
+        }
+        tabla.columns.adjust();
+    }
+
+    // Ejecutar ajuste inicial después de cargar datos
+    tabla.on('init', function() {
+        ajustarColumnasSegunPantalla();
+    });
+
+    tabla.on('draw', function() {
+        ajustarColumnasSegunPantalla();
     });
 
     // Funcionalidad para expandir filas en móvil
@@ -187,13 +244,26 @@ $(document).ready(function () {
     // Reajustar tabla al cambiar tamaño de ventana
     $(window).on('resize', function() {
         if ($.fn.DataTable.isDataTable('#tablaPersonas')) {
+            // Controlar visibilidad de columnas según tamaño de pantalla
+            const isMobile = window.innerWidth <= 768;
+            
+            // Ocultar/mostrar columnas dinámicamente
+            tabla.column(1).visible(!isMobile); // Código
+            tabla.column(2).visible(!isMobile); // Descuento
+            tabla.column(4).visible(!isMobile); // Apellido
+            tabla.column(5).visible(!isMobile); // Teléfono
+            tabla.column(6).visible(!isMobile); // RUC
+            tabla.column(7).visible(!isMobile); // Patrocinador
+            tabla.column(8).visible(!isMobile); // Acciones
+            
             // Limpiar expansiones al cambiar a desktop
-            if (window.innerWidth > 768) {
+            if (!isMobile) {
                 $('.details-row').remove();
                 expandedRows = {};
                 $('#tablaPersonas tbody tr').removeClass('expanded');
             }
-            // Redibujar tabla para actualizar renderizado responsivo
+            
+            // Redibujar tabla
             tabla.columns.adjust().draw(false);
         }
     });
