@@ -39,145 +39,23 @@ document.addEventListener('DOMContentLoaded', function () {
       productoBusqueda.style.color = '#6c757d';
     }
 
-    // Helpers dropdown
+    // Helpers dropdown simplificados - ya no necesitan posicionamiento complejo
     function posicionarDropdown(dropdown, input) {
-        const rect = input.getBoundingClientRect();
-        const isMobile = window.innerWidth <= 576;
-        
-        dropdown.style.position = 'fixed';
-        dropdown.style.zIndex = '999999';
-        
-        if (isMobile) {
-            // En móvil: posición fija más visible
-            dropdown.style.left = '15px';
-            dropdown.style.right = '15px';
-            dropdown.style.width = 'auto';
-            
-            // Calcular posición segura dentro del viewport - DEBAJO del input
-            const inputBottom = rect.bottom; // No usar scrollY para position: fixed
-            const viewportHeight = window.innerHeight;
-            const dropdownHeight = 200;
-            
-            // Verificar si hay espacio abajo del input
-            if (inputBottom + dropdownHeight > viewportHeight) {
-                // Si no hay espacio abajo, mostrar arriba del input
-                const safeTop = Math.max(rect.top - dropdownHeight - 10, 10);
-                dropdown.style.top = safeTop + 'px';
-                console.log('📱 Dropdown arriba del input:', dropdown.style.top);
-            } else {
-                // Posición normal debajo del input
-                const safeTop = inputBottom + 10;
-                dropdown.style.top = safeTop + 'px';
-                console.log('📱 Dropdown debajo del input:', dropdown.style.top);
-            }
-            
-            dropdown.style.maxHeight = '200px';
-            dropdown.style.bottom = 'auto';
-            
-        } else {
-            // En desktop: posicionamiento normal
-            dropdown.style.top = (rect.bottom + 5) + 'px';
-            dropdown.style.left = rect.left + 'px';
-            dropdown.style.width = rect.width + 'px';
-            dropdown.style.right = 'auto';
-            dropdown.style.bottom = 'auto';
-            dropdown.style.maxHeight = '300px';
-
-            const dropdownRect = dropdown.getBoundingClientRect();
-            if (dropdownRect.right > window.innerWidth) {
-                dropdown.style.left = (window.innerWidth - dropdownRect.width - 15) + 'px';
-            }
-            if (dropdownRect.left < 0) {
-                dropdown.style.left = '15px';
-                dropdown.style.width = (window.innerWidth - 30) + 'px';
-            }
-        }
+        // Los dropdowns ahora están integrados directamente debajo de cada input
+        // No necesitan posicionamiento manual ya que están en el flujo del documento
+        console.log('✅ Dropdown integrado en flujo del documento');
     }
+    
     function mostrarDropdown(dropdown, input) {
-        console.log('📱 Mostrando dropdown:', dropdown.id, 'isMobile:', window.innerWidth <= 576);
-        posicionarDropdown(dropdown, input);
+        console.log('📱 Mostrando dropdown integrado:', dropdown.id);
         dropdown.style.display = 'block';
         dropdown.classList.add('show');
-        
-        // Fuerza absoluta para móvil
-        if (window.innerWidth <= 576) {
-            dropdown.style.opacity = '1';
-            dropdown.style.visibility = 'visible';
-            dropdown.style.pointerEvents = 'auto';
-            dropdown.style.position = 'fixed';
-            dropdown.style.zIndex = '999999';
-            dropdown.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
-            dropdown.style.border = '2px solid rgba(255, 255, 255, 0.5)';
-            dropdown.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.4)';
-            
-            // FORZAR POSICIÓN VISIBLE INMEDIATAMENTE
-            console.log('🔧 Aplicando posición forzada inmediata para móvil...');
-            const rect = input.getBoundingClientRect();
-            const inputBottom = rect.bottom; // Para position: fixed no usar scrollY
-            dropdown.style.top = (inputBottom + 10) + 'px'; // 10px debajo del input
-            dropdown.style.left = '15px';
-            dropdown.style.right = '15px';
-            dropdown.style.bottom = 'auto';
-            dropdown.style.width = 'auto';
-            dropdown.style.minHeight = '100px';
-            dropdown.style.transform = 'none';
-            dropdown.style.margin = '0';
-            dropdown.style.padding = '0';
-            
-            // Verificar posición después de aplicar estilos
-            setTimeout(() => {
-                const rect = dropdown.getBoundingClientRect();
-                const viewportHeight = window.innerHeight;
-                console.log('📱 Dropdown rect after timeout:', rect);
-                console.log('📱 Viewport height:', viewportHeight);
-                console.log('📱 Condiciones:', {
-                    topOutside: rect.top > viewportHeight,
-                    bottomOutside: rect.bottom < 0,
-                    heightZero: rect.height === 0,
-                    topFarDown: rect.top > viewportHeight * 0.8
-                });
-                
-                // Si aún está fuera del viewport o muy abajo, reposicionar de emergencia
-                if (rect.top > viewportHeight || rect.bottom < 0 || rect.height === 0 || rect.top > viewportHeight * 0.8) {
-                    console.log('❌ Dropdown TODAVÍA fuera de viewport, segunda emergencia...');
-                    const inputRect = input.getBoundingClientRect();
-                    const fallbackTop = inputRect.bottom + 10; // Siempre debajo del input
-                    dropdown.style.top = Math.max(fallbackTop, 50) + 'px';
-                    dropdown.style.left = '10px';
-                    dropdown.style.right = '10px';
-                    dropdown.style.bottom = 'auto';
-                    dropdown.style.minHeight = '150px';
-                    dropdown.style.transform = 'none';
-                    dropdown.style.position = 'fixed';
-                    
-                    // Verificar nuevamente
-                    setTimeout(() => {
-                        const newRect = dropdown.getBoundingClientRect();
-                        console.log('🔧 Nueva posición después de segunda emergencia:', newRect);
-                    }, 50);
-                } else {
-                    console.log('✅ Dropdown en posición correcta');
-                }
-            }, 100);
-        }
-        
-        console.log('📱 Dropdown styles applied:', {
-            display: dropdown.style.display,
-            position: dropdown.style.position,
-            top: dropdown.style.top,
-            left: dropdown.style.left,
-            zIndex: dropdown.style.zIndex,
-            visibility: getComputedStyle(dropdown).visibility
-        });
+        console.log('✅ Dropdown mostrado correctamente');
     }
     function ocultarDropdown(dropdown) {
         dropdown.style.display = 'none';
         dropdown.classList.remove('show');
         dropdown.innerHTML = '';
-    }
-    // Implementación opcional para móvil (si quieres conservar la llamada)
-    function posicionarDropdownMovil(dropdown, input) {
-        if (window.innerWidth <= 576) posicionarDropdown(dropdown, input);
     }
 
     // Buscar/seleccionar persona

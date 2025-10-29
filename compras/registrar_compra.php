@@ -75,6 +75,10 @@ setPageTitle('Registrar Compra');
                                 <span class="input-icon">
                                     <i class="bi bi-search"></i>
                                 </span>
+                                <!-- Dropdown de personas directamente aquí -->
+                                <div class="list-group modern-dropdown" id="persona-lista" style="display: none;">
+                                    <!-- Resultados de búsqueda de personas aparecerán aquí -->
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -113,6 +117,10 @@ setPageTitle('Registrar Compra');
                                 <span class="input-icon">
                                     <i class="bi bi-search"></i>
                                 </span>
+                                <!-- Dropdown de productos directamente aquí -->
+                                <div class="list-group modern-dropdown" id="producto-lista" style="display: none;">
+                                    <!-- Resultados de búsqueda de productos aparecerán aquí -->
+                                </div>
                             </div>
                         </div>
 
@@ -362,15 +370,6 @@ setPageTitle('Registrar Compra');
             
     </div>
     
-    <!-- Dropdowns flotantes - fuera de cualquier contenedor -->
-    <div class="list-group modern-dropdown" id="persona-lista" style="display: none;">
-        <!-- Resultados de búsqueda de personas aparecerán aquí -->
-    </div>
-    
-    <div class="list-group modern-dropdown" id="producto-lista" style="display: none;">
-        <!-- Resultados de búsqueda de productos aparecerán aquí -->
-    </div>
-    
     <script>
         const personas = <?= json_encode($personas); ?>; // Pasar datos de personas al script
         const productos = <?= json_encode($productos); ?>; // Pasar datos de productos al script
@@ -379,6 +378,6 @@ setPageTitle('Registrar Compra');
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Indicador de versión PWA -->
-    <div class="version-indicator">PWA v1.4.6</div>
+    <div class="version-indicator">PWA v1.6.0</div>
 </body>
 </html>
