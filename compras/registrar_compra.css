@@ -177,6 +177,14 @@ body.context-app {
     min-height: 50px;
 }
 
+/* Dropdown de personas - prioridad máxima */
+#persona-lista.modern-dropdown {
+    z-index: 2000 !important; /* Más alto que productos */
+    background: rgba(255, 255, 255, 0.99);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(13, 110, 253, 0.3);
+}
+
 .modern-dropdown.show {
     display: block !important;
     opacity: 1;
@@ -188,6 +196,12 @@ body.context-app {
     .modern-dropdown {
         min-width: 300px; /* Ancho mínimo en desktop */
         z-index: 1050; /* Z-index más alto para desktop */
+    }
+    
+    /* Dropdown de personas en desktop - prioridad absoluta */
+    #persona-lista.modern-dropdown {
+        z-index: 2100 !important;
+        min-width: 350px;
     }
 }
 

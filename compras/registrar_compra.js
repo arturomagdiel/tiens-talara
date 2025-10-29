@@ -20,12 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalAlertaPago = new bootstrap.Modal(document.getElementById('modalAlertaPago'));
 
     // Debug para móvil
-    console.log('🔍 Debug elements:', {
-        personaBusqueda: !!personaBusqueda,
-        personaLista: !!personaLista,
-        isMobile: window.innerWidth <= 576,
-        viewport: { width: window.innerWidth, height: window.innerHeight }
-    });
+    console.log('� Viewport:', { width: window.innerWidth, height: window.innerHeight });
 
     let personaSeleccionada = null;
     let descuentoSeleccionado = 0;
@@ -48,13 +43,28 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
     function mostrarDropdown(dropdown, input) {
-        console.log('📱 Mostrando dropdown integrado:', dropdown.id, 'isDesktop:', window.innerWidth > 576);
+        console.log('📱 Mostrando dropdown:', dropdown.id, 'isDesktop:', window.innerWidth > 576);
         dropdown.style.display = 'block';
         dropdown.classList.add('show');
         
         // Asegurar visibilidad completa
         dropdown.style.visibility = 'visible';
         dropdown.style.opacity = '1';
+        
+        // Debug específico para dropdown de personas
+        if (dropdown.id === 'persona-lista') {
+            const computedStyle = window.getComputedStyle(dropdown);
+            console.log('🔍 Z-INDEX DEBUG - Dropdown personas:', {
+                zIndex: computedStyle.zIndex,
+                position: computedStyle.position,
+                visibility: dropdown.style.visibility,
+                display: dropdown.style.display
+            });
+            
+            // Forzar z-index alto para personas
+            dropdown.style.zIndex = '2000';
+            console.log('✅ Z-index forzado para dropdown personas: 2000');
+        }
         
         // Debug adicional para desktop
         if (window.innerWidth > 576) {
@@ -70,7 +80,6 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('✅ Dropdown mostrado correctamente');
     }
     function ocultarDropdown(dropdown) {
-        console.log('🫥 Ocultando dropdown:', dropdown.id);
         dropdown.style.display = 'none';
         dropdown.classList.remove('show');
         dropdown.innerHTML = '';
@@ -78,18 +87,14 @@ document.addEventListener('DOMContentLoaded', function () {
         // Asegurar que se oculte con múltiples métodos
         dropdown.style.visibility = 'hidden';
         dropdown.style.opacity = '0';
-        
-        console.log('✅ Dropdown ocultado correctamente');
     }
 
     // Buscar/seleccionar persona
     if (personaBusqueda && personaLista) {
       personaBusqueda.addEventListener('input', function () {
           const query = this.value.toLowerCase();
-          console.log('🔍 Búsqueda personas:', query, 'length:', query.length);
 
           if (query.length < 3) { 
-              console.log('❌ Query muy corto, ocultando dropdown');
               ocultarDropdown(personaLista); 
               return; 
           }
@@ -98,8 +103,6 @@ document.addEventListener('DOMContentLoaded', function () {
               (p.nombre || '').toLowerCase().includes(query) ||
               (p.codigo || '').toLowerCase().includes(query)
           );
-
-          console.log('📊 Resultados encontrados:', resultados.length);
 
           if (resultados.length === 0) {
               personaLista.innerHTML = '<p class="text-muted p-3">No se encontraron resultados.</p>';
@@ -152,13 +155,10 @@ document.addEventListener('DOMContentLoaded', function () {
     if (productoBusqueda && productoLista) {
       // Crear handler de input y guardarlo como referencia
       const inputHandler = function () {
-          // Si acabamos de seleccionar un producto, ignorar este evento
-          if (prevenirBusquedaProducto) {
-              console.log('🚫 Búsqueda producto prevenida por selección reciente');
-              return;
-          }
-          
-          const query = this.value.toLowerCase();
+      // Si acabamos de seleccionar un producto, ignorar este evento
+      if (prevenirBusquedaProducto) {
+          return;
+      }          const query = this.value.toLowerCase();
           if (!query) { ocultarDropdown(productoLista); return; }
 
           const resultados = productos.filter(prod =>
@@ -464,13 +464,9 @@ document.addEventListener('DOMContentLoaded', function () {
               cantidad++; cantidadInput.value = cantidad; actualizarSubtotal(fila);
           }
           if (target.classList.contains('eliminar-producto')) {
-              console.log('🗑️ ELIMINANDO producto desde tabla desktop');
               const fila = target.closest('tr');
               if (fila) {
-                  const nombreProducto = fila.querySelector('td:first-child')?.textContent;
-                  console.log('🗑️ Producto a eliminar:', nombreProducto);
                   fila.remove();
-                  console.log('✅ Fila eliminada, actualizando totales...');
                   verificarProductosEnLista();
                   actualizarTotales();
               }
@@ -496,13 +492,9 @@ document.addEventListener('DOMContentLoaded', function () {
               cantidad++; cantidadInput.value = cantidad; actualizarSubtotal(tarjeta);
           }
           if (target.classList.contains('eliminar-producto') || target.closest('.eliminar-producto')) {
-              console.log('🗑️ ELIMINANDO producto desde tarjeta móvil');
               const tarjeta = target.closest('.mobile-product-card');
               if (tarjeta) {
-                  const nombreProducto = tarjeta.querySelector('.mobile-product-name')?.textContent;
-                  console.log('🗑️ Producto a eliminar:', nombreProducto);
                   tarjeta.remove();
-                  console.log('✅ Tarjeta eliminada, actualizando totales...');
                   verificarProductosEnLista();
                   actualizarTotales();
               }
