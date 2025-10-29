@@ -47,9 +47,21 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
     function mostrarDropdown(dropdown, input) {
-        console.log('📱 Mostrando dropdown integrado:', dropdown.id);
+        console.log('📱 Mostrando dropdown integrado:', dropdown.id, 'isDesktop:', window.innerWidth > 576);
         dropdown.style.display = 'block';
         dropdown.classList.add('show');
+        
+        // Debug adicional para desktop
+        if (window.innerWidth > 576) {
+            console.log('🖥️ Desktop mode - dropdown info:', {
+                id: dropdown.id,
+                display: dropdown.style.display,
+                className: dropdown.className,
+                innerHTML: dropdown.innerHTML.length > 0,
+                parentElement: dropdown.parentElement?.className
+            });
+        }
+        
         console.log('✅ Dropdown mostrado correctamente');
     }
     function ocultarDropdown(dropdown) {
@@ -186,9 +198,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function agregarProductoALista(producto, descuento) {
-        const filas = document.querySelectorAll('#productos-lista tr');
-        for (let fila of filas) {
+        // Verificar si el producto ya existe (tanto en desktop como móvil)
+        const filasDesktop = document.querySelectorAll('#productos-lista tr');
+        const tarjetasMobile = document.querySelectorAll('.mobile-product-card');
+        
+        for (let fila of filasDesktop) {
             if (fila.dataset.id === String(producto.id)) {
+                const modalProductoExistente = new bootstrap.Modal(document.getElementById('modalProductoExistente'));
+                modalProductoExistente.show();
+                productoBusqueda.value = '';
+                productoLista.innerHTML = '';
+                return;
+            }
+        }
+        
+        for (let tarjeta of tarjetasMobile) {
+            if (tarjeta.dataset.id === String(producto.id)) {
                 const modalProductoExistente = new bootstrap.Modal(document.getElementById('modalProductoExistente'));
                 modalProductoExistente.show();
                 productoBusqueda.value = '';
@@ -202,7 +227,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const precioFinal = redondearHaciaArriba(precioBase * (1 - (descuento / 100)));
         const pvFinal = redondearHaciaArriba(pvBase * (1 - (descuento / 100)));
 
-        const row = `
+        // Vista Desktop: Tabla
+        const rowDesktop = `
             <tr data-id="${producto.id}" data-precio-afiliado="${precioBase}" data-pv-afiliado="${pvBase}">
                 <td>${producto.nombre}</td>
                 <td>${producto.codigo}</td>
@@ -216,20 +242,74 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 </td>
                 <td class="subtotal">S/${precioFinal.toFixed(2)}</td>
-                <td class="subtotal-pv">${pvFinal.toFixed(2)}</td>
                 <td><button class="btn btn-danger btn-sm eliminar-producto">Eliminar</button></td>
             </tr>
         `;
-        productosLista.insertAdjacentHTML('beforeend', row);
+        
+        // Vista Mobile: Tarjeta moderna
+        const cardMobile = `
+            <div class="mobile-product-card" data-id="${producto.id}" data-precio-afiliado="${precioBase}" data-pv-afiliado="${pvBase}">
+                <div class="mobile-product-header">
+                    <div class="mobile-product-name">${producto.nombre}</div>
+                    <div class="mobile-product-code">${producto.codigo}</div>
+                </div>
+                
+                <div class="mobile-product-details">
+                    <div class="mobile-detail-item">
+                        <i class="bi bi-currency-dollar"></i>
+                        <span class="mobile-detail-label">Precio:</span>
+                        <span class="mobile-detail-value precio">S/${precioFinal.toFixed(2)}</span>
+                    </div>
+                    <div class="mobile-detail-item">
+                        <i class="bi bi-star"></i>
+                        <span class="mobile-detail-label">PV:</span>
+                        <span class="mobile-detail-value pv">${pvFinal.toFixed(2)}</span>
+                    </div>
+                </div>
+                
+                <div class="mobile-product-actions">
+                    <div class="mobile-quantity-controls">
+                        <button class="mobile-qty-btn disminuir-cantidad" type="button">−</button>
+                        <input type="text" value="1" min="1" class="mobile-qty-input cantidad text-center" readonly>
+                        <button class="mobile-qty-btn aumentar-cantidad" type="button">+</button>
+                    </div>
+                    
+                    <div class="mobile-subtotal">
+                        <div class="mobile-subtotal-label">Subtotal</div>
+                        <div class="mobile-subtotal-value subtotal">S/${precioFinal.toFixed(2)}</div>
+                    </div>
+                    
+                    <button class="mobile-delete-btn eliminar-producto" type="button">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+
+        // Agregar a ambas vistas
+        const productosListaDesktop = document.getElementById('productos-lista');
+        const productosListaMobile = document.getElementById('productos-lista-mobile');
+        
+        if (productosListaDesktop) {
+            productosListaDesktop.insertAdjacentHTML('beforeend', rowDesktop);
+        }
+        
+        if (productosListaMobile) {
+            productosListaMobile.insertAdjacentHTML('beforeend', cardMobile);
+        }
 
         verificarProductosEnLista();
         actualizarTotales();
 
+        // Event listeners para botones eliminar
         document.querySelectorAll('.eliminar-producto').forEach(btn => {
             btn.addEventListener('click', function () {
-                this.closest('tr').remove();
-                verificarProductosEnLista();
-                actualizarTotales();
+                const element = this.closest('tr') || this.closest('.mobile-product-card');
+                if (element) {
+                    element.remove();
+                    verificarProductosEnLista();
+                    actualizarTotales();
+                }
             });
         });
     }
@@ -270,23 +350,42 @@ document.addEventListener('DOMContentLoaded', function () {
     if (descuentoPersona) {
       descuentoPersona.addEventListener('change', function () {
           const nuevoDescuento = parseInt(descuentoPersona.value, 10) || 0;
-          const filas = productosLista.querySelectorAll('tr');
-          if (filas.length > 0) {
-              filas.forEach(fila => {
-                  const precioBase = parseFloat(fila.dataset.precioAfiliado);
-                  const pvBase = parseFloat(fila.dataset.pvAfiliado);
-                  const precioFinal = redondearHaciaArriba(precioBase * (1 - (nuevoDescuento / 100)));
-                  const pvFinal = redondearHaciaArriba(pvBase * (1 - (nuevoDescuento / 100)));
+          
+          // Actualizar productos en vista desktop (tabla)
+          const filasDesktop = document.querySelectorAll('#productos-lista tr');
+          filasDesktop.forEach(fila => {
+              const precioBase = parseFloat(fila.dataset.precioAfiliado);
+              const pvBase = parseFloat(fila.dataset.pvAfiliado);
+              const precioFinal = redondearHaciaArriba(precioBase * (1 - (nuevoDescuento / 100)));
+              const pvFinal = redondearHaciaArriba(pvBase * (1 - (nuevoDescuento / 100)));
 
-                  fila.querySelector('.precio').textContent = `S/${precioFinal.toFixed(2)}`;
-                  fila.querySelector('.pv').textContent = pvFinal.toFixed(2);
+              fila.querySelector('.precio').textContent = `S/${precioFinal.toFixed(2)}`;
+              fila.querySelector('.pv').textContent = pvFinal.toFixed(2);
 
-                  const cantidad = parseInt(fila.querySelector('.cantidad').value, 10) || 0;
-                  fila.querySelector('.subtotal').textContent = `S/${(precioFinal * cantidad).toFixed(2)}`;
-                  fila.querySelector('.subtotal-pv').textContent = (pvFinal * cantidad).toFixed(2);
-              });
-              actualizarTotales();
-          }
+              const cantidad = parseInt(fila.querySelector('.cantidad').value, 10) || 0;
+              fila.querySelector('.subtotal').textContent = `S/${(precioFinal * cantidad).toFixed(2)}`;
+              const subtotalPvElement = fila.querySelector('.subtotal-pv');
+              if (subtotalPvElement) {
+                  subtotalPvElement.textContent = (pvFinal * cantidad).toFixed(2);
+              }
+          });
+          
+          // Actualizar productos en vista móvil (tarjetas)
+          const tarjetasMobile = document.querySelectorAll('.mobile-product-card');
+          tarjetasMobile.forEach(tarjeta => {
+              const precioBase = parseFloat(tarjeta.dataset.precioAfiliado);
+              const pvBase = parseFloat(tarjeta.dataset.pvAfiliado);
+              const precioFinal = redondearHaciaArriba(precioBase * (1 - (nuevoDescuento / 100)));
+              const pvFinal = redondearHaciaArriba(pvBase * (1 - (nuevoDescuento / 100)));
+
+              tarjeta.querySelector('.precio').textContent = `S/${precioFinal.toFixed(2)}`;
+              tarjeta.querySelector('.pv').textContent = pvFinal.toFixed(2);
+
+              const cantidad = parseInt(tarjeta.querySelector('.cantidad').value, 10) || 0;
+              tarjeta.querySelector('.subtotal').textContent = `S/${(precioFinal * cantidad).toFixed(2)}`;
+          });
+          
+          actualizarTotales();
       });
     }
 
@@ -306,7 +405,7 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
 
-    // Delegación de cantidad
+    // Delegación de cantidad para vista Desktop (tabla)
     if (productosLista) {
       productosLista.addEventListener('click', function (event) {
           const target = event.target;
@@ -321,6 +420,26 @@ document.addEventListener('DOMContentLoaded', function () {
               const cantidadInput = fila.querySelector('.cantidad');
               let cantidad = parseInt(cantidadInput.value, 10) || 1;
               cantidad++; cantidadInput.value = cantidad; actualizarSubtotal(fila);
+          }
+      });
+    }
+
+    // Delegación de cantidad para vista Móvil (tarjetas)
+    const productosListaMobile = document.getElementById('productos-lista-mobile');
+    if (productosListaMobile) {
+      productosListaMobile.addEventListener('click', function (event) {
+          const target = event.target;
+          if (target.classList.contains('disminuir-cantidad')) {
+              const tarjeta = target.closest('.mobile-product-card');
+              const cantidadInput = tarjeta.querySelector('.cantidad');
+              let cantidad = parseInt(cantidadInput.value, 10) || 1;
+              if (cantidad > 1) { cantidad--; cantidadInput.value = cantidad; actualizarSubtotal(tarjeta); }
+          }
+          if (target.classList.contains('aumentar-cantidad')) {
+              const tarjeta = target.closest('.mobile-product-card');
+              const cantidadInput = tarjeta.querySelector('.cantidad');
+              let cantidad = parseInt(cantidadInput.value, 10) || 1;
+              cantidad++; cantidadInput.value = cantidad; actualizarSubtotal(tarjeta);
           }
       });
     }
@@ -351,16 +470,40 @@ document.addEventListener('DOMContentLoaded', function () {
     verificarProductosEnLista();
 
     // ------- funciones que usan variables de arriba permanecen dentro del DOMContentLoaded -------
-    function actualizarSubtotal(fila) {
-        const precio = parseFloat(fila.querySelector('.precio').textContent.replace('S/', ''));
-        const pv = parseFloat(fila.querySelector('.pv').textContent);
-        const cantidad = parseInt(fila.querySelector('.cantidad').value, 10) || 0;
+    function actualizarSubtotal(elemento) {
+        // Detectar si es fila de tabla (desktop) o tarjeta móvil
+        const esTabla = elemento.tagName === 'TR';
+        
+        let precio, pv, cantidad, subtotalElement;
+        
+        if (esTabla) {
+            // Vista Desktop (tabla)
+            precio = parseFloat(elemento.querySelector('.precio').textContent.replace('S/', ''));
+            pv = parseFloat(elemento.querySelector('.pv').textContent);
+            cantidad = parseInt(elemento.querySelector('.cantidad').value, 10) || 0;
+            subtotalElement = elemento.querySelector('.subtotal');
+        } else {
+            // Vista Mobile (tarjeta)
+            precio = parseFloat(elemento.querySelector('.precio').textContent.replace('S/', ''));
+            pv = parseFloat(elemento.querySelector('.pv').textContent);
+            cantidad = parseInt(elemento.querySelector('.cantidad').value, 10) || 0;
+            subtotalElement = elemento.querySelector('.subtotal');
+        }
 
         const nuevoSubtotal = precio * cantidad;
-        const nuevoSubtotalPV = pv * cantidad;
 
-        fila.querySelector('.subtotal').textContent = `S/${nuevoSubtotal.toFixed(2)}`;
-        fila.querySelector('.subtotal-pv').textContent = nuevoSubtotalPV.toFixed(2);
+        if (subtotalElement) {
+            subtotalElement.textContent = `S/${nuevoSubtotal.toFixed(2)}`;
+        }
+
+        // En vista desktop también actualizar PV
+        if (esTabla) {
+            const nuevoSubtotalPV = pv * cantidad;
+            const subtotalPVElement = elemento.querySelector('.subtotal-pv');
+            if (subtotalPVElement) {
+                subtotalPVElement.textContent = nuevoSubtotalPV.toFixed(2);
+            }
+        }
 
         actualizarTotales();
     }

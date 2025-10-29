@@ -124,8 +124,9 @@ setPageTitle('Registrar Compra');
                             </div>
                         </div>
 
-                        <!-- Tabla responsive de productos -->
-                        <div class="table-container">
+                        <!-- Vista para productos agregados -->
+                        <!-- Vista Desktop: Tabla tradicional -->
+                        <div class="table-container d-none d-md-block">
                             <div class="table-responsive">
                                 <table class="table modern-table">
                                     <thead>
@@ -134,7 +135,7 @@ setPageTitle('Registrar Compra');
                                                 <i class="bi bi-box me-1"></i>
                                                 Producto
                                             </th>
-                                            <th class="text-nowrap d-none d-md-table-cell">
+                                            <th class="text-nowrap">
                                                 <i class="bi bi-upc me-1"></i>
                                                 Código
                                             </th>
@@ -142,19 +143,17 @@ setPageTitle('Registrar Compra');
                                                 <i class="bi bi-currency-dollar me-1"></i>
                                                 Precio
                                             </th>
-                                            <th class="text-nowrap d-none d-lg-table-cell">
+                                            <th class="text-nowrap">
                                                 <i class="bi bi-star me-1"></i>
                                                 PV
                                             </th>
                                             <th class="text-nowrap">
                                                 <i class="bi bi-123 me-1"></i>
-                                                <span class="d-none d-sm-inline">Cantidad</span>
-                                                <span class="d-sm-none">Cant</span>
+                                                Cantidad
                                             </th>
                                             <th class="text-nowrap">
                                                 <i class="bi bi-calculator me-1"></i>
-                                                <span class="d-none d-sm-inline">Subtotal</span>
-                                                <span class="d-sm-none">Total</span>
+                                                Subtotal
                                             </th>
                                             <th class="text-nowrap text-center">
                                                 <i class="bi bi-gear-fill"></i>
@@ -166,6 +165,11 @@ setPageTitle('Registrar Compra');
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                        
+                        <!-- Vista Mobile: Tarjetas modernas -->
+                        <div class="mobile-products-container d-md-none" id="productos-lista-mobile">
+                            <!-- Los productos aparecerán como tarjetas aquí -->
                         </div>
 
                         <!-- Panel de totales -->
@@ -378,6 +382,6 @@ setPageTitle('Registrar Compra');
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Indicador de versión PWA -->
-    <div class="version-indicator">PWA v1.6.0</div>
+    <div class="version-indicator">PWA v1.6.1</div>
 </body>
 </html>
