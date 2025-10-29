@@ -32,7 +32,7 @@ const urlsToCache = [
   '/talara/shared/header.php',
   '/talara/shared/auth.php',
   '/talara/pwa-styles.css',
-  '/talara/manifest.json',
+  '/talara/manifest.php',
   '/talara/images/apple-touch-icon.svg',
   '/talara/images/tiens.ico',
   'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
