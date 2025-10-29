@@ -150,7 +150,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Buscar/seleccionar producto
     if (productoBusqueda && productoLista) {
-      productoBusqueda.addEventListener('input', function () {
+      // Crear handler de input y guardarlo como referencia
+      const inputHandler = function () {
           // Si acabamos de seleccionar un producto, ignorar este evento
           if (prevenirBusquedaProducto) {
               console.log('🚫 Búsqueda producto prevenida por selección reciente');
@@ -183,34 +184,41 @@ document.addEventListener('DOMContentLoaded', function () {
               item.dataset.precioAfiliado = producto.precio_afiliado;
               item.dataset.pvAfiliado = producto.pv_afiliado;
 
-              item.addEventListener('click', function () {
+              item.addEventListener('click', function (event) {
+                  // Prevenir propagación del evento
+                  event.preventDefault();
+                  event.stopPropagation();
+                  
                   if (!personaSeleccionada) {
                       const modalSeleccionarPersona = new bootstrap.Modal(document.getElementById('modalSeleccionarPersona'));
                       modalSeleccionarPersona.show();
                       return;
                   }
                   
-                  // Agregar producto a la lista
-                  agregarProductoALista(producto, descuentoSeleccionado);
+                  console.log('🎯 Producto seleccionado:', producto.nombre);
                   
-                  // Activar flag para prevenir búsqueda
-                  prevenirBusquedaProducto = true;
-                  
-                  // Ocultar dropdown y limpiar búsqueda
-                  console.log('🧹 Limpiando dropdown y búsqueda después de agregar producto');
-                  
-                  // Primero limpiar la búsqueda
-                  productoBusqueda.value = '';
-                  productoBusqueda.blur(); // Quitar foco del input
-                  
-                  // Luego ocultar dropdown
+                  // PRIMERO: Ocultar dropdown inmediatamente
                   ocultarDropdown(productoLista);
                   
-                  // Reactivar búsqueda después de un delay
+                  // SEGUNDO: Activar flag para prevenir búsqueda
+                  prevenirBusquedaProducto = true;
+                  
+                  // TERCERO: Limpiar búsqueda sin disparar eventos
+                  productoBusqueda.removeEventListener('input', productoBusqueda._inputHandler);
+                  productoBusqueda.value = '';
+                  productoBusqueda.blur();
+                  
+                  // CUARTO: Agregar producto a la lista
+                  agregarProductoALista(producto, descuentoSeleccionado);
+                  
+                  // QUINTO: Reactivar eventos después de un delay
                   setTimeout(() => {
+                      if (productoBusqueda._inputHandler) {
+                          productoBusqueda.addEventListener('input', productoBusqueda._inputHandler);
+                      }
                       prevenirBusquedaProducto = false;
-                      console.log('✅ Búsqueda de productos reactivada');
-                  }, 200);
+                      console.log('✅ Sistema de búsqueda reactivado');
+                  }, 300);
                   
                   // Verificar que se haya limpiado correctamente
                   setTimeout(() => {
@@ -227,7 +235,11 @@ document.addEventListener('DOMContentLoaded', function () {
           });
 
           mostrarDropdown(productoLista, productoBusqueda);
-      });
+      };
+      
+      // Guardar referencia del handler y agregar el event listener
+      productoBusqueda._inputHandler = inputHandler;
+      productoBusqueda.addEventListener('input', inputHandler);
     }
 
     function redondearHaciaArriba(v) { return Math.ceil(v * 100) / 100; }
