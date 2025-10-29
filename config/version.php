@@ -1,6 +1,6 @@
 <?php
 // Single Source of Truth para la versión de Tiens Talara
-define('APP_VERSION', '1.6.6');
+define('APP_VERSION', '1.6.7');
 define('APP_NAME', 'Tiens Talara');
 define('APP_DESCRIPTION', 'Sistema de gestión de compras, productos y afiliados para Tiens Talara');
 

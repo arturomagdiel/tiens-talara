@@ -257,13 +257,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function verificarProductosEnLista() {
         const filas = productosLista ? productosLista.querySelectorAll('tr') : [];
-        if (!guardarCompra || !comenzarNuevo) return;
+        console.log('🔍 verificarProductosEnLista - Filas encontradas:', filas.length);
+        
+        if (!guardarCompra || !comenzarNuevo) {
+            console.log('⚠️ Botones guardarCompra o comenzarNuevo no encontrados');
+            return;
+        }
+        
         if (filas.length > 0) {
           guardarCompra.style.display = 'inline-block';
           comenzarNuevo.style.display = 'inline-block';
+          console.log('✅ Botones habilitados - hay productos en lista');
         } else {
           guardarCompra.style.display = 'none';
           comenzarNuevo.style.display = 'none';
+          console.log('🚫 Botones deshabilitados - lista vacía');
         }
     }
 
@@ -393,17 +401,7 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('🔄 Llamando actualizarTotales()');
         actualizarTotales();
 
-        // Event listeners para botones eliminar
-        document.querySelectorAll('.eliminar-producto').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const element = this.closest('tr') || this.closest('.mobile-product-card');
-                if (element) {
-                    element.remove();
-                    verificarProductosEnLista();
-                    actualizarTotales();
-                }
-            });
-        });
+        console.log('✅ Producto agregado completamente a ambas vistas');
     }
 
     if (comenzarNuevo) {
@@ -513,6 +511,18 @@ document.addEventListener('DOMContentLoaded', function () {
               let cantidad = parseInt(cantidadInput.value, 10) || 1;
               cantidad++; cantidadInput.value = cantidad; actualizarSubtotal(fila);
           }
+          if (target.classList.contains('eliminar-producto')) {
+              console.log('🗑️ ELIMINANDO producto desde tabla desktop');
+              const fila = target.closest('tr');
+              if (fila) {
+                  const nombreProducto = fila.querySelector('td:first-child')?.textContent;
+                  console.log('🗑️ Producto a eliminar:', nombreProducto);
+                  fila.remove();
+                  console.log('✅ Fila eliminada, actualizando totales...');
+                  verificarProductosEnLista();
+                  actualizarTotales();
+              }
+          }
       });
     }
 
@@ -532,6 +542,18 @@ document.addEventListener('DOMContentLoaded', function () {
               const cantidadInput = tarjeta.querySelector('.cantidad');
               let cantidad = parseInt(cantidadInput.value, 10) || 1;
               cantidad++; cantidadInput.value = cantidad; actualizarSubtotal(tarjeta);
+          }
+          if (target.classList.contains('eliminar-producto') || target.closest('.eliminar-producto')) {
+              console.log('🗑️ ELIMINANDO producto desde tarjeta móvil');
+              const tarjeta = target.closest('.mobile-product-card');
+              if (tarjeta) {
+                  const nombreProducto = tarjeta.querySelector('.mobile-product-name')?.textContent;
+                  console.log('🗑️ Producto a eliminar:', nombreProducto);
+                  tarjeta.remove();
+                  console.log('✅ Tarjeta eliminada, actualizando totales...');
+                  verificarProductosEnLista();
+                  actualizarTotales();
+              }
           }
       });
     }
