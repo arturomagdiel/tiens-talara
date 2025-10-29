@@ -51,6 +51,10 @@ document.addEventListener('DOMContentLoaded', function () {
         dropdown.style.display = 'block';
         dropdown.classList.add('show');
         
+        // Asegurar visibilidad completa
+        dropdown.style.visibility = 'visible';
+        dropdown.style.opacity = '1';
+        
         // Debug adicional para desktop
         if (window.innerWidth > 576) {
             console.log('🖥️ Desktop mode - dropdown info:', {
@@ -65,9 +69,16 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('✅ Dropdown mostrado correctamente');
     }
     function ocultarDropdown(dropdown) {
+        console.log('🫥 Ocultando dropdown:', dropdown.id);
         dropdown.style.display = 'none';
         dropdown.classList.remove('show');
         dropdown.innerHTML = '';
+        
+        // Asegurar que se oculte con múltiples métodos
+        dropdown.style.visibility = 'hidden';
+        dropdown.style.opacity = '0';
+        
+        console.log('✅ Dropdown ocultado correctamente');
     }
 
     // Buscar/seleccionar persona
@@ -171,9 +182,24 @@ document.addEventListener('DOMContentLoaded', function () {
                       modalSeleccionarPersona.show();
                       return;
                   }
+                  
+                  // Agregar producto a la lista
                   agregarProductoALista(producto, descuentoSeleccionado);
+                  
+                  // Ocultar dropdown y limpiar búsqueda
+                  console.log('🧹 Limpiando dropdown y búsqueda después de agregar producto');
                   ocultarDropdown(productoLista);
                   productoBusqueda.value = '';
+                  productoBusqueda.blur(); // Quitar foco del input
+                  
+                  // Verificar que se haya limpiado correctamente
+                  setTimeout(() => {
+                      console.log('✅ Estado después de limpiar:', {
+                          dropdownVisible: productoLista.style.display,
+                          searchValue: productoBusqueda.value,
+                          dropdownHasClass: productoLista.classList.contains('show')
+                      });
+                  }, 100);
               });
 
               productoLista.appendChild(item);
@@ -242,6 +268,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 </td>
                 <td class="subtotal">S/${precioFinal.toFixed(2)}</td>
+                <td class="subtotal-pv">${pvFinal.toFixed(2)}</td>
                 <td><button class="btn btn-danger btn-sm eliminar-producto">Eliminar</button></td>
             </tr>
         `;
@@ -511,13 +538,28 @@ document.addEventListener('DOMContentLoaded', function () {
     function actualizarTotales() {
         let total = 0;
         let totalPV = 0;
-        const filas = document.querySelectorAll('#productos-lista tr');
-        filas.forEach(fila => {
+        
+        // Calcular desde tabla desktop
+        const filasDesktop = document.querySelectorAll('#productos-lista tr');
+        filasDesktop.forEach(fila => {
             const subtotal = parseFloat(fila.querySelector('.subtotal').textContent.replace('S/', '')) || 0;
             const subtotalPV = parseFloat(fila.querySelector('.subtotal-pv').textContent) || 0;
             total += subtotal;
             totalPV += subtotalPV;
         });
+        
+        // Calcular desde tarjetas mobile
+        const tarjetasMobile = document.querySelectorAll('.mobile-product-card');
+        tarjetasMobile.forEach(tarjeta => {
+            const subtotal = parseFloat(tarjeta.querySelector('.subtotal').textContent.replace('S/', '')) || 0;
+            const pv = parseFloat(tarjeta.querySelector('.pv').textContent) || 0;
+            const cantidad = parseInt(tarjeta.querySelector('.cantidad').value) || 1;
+            total += subtotal;
+            totalPV += (pv * cantidad);
+        });
+        
+        console.log('💰 Totales calculados:', { total, totalPV, filasDesktop: filasDesktop.length, tarjetasMobile: tarjetasMobile.length });
+        
         if (totalPagar) totalPagar.textContent = total.toFixed(2);
         if (totalPVDisplay) totalPVDisplay.textContent = totalPV.toFixed(2);
     }

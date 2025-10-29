@@ -155,6 +155,10 @@ setPageTitle('Registrar Compra');
                                                 <i class="bi bi-calculator me-1"></i>
                                                 Subtotal
                                             </th>
+                                            <th class="text-nowrap">
+                                                <i class="bi bi-star-fill me-1"></i>
+                                                Subtotal PV
+                                            </th>
                                             <th class="text-nowrap text-center">
                                                 <i class="bi bi-gear-fill"></i>
                                             </th>

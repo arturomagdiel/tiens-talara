@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tiens Talara v1.6.1 - Sistema de Gestión</title>  <!-- PWA Meta Tags -->
+    <title>Tiens Talara v1.6.2 - Sistema de Gestión</title>  <!-- PWA Meta Tags -->
   <meta name="description" content="Sistema de gestión de compras, productos y afiliados para Tiens Talara">
   <meta name="theme-color" content="#0d6efd">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -190,7 +190,7 @@
         <i class="bi bi-leaf logo-icon"></i>
         <h1 class="main-title">Tiens Talara</h1>
         <p class="subtitle">Sistema de Gestión Integral</p>
-                                                            <span class="badge bg-success">v1.6.1</span>
+                                                            <span class="badge bg-success">v1.6.2</span>
       </div>
       
       <!-- Options Grid -->
@@ -248,8 +248,8 @@
     }
     
     // Mostrar versión en consola
-    console.log('%c🌿 Tiens Talara v1.6.1', 'color: #28a745; font-size: 16px; font-weight: bold;');
-    console.log('Sistema de Gestión - PWA v1.6.1 con Registrar Compra Modernizado');
+    console.log('%c🌿 Tiens Talara v1.6.2', 'color: #28a745; font-size: 16px; font-weight: bold;');
+    console.log('Sistema de Gestión - PWA v1.6.2 con Registrar Compra Modernizado');
 
     // PWA Install Prompt
     let deferredPrompt;
@@ -304,6 +304,6 @@
   </script>
   
   <!-- Indicador de versión para PWA -->
-  <div class="version-indicator">v1.6.1</div>
+  <div class="version-indicator">v1.6.3</div>
 </body>
 </html>
