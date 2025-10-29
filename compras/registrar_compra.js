@@ -19,6 +19,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalConfirmacionCompra = new bootstrap.Modal(document.getElementById('modalConfirmacionCompra'));
     const modalAlertaPago = new bootstrap.Modal(document.getElementById('modalAlertaPago'));
 
+    // Debug para móvil
+    console.log('🔍 Debug elements:', {
+        personaBusqueda: !!personaBusqueda,
+        personaLista: !!personaLista,
+        isMobile: window.innerWidth <= 576,
+        viewport: { width: window.innerWidth, height: window.innerHeight }
+    });
+
     let personaSeleccionada = null;
     let descuentoSeleccionado = 0;
     let liquidacionNota = '';
@@ -74,9 +82,44 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
     function mostrarDropdown(dropdown, input) {
+        console.log('📱 Mostrando dropdown:', dropdown.id, 'isMobile:', window.innerWidth <= 576);
         posicionarDropdown(dropdown, input);
         dropdown.style.display = 'block';
         dropdown.classList.add('show');
+        
+        // Fuerza absoluta para móvil
+        if (window.innerWidth <= 576) {
+            dropdown.style.opacity = '1';
+            dropdown.style.visibility = 'visible';
+            dropdown.style.pointerEvents = 'auto';
+            dropdown.style.position = 'fixed';
+            dropdown.style.zIndex = '999999';
+            dropdown.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
+            dropdown.style.border = '2px solid rgba(255, 255, 255, 0.5)';
+            dropdown.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.4)';
+            
+            // Asegurar que esté en viewport
+            setTimeout(() => {
+                const rect = dropdown.getBoundingClientRect();
+                console.log('📱 Dropdown rect after timeout:', rect);
+                if (rect.height === 0) {
+                    console.log('❌ Dropdown no visible, reposicionando...');
+                    dropdown.style.top = '200px';
+                    dropdown.style.left = '15px';
+                    dropdown.style.right = '15px';
+                    dropdown.style.minHeight = '100px';
+                }
+            }, 100);
+        }
+        
+        console.log('📱 Dropdown styles applied:', {
+            display: dropdown.style.display,
+            position: dropdown.style.position,
+            top: dropdown.style.top,
+            left: dropdown.style.left,
+            zIndex: dropdown.style.zIndex,
+            visibility: getComputedStyle(dropdown).visibility
+        });
     }
     function ocultarDropdown(dropdown) {
         dropdown.style.display = 'none';
@@ -92,13 +135,20 @@ document.addEventListener('DOMContentLoaded', function () {
     if (personaBusqueda && personaLista) {
       personaBusqueda.addEventListener('input', function () {
           const query = this.value.toLowerCase();
+          console.log('🔍 Búsqueda personas:', query, 'length:', query.length);
 
-          if (query.length < 3) { ocultarDropdown(personaLista); return; }
+          if (query.length < 3) { 
+              console.log('❌ Query muy corto, ocultando dropdown');
+              ocultarDropdown(personaLista); 
+              return; 
+          }
 
           const resultados = personas.filter(p =>
               (p.nombre || '').toLowerCase().includes(query) ||
               (p.codigo || '').toLowerCase().includes(query)
           );
+
+          console.log('📊 Resultados encontrados:', resultados.length);
 
           if (resultados.length === 0) {
               personaLista.innerHTML = '<p class="text-muted p-3">No se encontraron resultados.</p>';
@@ -144,8 +194,6 @@ document.addEventListener('DOMContentLoaded', function () {
           });
 
           mostrarDropdown(personaLista, personaBusqueda);
-          // Si quieres mantenerlo:
-          posicionarDropdownMovil(personaLista, personaBusqueda);
       });
     }
 

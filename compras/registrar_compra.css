@@ -376,11 +376,29 @@ body.context-app {
         border: 2px solid rgba(255, 255, 255, 0.5) !important;
         backdrop-filter: blur(20px) !important;
         overflow-y: auto !important;
+        /* Forzar visibilidad absoluta */
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        transform: none !important;
     }
     
     .modern-dropdown.show {
         display: block !important;
         animation: slideDown 0.3s ease-out;
+        /* Forzar que se vea */
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+    /* Asegurar que no haya overlays que bloqueen */
+    body.context-app {
+        overflow-x: hidden !important;
+    }
+    
+    .modern-card {
+        z-index: 1 !important;
+        position: relative !important;
     }
     
     @keyframes slideDown {

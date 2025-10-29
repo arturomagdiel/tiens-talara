@@ -1,5 +1,5 @@
 // Service Worker para Tiens Talara PWA v1.4.7
-const CACHE_NAME = 'tiens-talara-v1.4.8';
+const CACHE_NAME = 'tiens-talara-v1.4.9';
 const APP_VERSION = '1.4.7';
 const urlsToCache = [
   '/talara/',
