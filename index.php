@@ -1,18 +1,19 @@
 <!-- filepath: c:\Users\artur\Documents\GitHub\tiens-talara\index.php -->
+<?php require_once __DIR__ . '/config/version.php'; ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tiens Talara v1.6.3 - Sistema de Gestión</title>  <!-- PWA Meta Tags -->
-  <meta name="description" content="Sistema de gestión de compras, productos y afiliados para Tiens Talara">
+    <title><?php echo getFullVersion(); ?> - Sistema de Gestión</title>  <!-- PWA Meta Tags -->
+  <meta name="description" content="<?php echo APP_DESCRIPTION; ?>">
   <meta name="theme-color" content="#0d6efd">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Tiens Talara">
+  <meta name="apple-mobile-web-app-title" content="<?php echo APP_NAME; ?>">
   
   <!-- PWA Links -->
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="manifest.php">
   <link rel="apple-touch-icon" href="images/apple-touch-icon.svg">
   <link rel="icon" type="image/x-icon" href="images/tiens.ico">
   
@@ -188,9 +189,9 @@
       <!-- Header Section -->
       <div class="header-section">
         <i class="bi bi-leaf logo-icon"></i>
-        <h1 class="main-title">Tiens Talara</h1>
+        <h1 class="main-title"><?php echo APP_NAME; ?></h1>
         <p class="subtitle">Sistema de Gestión Integral</p>
-                                                            <span class="badge bg-success">v1.6.3</span>
+                                                            <span class="badge bg-success">v<?php echo getVersion(); ?></span>
       </div>
       
       <!-- Options Grid -->
@@ -237,9 +238,9 @@
     // Registrar Service Worker para PWA
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('sw.js')
+        navigator.serviceWorker.register('sw.php')
           .then(function(registration) {
-            console.log('✅ Tiens Talara v1.6.3 - Service Worker registrado:', registration.scope);
+            console.log('✅ <?php echo getFullVersion(); ?> - Service Worker registrado:', registration.scope);
           })
           .catch(function(error) {
             console.log('❌ Error al registrar Service Worker:', error);
@@ -248,8 +249,8 @@
     }
     
     // Mostrar versión en consola
-    console.log('%c🌿 Tiens Talara v1.6.3', 'color: #28a745; font-size: 16px; font-weight: bold;');
-    console.log('Sistema de Gestión - PWA v1.6.3 con Registrar Compra Modernizado');
+    console.log('%c🌿 <?php echo getFullVersion(); ?>', 'color: #28a745; font-size: 16px; font-weight: bold;');
+    console.log('Sistema de Gestión - PWA v<?php echo getVersion(); ?> con Registrar Compra Modernizado');
 
     // PWA Install Prompt
     let deferredPrompt;
@@ -304,6 +305,6 @@
   </script>
   
   <!-- Indicador de versión para PWA -->
-  <div class="version-indicator">v1.6.3</div>
+  <div class="version-indicator">v<?php echo getVersion(); ?></div>
 </body>
 </html>

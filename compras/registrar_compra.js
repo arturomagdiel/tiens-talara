@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let personaSeleccionada = null;
     let descuentoSeleccionado = 0;
     let liquidacionNota = '';
+    let prevenirBusquedaProducto = false; // Flag para prevenir búsqueda después de selección
 
     // Deshabilitar búsqueda de productos inicialmente
     if (productoBusqueda) {
@@ -150,6 +151,12 @@ document.addEventListener('DOMContentLoaded', function () {
     // Buscar/seleccionar producto
     if (productoBusqueda && productoLista) {
       productoBusqueda.addEventListener('input', function () {
+          // Si acabamos de seleccionar un producto, ignorar este evento
+          if (prevenirBusquedaProducto) {
+              console.log('🚫 Búsqueda producto prevenida por selección reciente');
+              return;
+          }
+          
           const query = this.value.toLowerCase();
           if (!query) { ocultarDropdown(productoLista); return; }
 
@@ -186,18 +193,32 @@ document.addEventListener('DOMContentLoaded', function () {
                   // Agregar producto a la lista
                   agregarProductoALista(producto, descuentoSeleccionado);
                   
+                  // Activar flag para prevenir búsqueda
+                  prevenirBusquedaProducto = true;
+                  
                   // Ocultar dropdown y limpiar búsqueda
                   console.log('🧹 Limpiando dropdown y búsqueda después de agregar producto');
-                  ocultarDropdown(productoLista);
+                  
+                  // Primero limpiar la búsqueda
                   productoBusqueda.value = '';
                   productoBusqueda.blur(); // Quitar foco del input
+                  
+                  // Luego ocultar dropdown
+                  ocultarDropdown(productoLista);
+                  
+                  // Reactivar búsqueda después de un delay
+                  setTimeout(() => {
+                      prevenirBusquedaProducto = false;
+                      console.log('✅ Búsqueda de productos reactivada');
+                  }, 200);
                   
                   // Verificar que se haya limpiado correctamente
                   setTimeout(() => {
                       console.log('✅ Estado después de limpiar:', {
                           dropdownVisible: productoLista.style.display,
                           searchValue: productoBusqueda.value,
-                          dropdownHasClass: productoLista.classList.contains('show')
+                          dropdownHasClass: productoLista.classList.contains('show'),
+                          dropdownVisibility: productoLista.style.visibility
                       });
                   }, 100);
               });
