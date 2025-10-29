@@ -173,7 +173,6 @@ document.addEventListener('DOMContentLoaded', function () {
           }
 
           productoLista.innerHTML = '';
-          console.log('🎯 Creando', resultados.length, 'items de productos en dropdown');
           resultados.forEach(producto => {
               const item = document.createElement('button');
               item.type = 'button';
@@ -185,28 +184,16 @@ document.addEventListener('DOMContentLoaded', function () {
               item.dataset.precioAfiliado = producto.precio_afiliado;
               item.dataset.pvAfiliado = producto.pv_afiliado;
 
-              console.log('🔗 Agregando event listener a producto:', producto.nombre);
-
               item.addEventListener('click', function (event) {
-                  console.log('🚀 CLICK EN PRODUCTO DETECTADO:', producto.nombre);
-                  console.log('📊 Estado actual:', {
-                      personaSeleccionada: !!personaSeleccionada,
-                      prevenirBusqueda: prevenirBusquedaProducto,
-                      eventoTipo: event.type
-                  });
-                  
                   // Prevenir propagación del evento
                   event.preventDefault();
                   event.stopPropagation();
                   
                   if (!personaSeleccionada) {
-                      console.log('❌ No hay persona seleccionada, mostrando modal');
                       const modalSeleccionarPersona = new bootstrap.Modal(document.getElementById('modalSeleccionarPersona'));
                       modalSeleccionarPersona.show();
                       return;
                   }
-                  
-                  console.log('🎯 Producto seleccionado válido:', producto.nombre);
                   
                   // PRIMERO: Ocultar dropdown inmediatamente
                   ocultarDropdown(productoLista);
@@ -222,23 +209,17 @@ document.addEventListener('DOMContentLoaded', function () {
                   // CUARTO: Agregar producto a la lista
                   agregarProductoALista(producto, descuentoSeleccionado);
                   
-                  // QUINTO: Reactivar eventos después de un delay
+                  // Reactivar eventos después de un delay
                   setTimeout(() => {
                       if (productoBusqueda._inputHandler) {
                           productoBusqueda.addEventListener('input', productoBusqueda._inputHandler);
                       }
                       prevenirBusquedaProducto = false;
-                      console.log('✅ Sistema de búsqueda reactivado');
                   }, 300);
                   
                   // Verificar que se haya limpiado correctamente
                   setTimeout(() => {
-                      console.log('✅ Estado después de limpiar:', {
-                          dropdownVisible: productoLista.style.display,
-                          searchValue: productoBusqueda.value,
-                          dropdownHasClass: productoLista.classList.contains('show'),
-                          dropdownVisibility: productoLista.style.visibility
-                      });
+                      console.log('✅ Dropdown y búsqueda limpiados correctamente');
                   }, 100);
               });
 
@@ -257,39 +238,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function verificarProductosEnLista() {
         const filas = productosLista ? productosLista.querySelectorAll('tr') : [];
-        console.log('🔍 verificarProductosEnLista - Filas encontradas:', filas.length);
         
-        if (!guardarCompra || !comenzarNuevo) {
-            console.log('⚠️ Botones guardarCompra o comenzarNuevo no encontrados');
-            return;
-        }
+        if (!guardarCompra || !comenzarNuevo) return;
         
         if (filas.length > 0) {
           guardarCompra.style.display = 'inline-block';
           comenzarNuevo.style.display = 'inline-block';
-          console.log('✅ Botones habilitados - hay productos en lista');
         } else {
           guardarCompra.style.display = 'none';
           comenzarNuevo.style.display = 'none';
-          console.log('🚫 Botones deshabilitados - lista vacía');
         }
     }
 
     function agregarProductoALista(producto, descuento) {
-        console.log('🏗️ INICIANDO agregarProductoALista:', {
-            producto: producto.nombre,
-            descuento: descuento,
-            productoId: producto.id
-        });
-        
         // Verificar si el producto ya existe (tanto en desktop como móvil)
         const filasDesktop = document.querySelectorAll('#productos-lista tr');
         const tarjetasMobile = document.querySelectorAll('.mobile-product-card');
-        
-        console.log('🔍 Verificando duplicados:', {
-            filasDesktop: filasDesktop.length,
-            tarjetasMobile: tarjetasMobile.length
-        });
         
         for (let fila of filasDesktop) {
             if (fila.dataset.id === String(producto.id)) {
@@ -380,28 +344,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const productosListaDesktop = document.getElementById('productos-lista');
         const productosListaMobile = document.getElementById('productos-lista-mobile');
         
-        console.log('📝 Agregando producto a listas:', {
-            desktop: !!productosListaDesktop,
-            mobile: !!productosListaMobile
-        });
-        
         if (productosListaDesktop) {
             productosListaDesktop.insertAdjacentHTML('beforeend', rowDesktop);
-            console.log('✅ Producto agregado a tabla desktop');
         }
         
         if (productosListaMobile) {
             productosListaMobile.insertAdjacentHTML('beforeend', cardMobile);
-            console.log('✅ Producto agregado a tarjetas mobile');
         }
 
-        console.log('🔄 Llamando verificarProductosEnLista()');
         verificarProductosEnLista();
-        
-        console.log('🔄 Llamando actualizarTotales()');
         actualizarTotales();
-
-        console.log('✅ Producto agregado completamente a ambas vistas');
     }
 
     if (comenzarNuevo) {
@@ -627,30 +579,36 @@ document.addEventListener('DOMContentLoaded', function () {
         let total = 0;
         let totalPV = 0;
         
-        // Calcular desde tabla desktop
-        const filasDesktop = document.querySelectorAll('#productos-lista tr');
-        console.log('🖥️ Filas desktop encontradas:', filasDesktop.length);
-        filasDesktop.forEach((fila, index) => {
-            const subtotal = parseFloat(fila.querySelector('.subtotal').textContent.replace('S/', '')) || 0;
-            const subtotalPV = parseFloat(fila.querySelector('.subtotal-pv').textContent) || 0;
-            console.log(`   Desktop fila ${index + 1}:`, { subtotal, subtotalPV });
-            total += subtotal;
-            totalPV += subtotalPV;
-        });
+        // Determinar si estamos en móvil o desktop
+        const esMobile = window.innerWidth <= 768;
+        console.log('📱 Modo detectado:', esMobile ? 'MOBILE' : 'DESKTOP');
         
-        // Calcular desde tarjetas mobile
-        const tarjetasMobile = document.querySelectorAll('.mobile-product-card');
-        console.log('📱 Tarjetas mobile encontradas:', tarjetasMobile.length);
-        tarjetasMobile.forEach((tarjeta, index) => {
-            const subtotal = parseFloat(tarjeta.querySelector('.subtotal').textContent.replace('S/', '')) || 0;
-            const pv = parseFloat(tarjeta.querySelector('.pv').textContent) || 0;
-            const cantidad = parseInt(tarjeta.querySelector('.cantidad').value) || 1;
-            console.log(`   Mobile tarjeta ${index + 1}:`, { subtotal, pv, cantidad, pvTotal: pv * cantidad });
-            total += subtotal;
-            totalPV += (pv * cantidad);
-        });
+        if (esMobile) {
+            // En móvil: solo calcular desde tarjetas mobile
+            const tarjetasMobile = document.querySelectorAll('.mobile-product-card');
+            console.log('� Calculando desde tarjetas mobile únicamente:', tarjetasMobile.length);
+            tarjetasMobile.forEach((tarjeta, index) => {
+                const subtotal = parseFloat(tarjeta.querySelector('.subtotal').textContent.replace('S/', '')) || 0;
+                const pv = parseFloat(tarjeta.querySelector('.pv').textContent) || 0;
+                const cantidad = parseInt(tarjeta.querySelector('.cantidad').value) || 1;
+                console.log(`   Mobile tarjeta ${index + 1}:`, { subtotal, pv, cantidad, pvTotal: pv * cantidad });
+                total += subtotal;
+                totalPV += (pv * cantidad);
+            });
+        } else {
+            // En desktop: solo calcular desde tabla desktop
+            const filasDesktop = document.querySelectorAll('#productos-lista tr');
+            console.log('�️ Calculando desde tabla desktop únicamente:', filasDesktop.length);
+            filasDesktop.forEach((fila, index) => {
+                const subtotal = parseFloat(fila.querySelector('.subtotal').textContent.replace('S/', '')) || 0;
+                const subtotalPV = parseFloat(fila.querySelector('.subtotal-pv').textContent) || 0;
+                console.log(`   Desktop fila ${index + 1}:`, { subtotal, subtotalPV });
+                total += subtotal;
+                totalPV += subtotalPV;
+            });
+        }
         
-        console.log('💰 Totales calculados:', { total, totalPV, filasDesktop: filasDesktop.length, tarjetasMobile: tarjetasMobile.length });
+        console.log('💰 Totales calculados SIN DUPLICACIÓN:', { total, totalPV, modo: esMobile ? 'mobile' : 'desktop' });
         
         console.log('🎯 Elementos de total encontrados:', {
             totalPagar: !!totalPagar,
