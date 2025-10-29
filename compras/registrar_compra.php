@@ -56,21 +56,6 @@ setPageTitle('Registrar Compra');
 <div class="container-fluid px-3 py-4">
     <div class="row justify-content-center">
         <div class="col-lg-10 col-xl-8">
-            <!-- Header moderno con glass morphism -->
-            <div class="modern-header mb-4">
-                <div class="modern-card p-4">
-                    <div class="d-flex align-items-center">
-                        <div class="header-icon me-3">
-                            <i class="bi bi-cart-plus-fill fs-2 text-primary"></i>
-                        </div>
-                        <div>
-                            <h1 class="modern-title mb-1">Registrar Compra</h1>
-                            <p class="modern-subtitle mb-0">Sistema de registro de compras</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Sección de búsqueda de persona -->
             <div class="modern-card mb-4">
                 <div class="card-body p-4">
@@ -83,12 +68,15 @@ setPageTitle('Registrar Compra');
                     
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <div class="modern-input-group">
+                            <div class="modern-input-group position-relative">
                                 <input type="text" class="form-control modern-input" id="persona-busqueda" 
                                        placeholder="Nombre o código de la persona" autocomplete="off">
                                 <span class="input-icon">
                                     <i class="bi bi-search"></i>
                                 </span>
+                                <div class="list-group position-absolute w-100 modern-dropdown mt-1" id="persona-lista" style="z-index: 2000;">
+                                    <!-- Resultados de búsqueda aparecerán aquí -->
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -106,10 +94,6 @@ setPageTitle('Registrar Compra');
                             </button>
                         </div>
                     </div>
-                    
-                    <div class="list-group position-absolute w-100 modern-dropdown mt-1" id="persona-lista" style="z-index: 1000;">
-                        <!-- Resultados de búsqueda aparecerán aquí -->
-                    </div>
                 </div>
             </div>
             <!-- Sección de productos -->
@@ -125,15 +109,15 @@ setPageTitle('Registrar Compra');
 
                         <!-- Búsqueda de productos -->
                         <div class="mb-4">
-                            <div class="modern-input-group">
+                            <div class="modern-input-group position-relative">
                                 <input type="text" class="form-control modern-input" id="producto-busqueda" 
                                        placeholder="Buscar producto por nombre o código" autocomplete="off">
                                 <span class="input-icon">
                                     <i class="bi bi-search"></i>
                                 </span>
-                            </div>
-                            <div class="list-group position-absolute w-100 modern-dropdown mt-1" id="producto-lista" style="z-index: 1000;">
-                                <!-- Resultados de búsqueda aparecerán aquí -->
+                                <div class="list-group position-absolute w-100 modern-dropdown mt-1" id="producto-lista" style="z-index: 2000;">
+                                    <!-- Resultados de búsqueda aparecerán aquí -->
+                                </div>
                             </div>
                         </div>
 

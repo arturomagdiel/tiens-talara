@@ -117,7 +117,16 @@
 function setPageTitle(title) {
     const titleElement = document.getElementById('page-title');
     if (titleElement) {
-        titleElement.innerHTML = '<i class="bi bi-box-seam me-2"></i>' + title;
+        // Determinar icono según el título
+        let icon = 'bi-box-seam';
+        if (title.includes('Registrar')) {
+            icon = 'bi-cart-plus-fill';
+        } else if (title.includes('Compras')) {
+            icon = 'bi-list-ul';
+        } else if (title.includes('Registro Diario')) {
+            icon = 'bi-calendar-check-fill';
+        }
+        titleElement.innerHTML = '<i class="' + icon + ' me-2"></i>' + title;
     }
 }
 </script>

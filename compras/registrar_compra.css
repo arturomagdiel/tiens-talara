@@ -40,37 +40,6 @@ body.context-app {
     transform: translateY(-2px);
 }
 
-/* Header moderno */
-.modern-header .modern-card {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-}
-
-.header-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 60px;
-    height: 60px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    backdrop-filter: blur(10px);
-}
-
-.modern-title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: white;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    margin: 0;
-}
-
-.modern-subtitle {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 1rem;
-    font-weight: 400;
-}
-
 /* Títulos de sección */
 .section-header {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -197,6 +166,12 @@ body.context-app {
     box-shadow: var(--shadow-medium);
     max-height: 300px;
     overflow-y: auto;
+    z-index: 2000 !important;
+}
+
+.modern-input-group {
+    position: relative;
+    z-index: 1;
 }
 
 .modern-dropdown .list-group-item {
@@ -319,23 +294,6 @@ body.context-app {
 
 /* Responsive optimizations */
 @media (max-width: 768px) {
-    .modern-title {
-        font-size: 1.5rem;
-    }
-    
-    .modern-subtitle {
-        font-size: 0.9rem;
-    }
-    
-    .header-icon {
-        width: 50px;
-        height: 50px;
-    }
-    
-    .modern-card {
-        margin-bottom: 1rem;
-    }
-    
     .modern-card .card-body {
         padding: 1.5rem !important;
     }
@@ -384,6 +342,15 @@ body.context-app {
     
     .action-buttons .btn {
         margin-bottom: 0.5rem;
+    }
+    
+    /* Asegurar que los dropdowns se muestren correctamente en móvil */
+    .modern-dropdown {
+        position: fixed !important;
+        left: 15px;
+        right: 15px;
+        width: auto !important;
+        z-index: 2050 !important;
     }
 }
 
