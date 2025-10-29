@@ -34,6 +34,19 @@ document.addEventListener('DOMContentLoaded', function () {
     productoBusqueda.style.backgroundColor = '#f8f9fa';
     productoBusqueda.style.color = '#6c757d';
 
+    // Función para posicionar dropdown en móvil
+    function posicionarDropdownMovil(dropdown, input) {
+        if (window.innerWidth < 768) {
+            const inputRect = input.getBoundingClientRect();
+            dropdown.style.position = 'fixed';
+            dropdown.style.top = (inputRect.bottom + 5) + 'px';
+            dropdown.style.left = '15px';
+            dropdown.style.right = '15px';
+            dropdown.style.width = 'auto';
+            dropdown.style.zIndex = '99999';
+        }
+    }
+
     // Manejar la selección de una persona
     personaBusqueda.addEventListener('input', function () {
         const query = this.value.toLowerCase();
@@ -49,7 +62,8 @@ document.addEventListener('DOMContentLoaded', function () {
         );
 
         if (resultados.length === 0) {
-            personaLista.innerHTML = '<p class="text-muted">No se encontraron resultados.</p>';
+            personaLista.innerHTML = '<p class="text-muted p-3">No se encontraron resultados.</p>';
+            posicionarDropdownMovil(personaLista, personaBusqueda);
             return;
         }
 
@@ -96,6 +110,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             personaLista.appendChild(item);
         });
+        
+        // Posicionar dropdown en móvil
+        posicionarDropdownMovil(personaLista, personaBusqueda);
     });
 
     // Manejar la búsqueda de productos
@@ -136,6 +153,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 productoLista.appendChild(item);
             });
+            
+            // Posicionar dropdown en móvil
+            posicionarDropdownMovil(productoLista, productoBusqueda);
+        }
+    });
+
+    // Reposicionar dropdowns al cambiar tamaño de ventana
+    window.addEventListener('resize', function() {
+        if (personaLista.children.length > 0) {
+            posicionarDropdownMovil(personaLista, personaBusqueda);
+        }
+        if (productoLista.children.length > 0) {
+            posicionarDropdownMovil(productoLista, productoBusqueda);
+        }
+    });
+
+    // Limpiar dropdown al hacer scroll
+    window.addEventListener('scroll', function() {
+        if (window.innerWidth < 768) {
+            personaLista.innerHTML = '';
+            productoLista.innerHTML = '';
         }
     });
 
