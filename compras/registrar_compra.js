@@ -110,7 +110,9 @@ document.addEventListener('DOMContentLoaded', function () {
             
             // FORZAR POSICIÓN VISIBLE INMEDIATAMENTE
             console.log('🔧 Aplicando posición forzada inmediata para móvil...');
-            dropdown.style.top = '150px';
+            const rect = input.getBoundingClientRect();
+            const inputBottom = rect.bottom + window.scrollY;
+            dropdown.style.top = (inputBottom + 10) + 'px'; // 10px debajo del input
             dropdown.style.left = '15px';
             dropdown.style.right = '15px';
             dropdown.style.bottom = 'auto';
@@ -136,7 +138,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Si aún está fuera del viewport o muy abajo, reposicionar de emergencia
                 if (rect.top > viewportHeight || rect.bottom < 0 || rect.height === 0 || rect.top > viewportHeight * 0.8) {
                     console.log('❌ Dropdown TODAVÍA fuera de viewport, segunda emergencia...');
-                    dropdown.style.top = '50px';
+                    const inputRect = input.getBoundingClientRect();
+                    const fallbackTop = Math.max(inputRect.bottom + 10, 50);
+                    dropdown.style.top = fallbackTop + 'px';
                     dropdown.style.left = '10px';
                     dropdown.style.right = '10px';
                     dropdown.style.bottom = 'auto';
