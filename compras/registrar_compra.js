@@ -108,28 +108,49 @@ document.addEventListener('DOMContentLoaded', function () {
             dropdown.style.border = '2px solid rgba(255, 255, 255, 0.5)';
             dropdown.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.4)';
             
+            // FORZAR POSICIÓN VISIBLE INMEDIATAMENTE
+            console.log('🔧 Aplicando posición forzada inmediata para móvil...');
+            dropdown.style.top = '150px';
+            dropdown.style.left = '15px';
+            dropdown.style.right = '15px';
+            dropdown.style.bottom = 'auto';
+            dropdown.style.width = 'auto';
+            dropdown.style.minHeight = '100px';
+            dropdown.style.transform = 'none';
+            dropdown.style.margin = '0';
+            dropdown.style.padding = '0';
+            
             // Verificar posición después de aplicar estilos
             setTimeout(() => {
                 const rect = dropdown.getBoundingClientRect();
                 const viewportHeight = window.innerHeight;
                 console.log('📱 Dropdown rect after timeout:', rect);
                 console.log('📱 Viewport height:', viewportHeight);
+                console.log('📱 Condiciones:', {
+                    topOutside: rect.top > viewportHeight,
+                    bottomOutside: rect.bottom < 0,
+                    heightZero: rect.height === 0,
+                    topFarDown: rect.top > viewportHeight * 0.8
+                });
                 
-                // Si está fuera del viewport o no visible, reposicionar de emergencia
-                if (rect.top > viewportHeight || rect.bottom < 0 || rect.height === 0) {
-                    console.log('❌ Dropdown fuera de viewport, reposicionando de emergencia...');
-                    dropdown.style.top = '150px';
-                    dropdown.style.left = '15px';
-                    dropdown.style.right = '15px';
+                // Si aún está fuera del viewport o muy abajo, reposicionar de emergencia
+                if (rect.top > viewportHeight || rect.bottom < 0 || rect.height === 0 || rect.top > viewportHeight * 0.8) {
+                    console.log('❌ Dropdown TODAVÍA fuera de viewport, segunda emergencia...');
+                    dropdown.style.top = '50px';
+                    dropdown.style.left = '10px';
+                    dropdown.style.right = '10px';
                     dropdown.style.bottom = 'auto';
-                    dropdown.style.minHeight = '100px';
+                    dropdown.style.minHeight = '150px';
                     dropdown.style.transform = 'none';
+                    dropdown.style.position = 'fixed';
                     
                     // Verificar nuevamente
                     setTimeout(() => {
                         const newRect = dropdown.getBoundingClientRect();
-                        console.log('🔧 Nueva posición después de emergencia:', newRect);
+                        console.log('🔧 Nueva posición después de segunda emergencia:', newRect);
                     }, 50);
+                } else {
+                    console.log('✅ Dropdown en posición correcta');
                 }
             }, 100);
         }
