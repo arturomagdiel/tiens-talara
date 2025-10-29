@@ -28,15 +28,17 @@ if ($resultProductos->num_rows > 0) {
 // echo '</pre>';
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Compra</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="../pwa-styles.css">
+    <link rel="stylesheet" href="registrar_compra.css">
 </head>
-<body>
+<body class="context-app">
 
 <?php
 // Incluir sistema de autenticación y requerir login
@@ -51,84 +53,181 @@ requireAuth();
 setPageTitle('Registrar Compra');
 </script>
 
-<div class="container mt-4">
-
-
-        <div class="card mt-4">
-            <div class="card-body">
-            <h5 class="card-title">Buscar Persona</h5>
-                            <!-- Selección de persona -->
-            <div class="mb-3 d-flex align-items-center">
-                <input type="text" class="form-control w-50 me-2" id="persona-busqueda" placeholder="Ingrese nombre o código de la persona" autocomplete="off">
-                <select class="form-select w-25 me-2" id="descuento-persona">
-                    <option value="0">0%</option>
-                    <option value="5">5%</option>
-                    <option value="8">8%</option>
-                    <option value="15">15%</option>
-                </select>
-                <button type="button" id="actualizar-descuento" class="btn btn-primary">Actualizar Descuento</button>
-            </div>
-            <div class="list-group position-absolute w-100" id="persona-lista" style="z-index: 1000;">
-    <!-- Resultados de búsqueda aparecerán aquí -->
-</div>
-
-            </div>
-        </div>
-        
-        <div class="card mt-4">
-        <div class="card-body">
-
-        <form id="compra-form">
-
-
-
-            <!-- Lista de productos -->
-           
-            <div class="mb-3 position-relative">
-            <h5 class="card-title">Buscar Producto</h5>
-                <input type="text" class="form-control" id="producto-busqueda" placeholder="Ingrese nombre o código del producto" autocomplete="off">
-                <div class="list-group position-absolute w-100" id="producto-lista" style="z-index: 1000;">
-                    <!-- Resultados de búsqueda aparecerán aquí -->
+<div class="container-fluid px-3 py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-8">
+            <!-- Header moderno con glass morphism -->
+            <div class="modern-header mb-4">
+                <div class="modern-card p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="header-icon me-3">
+                            <i class="bi bi-cart-plus-fill fs-2 text-primary"></i>
+                        </div>
+                        <div>
+                            <h1 class="modern-title mb-1">Registrar Compra</h1>
+                            <p class="modern-subtitle mb-0">Sistema de registro de compras</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Tabla de productos agregados -->
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Producto</th>
-                        <th>Código</th>
-                        <th>Precio</th>
-                        <th>PV</th>
-                        <th>Cantidad</th>
-                        <th>Subtotal</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="productos-lista">
-                    <!-- Los productos agregados aparecerán aquí -->
-                </tbody>
-            </table>
-
-            <!-- Totales -->
-            <div class="text-end">
-                <p><strong>Total a Pagar:</strong> S/<span id="total-pagar">0.00</span></p>
-                <p><strong>Total PV:</strong> <span id="total-pv-display">0.00</span></p>
+            <!-- Sección de búsqueda de persona -->
+            <div class="modern-card mb-4">
+                <div class="card-body p-4">
+                    <div class="section-header mb-4">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-person-search me-2 text-primary fs-5"></i>
+                            <h5 class="section-title mb-0">Buscar Persona</h5>
+                        </div>
+                    </div>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="modern-input-group">
+                                <input type="text" class="form-control modern-input" id="persona-busqueda" 
+                                       placeholder="Nombre o código de la persona" autocomplete="off">
+                                <span class="input-icon">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select modern-select" id="descuento-persona">
+                                <option value="0">Descuento: 0%</option>
+                                <option value="5">Descuento: 5%</option>
+                                <option value="8">Descuento: 8%</option>
+                                <option value="15">Descuento: 15%</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button" id="actualizar-descuento" class="btn btn-primary modern-btn w-100">
+                                <i class="bi bi-arrow-clockwise me-2"></i>
+                                <span class="btn-text">Actualizar</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="list-group position-absolute w-100 modern-dropdown mt-1" id="persona-lista" style="z-index: 1000;">
+                        <!-- Resultados de búsqueda aparecerán aquí -->
+                    </div>
+                </div>
             </div>
+            <!-- Sección de productos -->
+            <div class="modern-card mb-4">
+                <div class="card-body p-4">
+                    <form id="compra-form">
+                        <div class="section-header mb-4">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-box-seam me-2 text-primary fs-5"></i>
+                                <h5 class="section-title mb-0">Productos</h5>
+                            </div>
+                        </div>
 
-            <!-- Botones de acción -->
-            <div class="text-end">
-                <button type="button" id="guardar-compra" class="btn btn-success" style="display: none;">Guardar Compra</button>
-                <button type="button" id="comenzar-nuevo" class="btn btn-warning" style="display: none;">Comenzar de nuevo</button>
+                        <!-- Búsqueda de productos -->
+                        <div class="mb-4">
+                            <div class="modern-input-group">
+                                <input type="text" class="form-control modern-input" id="producto-busqueda" 
+                                       placeholder="Buscar producto por nombre o código" autocomplete="off">
+                                <span class="input-icon">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                            </div>
+                            <div class="list-group position-absolute w-100 modern-dropdown mt-1" id="producto-lista" style="z-index: 1000;">
+                                <!-- Resultados de búsqueda aparecerán aquí -->
+                            </div>
+                        </div>
+
+                        <!-- Tabla responsive de productos -->
+                        <div class="table-container">
+                            <div class="table-responsive">
+                                <table class="table modern-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-nowrap">
+                                                <i class="bi bi-box me-1"></i>
+                                                Producto
+                                            </th>
+                                            <th class="text-nowrap d-none d-md-table-cell">
+                                                <i class="bi bi-upc me-1"></i>
+                                                Código
+                                            </th>
+                                            <th class="text-nowrap">
+                                                <i class="bi bi-currency-dollar me-1"></i>
+                                                Precio
+                                            </th>
+                                            <th class="text-nowrap d-none d-lg-table-cell">
+                                                <i class="bi bi-star me-1"></i>
+                                                PV
+                                            </th>
+                                            <th class="text-nowrap">
+                                                <i class="bi bi-123 me-1"></i>
+                                                <span class="d-none d-sm-inline">Cantidad</span>
+                                                <span class="d-sm-none">Cant</span>
+                                            </th>
+                                            <th class="text-nowrap">
+                                                <i class="bi bi-calculator me-1"></i>
+                                                <span class="d-none d-sm-inline">Subtotal</span>
+                                                <span class="d-sm-none">Total</span>
+                                            </th>
+                                            <th class="text-nowrap text-center">
+                                                <i class="bi bi-gear-fill"></i>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="productos-lista">
+                                        <!-- Los productos agregados aparecerán aquí -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Panel de totales -->
+                        <div class="totals-panel mt-4">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="total-card">
+                                        <div class="total-icon">
+                                            <i class="bi bi-cash-coin"></i>
+                                        </div>
+                                        <div class="total-info">
+                                            <div class="total-label">Total a Pagar</div>
+                                            <div class="total-amount">S/<span id="total-pagar">0.00</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="total-card">
+                                        <div class="total-icon">
+                                            <i class="bi bi-star-fill"></i>
+                                        </div>
+                                        <div class="total-info">
+                                            <div class="total-label">Total PV</div>
+                                            <div class="total-amount"><span id="total-pv-display">0.00</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botones de acción -->
+                        <div class="action-buttons mt-4">
+                            <div class="d-flex gap-3 justify-content-end flex-wrap">
+                                <button type="button" id="guardar-compra" class="btn btn-success modern-btn-success" style="display: none;">
+                                    <i class="bi bi-check-circle me-2"></i>
+                                    <span class="btn-text">Guardar Compra</span>
+                                </button>
+                                <button type="button" id="comenzar-nuevo" class="btn btn-warning modern-btn-warning" style="display: none;">
+                                    <i class="bi bi-arrow-clockwise me-2"></i>
+                                    <span class="btn-text">Comenzar de nuevo</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </form>
-
-
+        </div>
+    </div>
 </div>
-</div>
-        
-
-    <div class="container mt-5">
  
 
             <!-- Modal de confirmación -->
@@ -262,6 +361,9 @@ setPageTitle('Registrar Compra');
         const productos = <?= json_encode($productos); ?>; // Pasar datos de productos al script
     </script>
     <script src="registrar_compra.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Indicador de versión PWA -->
+    <div class="version-indicator">PWA v1.4.6</div>
 </body>
 </html>

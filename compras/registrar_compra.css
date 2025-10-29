@@ -1,0 +1,497 @@
+/* Registrar Compra Modern Styles v1.4.6 */
+
+/* Variables CSS para el tema */
+:root {
+    --primary-color: #0d6efd;
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --success-color: #198754;
+    --success-gradient: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+    --warning-color: #ffc107;
+    --warning-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --shadow-light: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.15);
+    --border-radius: 16px;
+    --border-radius-small: 12px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Body con gradiente de fondo */
+body.context-app {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Tarjetas con glass morphism */
+.modern-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    backdrop-filter: blur(20px);
+    box-shadow: var(--shadow-light);
+    transition: var(--transition);
+    overflow: hidden;
+}
+
+.modern-card:hover {
+    box-shadow: var(--shadow-medium);
+    transform: translateY(-2px);
+}
+
+/* Header moderno */
+.modern-header .modern-card {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.header-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    backdrop-filter: blur(10px);
+}
+
+.modern-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin: 0;
+}
+
+.modern-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+/* Títulos de sección */
+.section-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1rem;
+}
+
+.section-title {
+    color: #333;
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+/* Inputs modernos */
+.modern-input-group {
+    position: relative;
+}
+
+.modern-input {
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius-small);
+    padding: 12px 45px 12px 15px;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    transition: var(--transition);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.modern-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+    background: white;
+    outline: none;
+}
+
+.modern-select {
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius-small);
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.modern-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+    background: white;
+}
+
+.input-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    pointer-events: none;
+    font-size: 1.1rem;
+}
+
+/* Botones modernos */
+.modern-btn {
+    border: none;
+    border-radius: var(--border-radius-small);
+    padding: 12px 24px;
+    font-weight: 600;
+    background: var(--primary-gradient);
+    color: white;
+    transition: var(--transition);
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.modern-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+    color: white;
+}
+
+.modern-btn:active {
+    transform: translateY(0);
+}
+
+.modern-btn-success {
+    background: var(--success-gradient);
+    box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3);
+    border: none;
+    border-radius: var(--border-radius-small);
+    padding: 12px 24px;
+    font-weight: 600;
+    color: white;
+    transition: var(--transition);
+}
+
+.modern-btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(25, 135, 84, 0.4);
+    color: white;
+}
+
+.modern-btn-warning {
+    background: var(--warning-gradient);
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+    border: none;
+    border-radius: var(--border-radius-small);
+    padding: 12px 24px;
+    font-weight: 600;
+    color: white;
+    transition: var(--transition);
+}
+
+.modern-btn-warning:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+    color: white;
+}
+
+/* Dropdown moderno */
+.modern-dropdown {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--border-radius-small);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-medium);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.modern-dropdown .list-group-item {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.modern-dropdown .list-group-item:hover {
+    background: rgba(13, 110, 253, 0.1);
+    transform: translateX(5px);
+}
+
+.modern-dropdown .list-group-item:last-child {
+    border-bottom: none;
+}
+
+/* Tabla moderna */
+.table-container {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--border-radius-small);
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.modern-table {
+    margin: 0;
+    background: transparent;
+}
+
+.modern-table thead {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.modern-table thead th {
+    border: none;
+    padding: 16px 12px;
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.modern-table tbody tr {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: var(--transition);
+}
+
+.modern-table tbody tr:hover {
+    background: rgba(13, 110, 253, 0.05);
+}
+
+.modern-table tbody td {
+    padding: 16px 12px;
+    border: none;
+    vertical-align: middle;
+}
+
+/* Panel de totales */
+.totals-panel {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius-small);
+    padding: 1.5rem;
+    backdrop-filter: blur(10px);
+}
+
+.total-card {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--border-radius-small);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: var(--transition);
+}
+
+.total-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.total-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: var(--primary-gradient);
+    color: white;
+    border-radius: 50%;
+    margin-right: 1rem;
+    font-size: 1.5rem;
+}
+
+.total-info {
+    flex: 1;
+}
+
+.total-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.total-amount {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+}
+
+/* Botones de acción */
+.action-buttons {
+    text-align: center;
+}
+
+/* Responsive optimizations */
+@media (max-width: 768px) {
+    .modern-title {
+        font-size: 1.5rem;
+    }
+    
+    .modern-subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .header-icon {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .modern-card {
+        margin-bottom: 1rem;
+    }
+    
+    .modern-card .card-body {
+        padding: 1.5rem !important;
+    }
+    
+    .section-title {
+        font-size: 1.1rem;
+    }
+    
+    .modern-input, .modern-select {
+        font-size: 16px; /* Evita zoom en iOS */
+        padding: 14px 45px 14px 15px;
+    }
+    
+    .modern-btn {
+        padding: 14px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .btn-text {
+        display: none;
+    }
+    
+    .totals-panel {
+        padding: 1rem;
+    }
+    
+    .total-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .total-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+        margin-right: 0.75rem;
+    }
+    
+    .total-amount {
+        font-size: 1.25rem;
+    }
+    
+    .action-buttons .d-flex {
+        flex-direction: column;
+    }
+    
+    .action-buttons .btn {
+        margin-bottom: 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container-fluid {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .modern-card .card-body {
+        padding: 1rem !important;
+    }
+    
+    .row.g-3 {
+        --bs-gutter-x: 0.75rem;
+    }
+    
+    .modern-table thead th,
+    .modern-table tbody td {
+        padding: 12px 8px;
+        font-size: 0.85rem;
+    }
+    
+    .total-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 1rem 0.75rem;
+    }
+    
+    .total-icon {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Animaciones personalizadas */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modern-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.modern-card:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.modern-card:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+/* Scrollbar personalizada */
+.modern-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modern-dropdown::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.modern-dropdown::-webkit-scrollbar-thumb {
+    background: rgba(13, 110, 253, 0.3);
+    border-radius: 3px;
+}
+
+.modern-dropdown::-webkit-scrollbar-thumb:hover {
+    background: rgba(13, 110, 253, 0.5);
+}
+
+/* Efectos de focus para accesibilidad */
+.modern-btn:focus,
+.modern-input:focus,
+.modern-select:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Estados de loading para botones */
+.modern-btn.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.modern-btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    margin: auto;
+    border: 2px solid transparent;
+    border-top-color: white;
+    border-radius: 50%;
+    animation: button-loading-spinner 1s ease infinite;
+}
+
+@keyframes button-loading-spinner {
+    from {
+        transform: rotate(0turn);
+    }
+    to {
+        transform: rotate(1turn);
+    }
+}
