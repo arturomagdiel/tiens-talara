@@ -28,6 +28,12 @@ document.addEventListener('DOMContentLoaded', function () {
     let descuentoSeleccionado = 0; // Inicializar el descuento seleccionado con 0
     let liquidacionNota = ''; // Variable para almacenar la nota del pago
 
+    // Deshabilitar búsqueda de productos inicialmente
+    productoBusqueda.disabled = true;
+    productoBusqueda.placeholder = 'Primero selecciona una persona';
+    productoBusqueda.style.backgroundColor = '#f8f9fa';
+    productoBusqueda.style.color = '#6c757d';
+
     // Manejar la selección de una persona
     personaBusqueda.addEventListener('input', function () {
         const query = this.value.toLowerCase();
@@ -77,6 +83,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Cambiar el fondo del campo de búsqueda a gris
                 personaBusqueda.style.backgroundColor = '#e9ecef'; // Color gris claro (Bootstrap-like)
 
+                // Habilitar búsqueda de productos
+                productoBusqueda.disabled = false;
+                productoBusqueda.placeholder = 'Buscar producto por nombre o código';
+                productoBusqueda.style.backgroundColor = '';
+                productoBusqueda.style.color = '';
+                productoBusqueda.focus();
+
                 // Mostrar el botón "Comenzar de nuevo"
                 comenzarNuevo.style.display = 'inline-block';
             });
@@ -108,6 +121,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Seleccionar producto al hacer clic
                 item.addEventListener('click', function () {
+                    // Validar que se haya seleccionado una persona
+                    if (!personaSeleccionada) {
+                        // Mostrar modal de advertencia
+                        const modalSeleccionarPersona = new bootstrap.Modal(document.getElementById('modalSeleccionarPersona'));
+                        modalSeleccionarPersona.show();
+                        return;
+                    }
+                    
                     agregarProductoALista(producto, descuentoSeleccionado);
                     productoLista.innerHTML = ''; // Limpiar la lista de resultados
                     productoBusqueda.value = ''; // Limpiar el campo de búsqueda

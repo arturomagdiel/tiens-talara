@@ -159,19 +159,35 @@ body.context-app {
 
 /* Dropdown moderno */
 .modern-dropdown {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.98);
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: var(--border-radius-small);
-    backdrop-filter: blur(10px);
-    box-shadow: var(--shadow-medium);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
     max-height: 300px;
     overflow-y: auto;
-    z-index: 2000 !important;
+    z-index: 9999 !important;
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin-top: 4px !important;
 }
 
 .modern-input-group {
     position: relative;
     z-index: 1;
+}
+
+/* Asegurar que el contenedor padre no interfiera */
+.modern-card {
+    position: relative;
+    z-index: 1;
+    overflow: visible !important;
+}
+
+.card-body {
+    overflow: visible !important;
 }
 
 .modern-dropdown .list-group-item {
@@ -180,6 +196,7 @@ body.context-app {
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     transition: var(--transition);
     cursor: pointer;
+    padding: 12px 16px;
 }
 
 .modern-dropdown .list-group-item:hover {
@@ -347,10 +364,16 @@ body.context-app {
     /* Asegurar que los dropdowns se muestren correctamente en móvil */
     .modern-dropdown {
         position: fixed !important;
-        left: 15px;
-        right: 15px;
+        left: 15px !important;
+        right: 15px !important;
         width: auto !important;
-        z-index: 2050 !important;
+        z-index: 9999 !important;
+        max-height: 250px !important;
+    }
+    
+    .modern-input-group {
+        position: relative !important;
+        z-index: 1 !important;
     }
 }
 

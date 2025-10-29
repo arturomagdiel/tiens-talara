@@ -61,6 +61,7 @@ setPageTitle('Registrar Compra');
                 <div class="card-body p-4">
                     <div class="section-header mb-4">
                         <div class="d-flex align-items-center">
+                            <i class="bi bi-person-fill me-2 text-primary fs-4"></i>
                             <i class="bi bi-person-search me-2 text-primary fs-5"></i>
                             <h5 class="section-title mb-0">Buscar Persona</h5>
                         </div>
@@ -316,6 +317,32 @@ setPageTitle('Registrar Compra');
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal de advertencia para seleccionar persona -->
+            <div class="modal fade" id="modalSeleccionarPersona" tabindex="-1" aria-labelledby="modalSeleccionarPersonaLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalSeleccionarPersonaLabel">
+                                <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+                                Selecciona una persona
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="text-center">
+                                <i class="bi bi-person-x display-1 text-muted mb-3"></i>
+                                <p class="mb-0">Debes seleccionar una persona antes de agregar productos a la compra.</p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                                <i class="bi bi-check-lg me-2"></i>Entendido
+                            </button>
                         </div>
                     </div>
                 </div>
