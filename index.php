@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tiens Talara v1.4.6 - Sistema de Gestión</title>  <!-- PWA Meta Tags -->
+    <title>Tiens Talara v1.4.8 - Sistema de Gestión</title>  <!-- PWA Meta Tags -->
   <meta name="description" content="Sistema de gestión de compras, productos y afiliados para Tiens Talara">
   <meta name="theme-color" content="#0d6efd">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -190,7 +190,7 @@
         <i class="bi bi-leaf logo-icon"></i>
         <h1 class="main-title">Tiens Talara</h1>
         <p class="subtitle">Sistema de Gestión Integral</p>
-        <span class="badge version-badge">v1.4.6</span>
+                                            <span class="badge bg-info text-dark">v1.4.8</span>
       </div>
       
       <!-- Options Grid -->
@@ -239,7 +239,7 @@
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('sw.js')
           .then(function(registration) {
-            console.log('✅ Tiens Talara v1.4.6 - Service Worker registrado:', registration.scope);
+            console.log('✅ Tiens Talara v1.4.8 - Service Worker registrado:', registration.scope);
           })
           .catch(function(error) {
             console.log('❌ Error al registrar Service Worker:', error);

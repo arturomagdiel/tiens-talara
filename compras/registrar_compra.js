@@ -34,19 +34,43 @@ document.addEventListener('DOMContentLoaded', function () {
     // Helpers dropdown
     function posicionarDropdown(dropdown, input) {
         const rect = input.getBoundingClientRect();
+        const isMobile = window.innerWidth <= 576;
+        
         dropdown.style.position = 'fixed';
-        dropdown.style.top = (rect.bottom + 5) + 'px';
-        dropdown.style.left = rect.left + 'px';
-        dropdown.style.width = rect.width + 'px';
         dropdown.style.zIndex = '999999';
-
-        const dropdownRect = dropdown.getBoundingClientRect();
-        if (dropdownRect.right > window.innerWidth) {
-            dropdown.style.left = (window.innerWidth - dropdownRect.width - 15) + 'px';
-        }
-        if (dropdownRect.left < 0) {
+        
+        if (isMobile) {
+            // En móvil: posición más simplificada y visible
             dropdown.style.left = '15px';
-            dropdown.style.width = (window.innerWidth - 30) + 'px';
+            dropdown.style.right = '15px';
+            dropdown.style.width = 'auto';
+            dropdown.style.top = (rect.bottom + 10) + 'px';
+            dropdown.style.maxHeight = '200px';
+            
+            // Verificar que no se salga de la pantalla por abajo
+            const availableHeight = window.innerHeight - rect.bottom - 20;
+            if (availableHeight < 200) {
+                // Si no hay espacio abajo, mostrar arriba del input
+                dropdown.style.top = 'auto';
+                dropdown.style.bottom = (window.innerHeight - rect.top + 10) + 'px';
+            }
+        } else {
+            // En desktop: posicionamiento normal
+            dropdown.style.top = (rect.bottom + 5) + 'px';
+            dropdown.style.left = rect.left + 'px';
+            dropdown.style.width = rect.width + 'px';
+            dropdown.style.right = 'auto';
+            dropdown.style.bottom = 'auto';
+            dropdown.style.maxHeight = '300px';
+
+            const dropdownRect = dropdown.getBoundingClientRect();
+            if (dropdownRect.right > window.innerWidth) {
+                dropdown.style.left = (window.innerWidth - dropdownRect.width - 15) + 'px';
+            }
+            if (dropdownRect.left < 0) {
+                dropdown.style.left = '15px';
+                dropdown.style.width = (window.innerWidth - 30) + 'px';
+            }
         }
     }
     function mostrarDropdown(dropdown, input) {
