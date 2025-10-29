@@ -48,20 +48,30 @@ document.addEventListener('DOMContentLoaded', function () {
         dropdown.style.zIndex = '999999';
         
         if (isMobile) {
-            // En móvil: posición más simplificada y visible
+            // En móvil: posición fija más visible
             dropdown.style.left = '15px';
             dropdown.style.right = '15px';
             dropdown.style.width = 'auto';
-            dropdown.style.top = (rect.bottom + 10) + 'px';
-            dropdown.style.maxHeight = '200px';
             
-            // Verificar que no se salga de la pantalla por abajo
-            const availableHeight = window.innerHeight - rect.bottom - 20;
-            if (availableHeight < 200) {
-                // Si no hay espacio abajo, mostrar arriba del input
-                dropdown.style.top = 'auto';
-                dropdown.style.bottom = (window.innerHeight - rect.top + 10) + 'px';
+            // Calcular posición segura dentro del viewport
+            const inputBottom = rect.bottom;
+            const viewportHeight = window.innerHeight;
+            const dropdownHeight = 200;
+            
+            // Si el input está muy abajo, mostrar el dropdown arriba
+            if (inputBottom + dropdownHeight > viewportHeight) {
+                dropdown.style.top = Math.max(rect.top - dropdownHeight - 10, 50) + 'px';
+                console.log('📱 Dropdown arriba del input:', dropdown.style.top);
+            } else {
+                // Posición normal abajo del input, pero asegurar que esté visible
+                const safeTop = Math.min(inputBottom + 10, viewportHeight - dropdownHeight - 50);
+                dropdown.style.top = Math.max(safeTop, 50) + 'px';
+                console.log('📱 Dropdown abajo del input:', dropdown.style.top);
             }
+            
+            dropdown.style.maxHeight = '200px';
+            dropdown.style.bottom = 'auto';
+            
         } else {
             // En desktop: posicionamiento normal
             dropdown.style.top = (rect.bottom + 5) + 'px';
@@ -98,16 +108,28 @@ document.addEventListener('DOMContentLoaded', function () {
             dropdown.style.border = '2px solid rgba(255, 255, 255, 0.5)';
             dropdown.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.4)';
             
-            // Asegurar que esté en viewport
+            // Verificar posición después de aplicar estilos
             setTimeout(() => {
                 const rect = dropdown.getBoundingClientRect();
+                const viewportHeight = window.innerHeight;
                 console.log('📱 Dropdown rect after timeout:', rect);
-                if (rect.height === 0) {
-                    console.log('❌ Dropdown no visible, reposicionando...');
-                    dropdown.style.top = '200px';
+                console.log('📱 Viewport height:', viewportHeight);
+                
+                // Si está fuera del viewport o no visible, reposicionar de emergencia
+                if (rect.top > viewportHeight || rect.bottom < 0 || rect.height === 0) {
+                    console.log('❌ Dropdown fuera de viewport, reposicionando de emergencia...');
+                    dropdown.style.top = '150px';
                     dropdown.style.left = '15px';
                     dropdown.style.right = '15px';
+                    dropdown.style.bottom = 'auto';
                     dropdown.style.minHeight = '100px';
+                    dropdown.style.transform = 'none';
+                    
+                    // Verificar nuevamente
+                    setTimeout(() => {
+                        const newRect = dropdown.getBoundingClientRect();
+                        console.log('🔧 Nueva posición después de emergencia:', newRect);
+                    }, 50);
                 }
             }, 100);
         }
