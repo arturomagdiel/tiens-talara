@@ -239,7 +239,7 @@
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('sw.js')
           .then(function(registration) {
-            console.log('✅ Tiens Talara v1.6.1 - Service Worker registrado:', registration.scope);
+            console.log('✅ Tiens Talara v1.6.3 - Service Worker registrado:', registration.scope);
           })
           .catch(function(error) {
             console.log('❌ Error al registrar Service Worker:', error);
@@ -248,8 +248,8 @@
     }
     
     // Mostrar versión en consola
-    console.log('%c🌿 Tiens Talara v1.6.2', 'color: #28a745; font-size: 16px; font-weight: bold;');
-    console.log('Sistema de Gestión - PWA v1.6.2 con Registrar Compra Modernizado');
+    console.log('%c🌿 Tiens Talara v1.6.3', 'color: #28a745; font-size: 16px; font-weight: bold;');
+    console.log('Sistema de Gestión - PWA v1.6.3 con Registrar Compra Modernizado');
 
     // PWA Install Prompt
     let deferredPrompt;
