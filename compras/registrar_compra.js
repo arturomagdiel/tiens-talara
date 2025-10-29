@@ -173,6 +173,7 @@ document.addEventListener('DOMContentLoaded', function () {
           }
 
           productoLista.innerHTML = '';
+          console.log('🎯 Creando', resultados.length, 'items de productos en dropdown');
           resultados.forEach(producto => {
               const item = document.createElement('button');
               item.type = 'button';
@@ -184,18 +185,28 @@ document.addEventListener('DOMContentLoaded', function () {
               item.dataset.precioAfiliado = producto.precio_afiliado;
               item.dataset.pvAfiliado = producto.pv_afiliado;
 
+              console.log('🔗 Agregando event listener a producto:', producto.nombre);
+
               item.addEventListener('click', function (event) {
+                  console.log('🚀 CLICK EN PRODUCTO DETECTADO:', producto.nombre);
+                  console.log('📊 Estado actual:', {
+                      personaSeleccionada: !!personaSeleccionada,
+                      prevenirBusqueda: prevenirBusquedaProducto,
+                      eventoTipo: event.type
+                  });
+                  
                   // Prevenir propagación del evento
                   event.preventDefault();
                   event.stopPropagation();
                   
                   if (!personaSeleccionada) {
+                      console.log('❌ No hay persona seleccionada, mostrando modal');
                       const modalSeleccionarPersona = new bootstrap.Modal(document.getElementById('modalSeleccionarPersona'));
                       modalSeleccionarPersona.show();
                       return;
                   }
                   
-                  console.log('🎯 Producto seleccionado:', producto.nombre);
+                  console.log('🎯 Producto seleccionado válido:', producto.nombre);
                   
                   // PRIMERO: Ocultar dropdown inmediatamente
                   ocultarDropdown(productoLista);
@@ -257,9 +268,20 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function agregarProductoALista(producto, descuento) {
+        console.log('🏗️ INICIANDO agregarProductoALista:', {
+            producto: producto.nombre,
+            descuento: descuento,
+            productoId: producto.id
+        });
+        
         // Verificar si el producto ya existe (tanto en desktop como móvil)
         const filasDesktop = document.querySelectorAll('#productos-lista tr');
         const tarjetasMobile = document.querySelectorAll('.mobile-product-card');
+        
+        console.log('🔍 Verificando duplicados:', {
+            filasDesktop: filasDesktop.length,
+            tarjetasMobile: tarjetasMobile.length
+        });
         
         for (let fila of filasDesktop) {
             if (fila.dataset.id === String(producto.id)) {
@@ -350,15 +372,25 @@ document.addEventListener('DOMContentLoaded', function () {
         const productosListaDesktop = document.getElementById('productos-lista');
         const productosListaMobile = document.getElementById('productos-lista-mobile');
         
+        console.log('📝 Agregando producto a listas:', {
+            desktop: !!productosListaDesktop,
+            mobile: !!productosListaMobile
+        });
+        
         if (productosListaDesktop) {
             productosListaDesktop.insertAdjacentHTML('beforeend', rowDesktop);
+            console.log('✅ Producto agregado a tabla desktop');
         }
         
         if (productosListaMobile) {
             productosListaMobile.insertAdjacentHTML('beforeend', cardMobile);
+            console.log('✅ Producto agregado a tarjetas mobile');
         }
 
+        console.log('🔄 Llamando verificarProductosEnLista()');
         verificarProductosEnLista();
+        
+        console.log('🔄 Llamando actualizarTotales()');
         actualizarTotales();
 
         // Event listeners para botones eliminar
@@ -569,32 +601,55 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function actualizarTotales() {
+        console.log('💰 INICIANDO actualizarTotales()');
         let total = 0;
         let totalPV = 0;
         
         // Calcular desde tabla desktop
         const filasDesktop = document.querySelectorAll('#productos-lista tr');
-        filasDesktop.forEach(fila => {
+        console.log('🖥️ Filas desktop encontradas:', filasDesktop.length);
+        filasDesktop.forEach((fila, index) => {
             const subtotal = parseFloat(fila.querySelector('.subtotal').textContent.replace('S/', '')) || 0;
             const subtotalPV = parseFloat(fila.querySelector('.subtotal-pv').textContent) || 0;
+            console.log(`   Desktop fila ${index + 1}:`, { subtotal, subtotalPV });
             total += subtotal;
             totalPV += subtotalPV;
         });
         
         // Calcular desde tarjetas mobile
         const tarjetasMobile = document.querySelectorAll('.mobile-product-card');
-        tarjetasMobile.forEach(tarjeta => {
+        console.log('📱 Tarjetas mobile encontradas:', tarjetasMobile.length);
+        tarjetasMobile.forEach((tarjeta, index) => {
             const subtotal = parseFloat(tarjeta.querySelector('.subtotal').textContent.replace('S/', '')) || 0;
             const pv = parseFloat(tarjeta.querySelector('.pv').textContent) || 0;
             const cantidad = parseInt(tarjeta.querySelector('.cantidad').value) || 1;
+            console.log(`   Mobile tarjeta ${index + 1}:`, { subtotal, pv, cantidad, pvTotal: pv * cantidad });
             total += subtotal;
             totalPV += (pv * cantidad);
         });
         
         console.log('💰 Totales calculados:', { total, totalPV, filasDesktop: filasDesktop.length, tarjetasMobile: tarjetasMobile.length });
         
-        if (totalPagar) totalPagar.textContent = total.toFixed(2);
-        if (totalPVDisplay) totalPVDisplay.textContent = totalPV.toFixed(2);
+        console.log('🎯 Elementos de total encontrados:', {
+            totalPagar: !!totalPagar,
+            totalPVDisplay: !!totalPVDisplay,
+            totalPagarId: totalPagar?.id,
+            totalPVId: totalPVDisplay?.id
+        });
+        
+        if (totalPagar) {
+            totalPagar.textContent = total.toFixed(2);
+            console.log('✅ Total a pagar actualizado:', total.toFixed(2));
+        } else {
+            console.log('❌ Elemento totalPagar no encontrado');
+        }
+        
+        if (totalPVDisplay) {
+            totalPVDisplay.textContent = totalPV.toFixed(2);
+            console.log('✅ Total PV actualizado:', totalPV.toFixed(2));
+        } else {
+            console.log('❌ Elemento totalPVDisplay no encontrado');
+        }
     }
 
     function procesarCompra(estado, liquidacionNota) {
