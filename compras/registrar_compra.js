@@ -53,20 +53,22 @@ document.addEventListener('DOMContentLoaded', function () {
             dropdown.style.right = '15px';
             dropdown.style.width = 'auto';
             
-            // Calcular posición segura dentro del viewport
-            const inputBottom = rect.bottom;
+            // Calcular posición segura dentro del viewport - DEBAJO del input
+            const inputBottom = rect.bottom; // No usar scrollY para position: fixed
             const viewportHeight = window.innerHeight;
             const dropdownHeight = 200;
             
-            // Si el input está muy abajo, mostrar el dropdown arriba
+            // Verificar si hay espacio abajo del input
             if (inputBottom + dropdownHeight > viewportHeight) {
-                dropdown.style.top = Math.max(rect.top - dropdownHeight - 10, 50) + 'px';
+                // Si no hay espacio abajo, mostrar arriba del input
+                const safeTop = Math.max(rect.top - dropdownHeight - 10, 10);
+                dropdown.style.top = safeTop + 'px';
                 console.log('📱 Dropdown arriba del input:', dropdown.style.top);
             } else {
-                // Posición normal abajo del input, pero asegurar que esté visible
-                const safeTop = Math.min(inputBottom + 10, viewportHeight - dropdownHeight - 50);
-                dropdown.style.top = Math.max(safeTop, 50) + 'px';
-                console.log('📱 Dropdown abajo del input:', dropdown.style.top);
+                // Posición normal debajo del input
+                const safeTop = inputBottom + 10;
+                dropdown.style.top = safeTop + 'px';
+                console.log('📱 Dropdown debajo del input:', dropdown.style.top);
             }
             
             dropdown.style.maxHeight = '200px';
@@ -111,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // FORZAR POSICIÓN VISIBLE INMEDIATAMENTE
             console.log('🔧 Aplicando posición forzada inmediata para móvil...');
             const rect = input.getBoundingClientRect();
-            const inputBottom = rect.bottom + window.scrollY;
+            const inputBottom = rect.bottom; // Para position: fixed no usar scrollY
             dropdown.style.top = (inputBottom + 10) + 'px'; // 10px debajo del input
             dropdown.style.left = '15px';
             dropdown.style.right = '15px';
@@ -139,8 +141,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (rect.top > viewportHeight || rect.bottom < 0 || rect.height === 0 || rect.top > viewportHeight * 0.8) {
                     console.log('❌ Dropdown TODAVÍA fuera de viewport, segunda emergencia...');
                     const inputRect = input.getBoundingClientRect();
-                    const fallbackTop = Math.max(inputRect.bottom + 10, 50);
-                    dropdown.style.top = fallbackTop + 'px';
+                    const fallbackTop = inputRect.bottom + 10; // Siempre debajo del input
+                    dropdown.style.top = Math.max(fallbackTop, 50) + 'px';
                     dropdown.style.left = '10px';
                     dropdown.style.right = '10px';
                     dropdown.style.bottom = 'auto';
