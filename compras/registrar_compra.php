@@ -75,9 +75,6 @@ setPageTitle('Registrar Compra');
                                 <span class="input-icon">
                                     <i class="bi bi-search"></i>
                                 </span>
-                                <div class="list-group position-absolute w-100 modern-dropdown mt-1" id="persona-lista" style="z-index: 2000;">
-                                    <!-- Resultados de búsqueda aparecerán aquí -->
-                                </div>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -116,9 +113,6 @@ setPageTitle('Registrar Compra');
                                 <span class="input-icon">
                                     <i class="bi bi-search"></i>
                                 </span>
-                                <div class="list-group position-absolute w-100 modern-dropdown mt-1" id="producto-lista" style="z-index: 2000;">
-                                    <!-- Resultados de búsqueda aparecerán aquí -->
-                                </div>
                             </div>
                         </div>
 
@@ -367,6 +361,16 @@ setPageTitle('Registrar Compra');
             </div>
             
     </div>
+    
+    <!-- Dropdowns flotantes - fuera de cualquier contenedor -->
+    <div class="list-group modern-dropdown" id="persona-lista" style="display: none;">
+        <!-- Resultados de búsqueda de personas aparecerán aquí -->
+    </div>
+    
+    <div class="list-group modern-dropdown" id="producto-lista" style="display: none;">
+        <!-- Resultados de búsqueda de productos aparecerán aquí -->
+    </div>
+    
     <script>
         const personas = <?= json_encode($personas); ?>; // Pasar datos de personas al script
         const productos = <?= json_encode($productos); ?>; // Pasar datos de productos al script

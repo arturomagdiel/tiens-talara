@@ -34,6 +34,38 @@ document.addEventListener('DOMContentLoaded', function () {
     productoBusqueda.style.backgroundColor = '#f8f9fa';
     productoBusqueda.style.color = '#6c757d';
 
+    // Funciones para manejar dropdowns flotantes
+    function posicionarDropdown(dropdown, input) {
+        const rect = input.getBoundingClientRect();
+        dropdown.style.position = 'fixed';
+        dropdown.style.top = (rect.bottom + 5) + 'px';
+        dropdown.style.left = rect.left + 'px';
+        dropdown.style.width = rect.width + 'px';
+        dropdown.style.zIndex = '999999';
+        
+        // Asegurar que no se salga de la pantalla
+        const dropdownRect = dropdown.getBoundingClientRect();
+        if (dropdownRect.right > window.innerWidth) {
+            dropdown.style.left = (window.innerWidth - dropdownRect.width - 15) + 'px';
+        }
+        if (dropdownRect.left < 0) {
+            dropdown.style.left = '15px';
+            dropdown.style.width = (window.innerWidth - 30) + 'px';
+        }
+    }
+
+    function mostrarDropdown(dropdown, input) {
+        posicionarDropdown(dropdown, input);
+        dropdown.style.display = 'block';
+        dropdown.classList.add('show');
+    }
+
+    function ocultarDropdown(dropdown) {
+        dropdown.style.display = 'none';
+        dropdown.classList.remove('show');
+        dropdown.innerHTML = '';
+    }
+
     // Función para posicionar dropdown en móvil
     function posicionarDropdownMovil(dropdown, input) {
         if (window.innerWidth < 768) {
